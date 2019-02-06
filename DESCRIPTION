@@ -15,12 +15,8 @@ Depends: R (>= 3.2.2), parallel, R2HTML, fitdistrplus, moments, copula,
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.0.1.9000
+RoxygenNote: 6.1.1
 Author: Robert Bear [aut],
   Kailan Shang [cre, aut],
   Hai You [aut]
 Maintainer: Kailan Shang <kshang@reserveprism.com>
-Built: R 3.4.3; ; 2018-06-30 02:00:46 UTC; windows
-RemoteType: local
-RemoteUrl: C:\temp\CAS\Work\R\cascsim
-RemoteSha: 0.0.0.9000
