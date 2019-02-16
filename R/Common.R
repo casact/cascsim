@@ -628,7 +628,8 @@ ptempirical <- function(q,cdf,min=0,max=100000) {
 #' #discrete distribution
 #' qtempirical(c(0.3,0.65,1),matrix(c(0.1,0.2,0.3,0.05,0.05,0.2,0.1,1:6,10),7,2),3,100)
 #' #continuous distribution
-#' qtempirical(c(0.3,0.65,0.8),matrix(c(seq(0.01,1,0.01),cumprod(c(1,rep(1.1,99)))),100,2),200,10000000)
+#' qtempirical(c(0.3,0.65,0.8),matrix(c(seq(0.01,1,0.01),
+#' cumprod(c(1,rep(1.1,99)))),100,2),200,10000000)
 #' @rdname tempirical
 #' @export
 qtempirical <- function(p,cdf,min=0,max=100000) {

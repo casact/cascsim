@@ -3,20 +3,15 @@ Title: CAS Individual Claim Simulator
 Version: 0.0.0.9000
 Authors@R: c(
     person("Robert", "Bear", email = "rbear@reserveprism.com", role = "aut"),
-    person("Kailan", "Shang", email = "kshang@reserveprism.com", role = c("cre","aut")),
+    person("Kailan", "Shang", email = "klshang81@gmail.com", role = c("aut","cre")),
     person("Hai", "You", email = "hyou@reserveprism.com", role = "aut"))
 Description: It is an open source insurance claim simulation engine sponsored
     by the Casualty Actuarial Society and built by ReservePrism LLC. It generates 
 	individual insurance claims including open claims, reopened claims, IBNR 
 	claims and UPR claims. It also includes claim data fitting functions to 
 	help set simulation assumptions. It is useful for claim level reserving analysis.
-Depends: R (>= 3.2.2), parallel, R2HTML, fitdistrplus, moments, copula,
-        scatterplot3d
+Depends: R (>= 3.4.3)
+Imports: parallel, R2HTML, fitdistrplus, moments, copula, scatterplot3d, methods
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
-Author: Robert Bear [aut],
-  Kailan Shang [cre, aut],
-  Hai You [aut]
-Maintainer: Kailan Shang <kshang@reserveprism.com>

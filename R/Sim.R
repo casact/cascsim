@@ -4,7 +4,10 @@
 #' @slot simNo Number of simulation.
 #' @slot lines A string vector to identify the business line(s) to be simulated.
 #' @slot types A string vector to identify the claim types to be simulated.
-#' @slot classes A string vector to identify the claim classes(RBNER, ROPEN, IBNR or UPR) to be simulated.
+#' @slot iRBNER A Boolean indicating whether IBNER claims need to be simulated.
+#' @slot iROPEN A Boolean indicating whether claim reopening needs to be simulated.
+#' @slot iIBNR A Boolean indicating whether IBNR claims need to be simulated.
+#' @slot iUPR A Boolean indicating whether future claims need to be simulated.
 #' @slot claimobjs A list of claim objects.
 #' @slot workingFolder A string to specify the working folder where the simulation results will be saved.
 #' @slot iCopula A Boolean indicating whether to use copula for frequency simulation.
@@ -89,6 +92,8 @@ setClass("Simulation",
 #' @param claimData claim data including existing claims for RBNER and claim reopenness analysis
 #' @param startDate Date after which claims are analyzed
 #' @param evaluationDate Date of evaluation for existing claims and IBNR
+#' @param lineList List of business lines to be included in claim fitting
+#' @param typeList List of claim types to be included in claim fitting
 #' @param discreteDist List of discrete distributions to try fitting (report lag, settlemet lag, frequency)
 #' @param continuousDist List of continuous distribution to try fitting (severity)
 #' @param copulaList List of copula to try fitting
@@ -109,7 +114,9 @@ setClass("Simulation",
 #' lines<-c("Auto","Property","Liab")
 #' types<-c("N","H")
 #' #exposure index
-#' index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
+#' index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),
+#' cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
 #' #severity index
 #' index2 <- new("Index",monthlyIndex=c(cumprod(c(1,rep(1.03^(1/12),59))),rep(1.03^(5),300)))
 #' objan <- new("ClaimType", line="Auto",claimType="N",exposureIndex=index1,severityIndex=index2)
@@ -119,7 +126,8 @@ setClass("Simulation",
 #' objln <- new("ClaimType", line="Liab",claimType="N",exposureIndex=index1,severityIndex=index2)
 #' objlh <- new("ClaimType", line="Liab",claimType="H",exposureIndex=index1,severityIndex=index2)
 #' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE, iCopula=TRUE, iReport=TRUE)
+#' simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE, 
+#' iCopula=TRUE, iReport=TRUE)
 #' simobj <- claimFitting(simobj,claimdata)
 #' @rdname claimFitting
 #' @export
@@ -1354,7 +1362,8 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 #' objln <- new("ClaimType", line="Liab",claimType="N")
 #' objlh <- new("ClaimType", line="Liab",claimType="H")
 #' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,iUPR=FALSE,claimobjs=objlist,simNo=2)
+#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,
+#' iUPR=FALSE,claimobjs=objlist,simNo=2)
 #' simdata <- claimSimulation(simobj)
 #' simSummary <- simSummary(simobj,simdata)
 #' simobj@iReport <- TRUE
@@ -1372,7 +1381,8 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 #' objln <- new("ClaimType", line="Liab",claimType="N")
 #' objlh <- new("ClaimType", line="Liab",claimType="H")
 #' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,iUPR=TRUE,claimobjs=objlist,simNo=2)
+#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,
+#' iUPR=TRUE,claimobjs=objlist,simNo=2)
 #' simdata <- claimSimulation(simobj)
 #' simSummary <- simSummary(simobj,simdata)
 #' simobj@iReport <- TRUE
@@ -1390,14 +1400,15 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 #' objln <- new("ClaimType", line="Liab",claimType="N")
 #' objlh <- new("ClaimType", line="Liab",claimType="H")
 #' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=TRUE,iROPEN=TRUE,iIBNR=TRUE,iUPR=TRUE,claimobjs=objlist,simNo=2)
+#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=TRUE,iROPEN=TRUE,iIBNR=TRUE,
+#' iUPR=TRUE,claimobjs=objlist,simNo=2)
 #' simdata <- claimSimulation(simobj,claimData=claimdata)
 #' simSummary <- simSummary(simobj,simdata)
 #' simTriangle <- simTriangle(simobj,claimdata,simdata)
 #' simobj@iReport <- TRUE
 #' simReport(simobj,simSummary,simTriangle)
 #' #multicore computing 
-#' simobj@ncores<-4
+#' #simobj@ncores<-4
 #' simobj@simNo<-9
 #' simdata <- claimSimulation(simobj,claimdata)
 #' simSummary <- simSummary(simobj,simdata)

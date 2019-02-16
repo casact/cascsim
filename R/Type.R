@@ -95,22 +95,31 @@ setClass("ClaimType",
 #' Claim simulation at line/type/status level
 #' @param object ClaimType object
 #' @param claimData claim data including existing claims for RBNER and claim reopenness analysis
+#' @param startDate Date from which claim data is included in the analysis
 #' @param evaluationDate Date of evaluation
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
 #' #RBNER simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=TRUE,iROPEN=FALSE,iIBNR=FALSE,iUPR=FALSE)
+#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=TRUE,iROPEN=FALSE,
+#' iIBNR=FALSE,iUPR=FALSE)
 #' rbnerdata <- claimSample(claimobj,claimdata)
 #' #claim reopen simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=TRUE,iIBNR=FALSE,iUPR=FALSE)
+#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=TRUE,
+#' iIBNR=FALSE,iUPR=FALSE)
 #' reopendata <- claimSample(claimobj,claimdata)
 #' na.omit(reopendata)
 #' #IBNR simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,iUPR=FALSE, IBNRfreqIndex=new("Index",startDate=as.Date("2016-01-01"),monthlyIndex=rep(30,12)),iCopula=TRUE)
+#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=FALSE,
+#' iIBNR=TRUE,iUPR=FALSE, 
+#' IBNRfreqIndex=new("Index",startDate=as.Date("2016-01-01"),
+#' monthlyIndex=rep(30,12)),iCopula=TRUE)
 #' ibnrdata <- claimSample(claimobj,claimdata)
 #' #UPR simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=FALSE,iIBNR=FALSE,iUPR=TRUE, UPRfreqIndex=new("Index",startDate=as.Date("2017-01-01"),monthlyIndex=rep(30,12)),iCopula=TRUE)
+#' claimobj <- new("ClaimType", line="Auto",claimType="N",
+#' iRBNER=FALSE,iROPEN=FALSE,iIBNR=FALSE,iUPR=TRUE, 
+#' UPRfreqIndex=new("Index",startDate=as.Date("2017-01-01"),
+#' monthlyIndex=rep(30,12)),iCopula=TRUE)
 #' uprdata <- claimSample(claimobj,claimdata)
 #' @rdname claimSample
 #' @export

@@ -53,19 +53,23 @@ setClass("Triangle",
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
-#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri@upper
 #' 
-#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), frequency="quarterly", sim=1, percentile=50)
+#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+#' frequency="quarterly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri@upper
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upper
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "paidLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+#' xTri <- new("Triangle", triID = "TRI1", type = "paidLoss", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upper
 #'
@@ -207,17 +211,20 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
-#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=TRUE)
+#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=TRUE)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri@upperkeep
 #' 
-#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), frequency="quarterly", sim=1, percentile=50, iRBNER=FALSE, iROPEN=TRUE)
+#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+#' frequency="quarterly", sim=1, percentile=50, iRBNER=FALSE, iROPEN=TRUE)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri@upperkeep
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=FALSE)
+#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=FALSE)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upperkeep
@@ -371,19 +378,22 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 #' library(cascsim)
 #' data(claimdata)
 #' simdata <- read.csv("C:/temp/CAS/demo/sim2016.csv")
-#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri<-setRectangle(xTri,simdata)
 #' xTri@rectangle
 #' 
-#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri<-setRectangle(xTri,simdata)
 #' xTri@rectangle
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=NaN, percentile=80)
+#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+#' frequency="yearly", sim=NaN, percentile=80)
 #' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri<-setRectangle(xTri,simdata,lob="Auto",ctype="H")
