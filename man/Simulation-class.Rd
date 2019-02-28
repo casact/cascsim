@@ -18,7 +18,13 @@ An S4 class to represent a simulation task.
 
 \item{\code{types}}{A string vector to identify the claim types to be simulated.}
 
-\item{\code{classes}}{A string vector to identify the claim classes(RBNER, ROPEN, IBNR or UPR) to be simulated.}
+\item{\code{iRBNER}}{A Boolean indicating whether IBNER claims need to be simulated.}
+
+\item{\code{iROPEN}}{A Boolean indicating whether claim reopening needs to be simulated.}
+
+\item{\code{iIBNR}}{A Boolean indicating whether IBNR claims need to be simulated.}
+
+\item{\code{iUPR}}{A Boolean indicating whether future claims need to be simulated.}
 
 \item{\code{claimobjs}}{A list of claim objects.}
 

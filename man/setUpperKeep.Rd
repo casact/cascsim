@@ -23,17 +23,20 @@ setUpperKeep(object, data, ...)
 \examples{
 library(cascsim)
 data(claimdata)
-xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=TRUE)
+xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=TRUE)
 xTri<-setUpperTriangle(xTri,claimdata)
 xTri<-setUpperKeep(xTri,claimdata)
 xTri@upperkeep
 
-xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), frequency="quarterly", sim=1, percentile=50, iRBNER=FALSE, iROPEN=TRUE)
+xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+frequency="quarterly", sim=1, percentile=50, iRBNER=FALSE, iROPEN=TRUE)
 xTri<-setUpperTriangle(xTri,claimdata)
 xTri<-setUpperKeep(xTri,claimdata)
 xTri@upperkeep
 
-xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=FALSE)
+xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=FALSE)
 xTri<-setUpperTriangle(xTri,claimdata)
 xTri<-setUpperKeep(xTri,claimdata,lob="Auto",ctype="H")
 xTri@upperkeep

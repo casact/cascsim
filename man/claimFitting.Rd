@@ -15,6 +15,10 @@ claimFitting(object, claimData, ...)
 
 \item{evaluationDate}{Date of evaluation for existing claims and IBNR}
 
+\item{lineList}{List of business lines to be included in claim fitting}
+
+\item{typeList}{List of claim types to be included in claim fitting}
+
 \item{discreteDist}{List of discrete distributions to try fitting (report lag, settlemet lag, frequency)}
 
 \item{continuousDist}{List of continuous distribution to try fitting (severity)}
@@ -52,7 +56,9 @@ data(claimdata)
 lines<-c("Auto","Property","Liab")
 types<-c("N","H")
 #exposure index
-index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
+index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),
+cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
 #severity index
 index2 <- new("Index",monthlyIndex=c(cumprod(c(1,rep(1.03^(1/12),59))),rep(1.03^(5),300)))
 objan <- new("ClaimType", line="Auto",claimType="N",exposureIndex=index1,severityIndex=index2)
@@ -62,6 +68,7 @@ objph <- new("ClaimType", line="Property",claimType="H",exposureIndex=index1,sev
 objln <- new("ClaimType", line="Liab",claimType="N",exposureIndex=index1,severityIndex=index2)
 objlh <- new("ClaimType", line="Liab",claimType="H",exposureIndex=index1,severityIndex=index2)
 objlist <- list(objan,objah,objpn,objph,objln,objlh)
-simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE, iCopula=TRUE, iReport=TRUE)
+simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE, 
+iCopula=TRUE, iReport=TRUE)
 simobj <- claimFitting(simobj,claimdata)
 }

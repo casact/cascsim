@@ -16,6 +16,6 @@ Shift monthly index with a new start date and replace the unknown index value wi
 xindex <- new("Index", indexID = "IDX1", tabulate = FALSE, annualizedRate = 0.03)
 xindex<-setIndex(xindex)
 xindex@monthlyIndex
-shiftIndex(xindex,as.Date("2016-10-15"))
-shiftIndex(xindex,as.Date("2010-10-15"))
+shiftIndex(xindex,as.Date("2016-10-15"),as.Date("2018-10-15"))
+shiftIndex(xindex,as.Date("2010-10-15"),as.Date("2013-10-15"))
 }

@@ -25,7 +25,8 @@ x[,1]<-Quantile(dist1,x[,1])
 x[,2]<-Quantile(dist2,x[,2])
 x[,3]<-Quantile(dist3,x[,3])
 #Create Copula Object and Fit it to observation data without goodness of fit test
-nom.cop <- new("CopulaObj", param=c(0.5,0.5,0.5),marginal=list(dist1=dist1,dist2=dist2,dist3=dist3),dimension=3,observation=x,fittest=FALSE)
+nom.cop <- new("CopulaObj", param=c(0.5,0.5,0.5),marginal=list(dist1=dist1,dist2=dist2,dist3=dist3),
+dimension=3,observation=x,fittest=FALSE)
 nom.cop <- copulaFit(nom.cop)
 copulaFitPlot(nom.cop)
 #Create Copula Object and Fit it to observation data with goodness of fit test
@@ -33,7 +34,8 @@ clayton.cop <- claytonCopula(c(3), dim=2)
 x <- rCopula(1000, clayton.cop)
 x[,1]<-Quantile(dist1,x[,1])
 x[,2]<-Quantile(dist2,x[,2])
-cla.cop <- new("CopulaObj", type="clayton",param=c(3),marginal=list(dist1=dist1,dist2=dist2),dimension=2,observation=x,fittest=TRUE)
+cla.cop <- new("CopulaObj", type="clayton",param=c(3),marginal=list(dist1=dist1,dist2=dist2),
+dimension=2,observation=x,fittest=TRUE)
 cla.cop <- copulaFit(cla.cop)
 copulaFitPlot(cla.cop)
 }

@@ -23,19 +23,23 @@ setUpperTriangle(object, data, ...)
 \examples{
 library(cascsim)
 data(claimdata)
-xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+frequency="yearly", sim=1, percentile=50)
 xTri<-setUpperTriangle(xTri,claimdata)
 xTri@upper
 
-xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), frequency="quarterly", sim=1, percentile=50)
+xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+frequency="quarterly", sim=1, percentile=50)
 xTri<-setUpperTriangle(xTri,claimdata)
 xTri@upper
 
-xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+frequency="yearly", sim=1, percentile=50)
 xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 xTri@upper
 
-xTri <- new("Triangle", triID = "TRI1", type = "paidLoss", startDate=as.Date("2012-01-01"), frequency="yearly", sim=1, percentile=50)
+xTri <- new("Triangle", triID = "TRI1", type = "paidLoss", startDate=as.Date("2012-01-01"), 
+frequency="yearly", sim=1, percentile=50)
 xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 xTri@upper
 

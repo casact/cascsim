@@ -37,7 +37,8 @@ objph <- new("ClaimType", line="Property",claimType="H")
 objln <- new("ClaimType", line="Liab",claimType="N")
 objlh <- new("ClaimType", line="Liab",claimType="H")
 objlist <- list(objan,objah,objpn,objph,objln,objlh)
-simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,iUPR=FALSE,claimobjs=objlist,simNo=2)
+simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,
+iUPR=FALSE,claimobjs=objlist,simNo=2)
 simdata <- claimSimulation(simobj)
 simSummary <- simSummary(simobj,simdata)
 simobj@iReport <- TRUE
@@ -55,7 +56,8 @@ objph <- new("ClaimType", line="Property",claimType="H")
 objln <- new("ClaimType", line="Liab",claimType="N")
 objlh <- new("ClaimType", line="Liab",claimType="H")
 objlist <- list(objan,objah,objpn,objph,objln,objlh)
-simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,iUPR=TRUE,claimobjs=objlist,simNo=2)
+simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,
+iUPR=TRUE,claimobjs=objlist,simNo=2)
 simdata <- claimSimulation(simobj)
 simSummary <- simSummary(simobj,simdata)
 simobj@iReport <- TRUE
@@ -73,14 +75,15 @@ objph <- new("ClaimType", line="Property",claimType="H")
 objln <- new("ClaimType", line="Liab",claimType="N")
 objlh <- new("ClaimType", line="Liab",claimType="H")
 objlist <- list(objan,objah,objpn,objph,objln,objlh)
-simobj <- new("Simulation",lines=lines,types=types,iRBNER=TRUE,iROPEN=TRUE,iIBNR=TRUE,iUPR=TRUE,claimobjs=objlist,simNo=2)
+simobj <- new("Simulation",lines=lines,types=types,iRBNER=TRUE,iROPEN=TRUE,iIBNR=TRUE,
+iUPR=TRUE,claimobjs=objlist,simNo=2)
 simdata <- claimSimulation(simobj,claimData=claimdata)
 simSummary <- simSummary(simobj,simdata)
 simTriangle <- simTriangle(simobj,claimdata,simdata)
 simobj@iReport <- TRUE
 simReport(simobj,simSummary,simTriangle)
 #multicore computing 
-simobj@ncores<-4
+#simobj@ncores<-4
 simobj@simNo<-9
 simdata <- claimSimulation(simobj,claimdata)
 simSummary <- simSummary(simobj,simdata)
