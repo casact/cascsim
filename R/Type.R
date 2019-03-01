@@ -97,30 +97,6 @@ setClass("ClaimType",
 #' @param claimData claim data including existing claims for RBNER and claim reopenness analysis
 #' @param startDate Date from which claim data is included in the analysis
 #' @param evaluationDate Date of evaluation
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' #RBNER simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=TRUE,iROPEN=FALSE,
-#' iIBNR=FALSE,iUPR=FALSE)
-#' rbnerdata <- claimSample(claimobj,claimdata)
-#' #claim reopen simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=TRUE,
-#' iIBNR=FALSE,iUPR=FALSE)
-#' reopendata <- claimSample(claimobj,claimdata)
-#' na.omit(reopendata)
-#' #IBNR simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=FALSE,
-#' iIBNR=TRUE,iUPR=FALSE, 
-#' IBNRfreqIndex=new("Index",startDate=as.Date("2016-01-01"),
-#' monthlyIndex=rep(30,12)),iCopula=TRUE)
-#' ibnrdata <- claimSample(claimobj,claimdata)
-#' #UPR simulation
-#' claimobj <- new("ClaimType", line="Auto",claimType="N",
-#' iRBNER=FALSE,iROPEN=FALSE,iIBNR=FALSE,iUPR=TRUE, 
-#' UPRfreqIndex=new("Index",startDate=as.Date("2017-01-01"),
-#' monthlyIndex=rep(30,12)),iCopula=TRUE)
-#' uprdata <- claimSample(claimobj,claimdata)
 #' @rdname claimSample
 #' @export
 setGeneric("claimSample", function(object, ...) standardGeneric("claimSample"))
@@ -142,20 +118,20 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 
 		nid <- 0
 
-		
-		
+
+
 		sobj <- object@severity
 		#sobj@truncated <- FALSE
-		
+
 		tmpdata = data.frame(ClaimID=character(),
-						LoB=character(), 
-						Type=character(), 
+						LoB=character(),
+						Type=character(),
 						status=character(),
 						occurrenceDate=character(),
 						reportDate=character(),
-						incurredLoss=double(), 
-						osRatio=double(), 
-						settlementDate=character(), 
+						incurredLoss=double(),
+						osRatio=double(),
+						settlementDate=character(),
 						totalLoss=double(),
 						ultimateLoss=double(),
 						Deductible=double(),
@@ -179,7 +155,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 				tmpdata <- claimData[claimData[,"status"] == "OPEN" | as.Date(claimData[,"settlementDate"])>as.Date(evaluationDate),]
 				nobs <- nrow(tmpdata)
 			}
-			
+
 			if (nobs > 0){
 				occurrenceDates<-as.character(tmpdata[,"occurrenceDate"])
 				reportDates<-as.character(tmpdata[,"reportDate"])
@@ -232,20 +208,20 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 							eibnerdev<-eibnerdev+object@fIBNER@paras[4+i]*as.numeric(tmpdata[,object@fIBNER@xname[i]])
 						}
 					}
-					ultimateLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(ibnerdev,0)		
+					ultimateLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(ibnerdev,0)
 					expectedLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(eibnerdev,0)
 				} else if (object@ioDevFac==3){
 					years <- cbind(developmentYears, settlementYears)
 					ibnerdev<-ultiDevFac(years,meanDevFac=object@fIBNER@meanList,sdDevFac=object@fIBNER@volList,distType=object@fIBNER@distType)
 					eibnerdev<-ultiDevFac(years,meanDevFac=object@fIBNER@meanList,distType=object@fIBNER@distType)
-					ultimateLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(ibnerdev,0)					
-					expectedLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(eibnerdev,0)					
+					ultimateLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(ibnerdev,0)
+					expectedLosses<-as.numeric(tmpdata[,"incurredLoss"])*pmax(eibnerdev,0)
 				} else if (object@ioDevFac==2){
 					tmpdata[,"Limit"] <- ifelse(is.na(tmpdata[,"Limit"]),1e10,tmpdata[,"Limit"])
 					tmpdata[,"Deductible"] <- ifelse(is.na(tmpdata[,"Deductible"]),0,tmpdata[,"Deductible"])
 					ultimateLosses<-pmax(as.numeric(tmpdata[,"incurredLoss"]),pmax((pmin(tmpdata[,"Limit"]+tmpdata[,"Deductible"],doSample(sobj,nobs))-tmpdata[,"Deductible"]),0))
 					basicmean<-sampleMean(object@severity)
-					expectedLosses<-rep(basicmean,nobs)									
+					expectedLosses<-rep(basicmean,nobs)
 				} else {
 					tmpdata[,"Limit"] <- ifelse(is.na(tmpdata[,"Limit"]),1e10,tmpdata[,"Limit"])
 					tmpdata[,"Deductible"] <- ifelse(is.na(tmpdata[,"Deductible"]),0,tmpdata[,"Deductible"])
@@ -268,32 +244,32 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 							tmpdata[j,"settlementDate"] <- as.character(as.Date(as.Date(tmpdata[j,"reportDate"]) + round(samples[,2])))
 							tmpdata[j,"ultimateLoss"] <- samples[,1]
 						}
-						
+
 						object@ssrCopula@marginal[[1]]@min <- sobjmin
 						object@ssrCopula@marginal[[1]]@truncated <- sobjtrunc
 						object@ssrCopula@marginal[[2]]@min <- robjmin
 						object@ssrCopula@marginal[[2]]@truncated <- robjtrunc
-						
+
 						settlementDates <- tmpdata[,"settlementDate"]
 						ultimateLosses <- tmpdata[,"ultimateLoss"]
-						
+
 					}
 					basicmean<-sampleMean(object@severity)
 					expectedLosses<-rep(basicmean,nobs)
 
 				}
-				
+
 				tmpdata[,"Limit"] <- ifelse(is.na(tmpdata[,"Limit"]),1e10,tmpdata[,"Limit"])
 				tmpdata[,"ultimateLoss"]<-pmin(round(ultimateLosses*sindex,2),tmpdata[,"Limit"])
-				
+
 				zeros<-simP0(settlementYears,object@p0@meanList)
 				exzeros<-expectZeros(settlementYears,object@p0@meanList)
-				
+
 				tmpdata[,"expectedLoss"]<-pmin(round(expectedLosses*sindex,2),tmpdata[,"Limit"])*(1-exzeros)
 
 				tmpdata[,"claimLiability"] <- ifelse(zeros==0,FALSE,TRUE)
 				tmpdata[,"ultimateLoss"]<- ifelse(tmpdata[,"claimLiability"] == FALSE, 0, tmpdata[,"ultimateLoss"])
-				
+
 				if(object@fIBNER@FacModel==TRUE & object@fIBNER@fun == "exponential" & object@ioDevFac==3){
 					laes<-as.numeric(tmpdata[,"LAE"])*pmax(log(ibnerdev)*sindex,0)
 					elaes<-as.numeric(tmpdata[,"LAE"])*pmax(log(eibnerdev)*sindex,0)
@@ -360,8 +336,8 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					laes<-as.numeric(tmpdata[,"ultimateLoss"])*pmax(laedev,0)
 					elaes<-as.numeric(tmpdata[,"expectedLoss"])*pmax(elaedev,0)
 				}
-				
-				
+
+
 				tmpdata[,"ultimateLAE"]<-round(laes,2)#*sindex
 				tmpdata[,"expectedLAE"]<-round(elaes,2)#*sindex
 				tmpdata[,"reopenDate"]<-NA
@@ -374,13 +350,13 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 				#return(claimData)
 			} else {
 				tmpdata = data.frame(ClaimID=character(),
-								LoB=character(), 
-								Type=character(), 
+								LoB=character(),
+								Type=character(),
 								status=character(),
 								occurrenceDate=character(),
 								reportDate=character(),
-								incurredLoss=double(), 
-								osRatio=double(), 
+								incurredLoss=double(),
+								osRatio=double(),
 								settlementDate=character(),
 								totalLoss=double(),
 								ultimateLoss=double(),
@@ -399,8 +375,8 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 								stringsAsFactors=FALSE)
 				#return(noData)
 			}
-		} 
-		
+		}
+
 		if (object@iROPEN == TRUE) {
 			if(nrow(claimData)==0){
 				nobs<-0
@@ -527,8 +503,8 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					years <- cbind(developmentYears, settlementYears)
 					rodev<-ultiDevFac(years,meanDevFac=object@roDevFac@meanList,sdDevFac=object@roDevFac@volList,distType=object@roDevFac@distType)
 					erodev<-ultiDevFac(years,meanDevFac=object@roDevFac@meanList,distType=object@roDevFac@distType)
-					ultimateLosses<-as.numeric(claimData[,"incurredLoss"])*pmax(rodev,0)					
-					expectedLosses<-as.numeric(claimData[,"incurredLoss"])*pmax(erodev,0)					
+					ultimateLosses<-as.numeric(claimData[,"incurredLoss"])*pmax(rodev,0)
+					expectedLosses<-as.numeric(claimData[,"incurredLoss"])*pmax(erodev,0)
 					ultimateLosses<- ifelse(reopens == 0, NA, ultimateLosses*sindex)
 					expectedLosses<- ifelse(reopens == 0, NA, expectedLosses*sindex)
 				} else if (object@irDevFac==2){
@@ -536,7 +512,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					claimData[,"Deductible"] <- ifelse(is.na(claimData[,"Deductible"]),0,claimData[,"Deductible"])
 					ultimateLosses<-pmax(as.numeric(claimData[,"incurredLoss"]),pmax((pmin(claimData[,"Limit"]+claimData[,"Deductible"],doSample(sobj,nobs)*sindex)-claimData[,"Deductible"]),0))
 					basicmean<-sampleMean(object@severity)
-					expectedLosses<-rep(basicmean,nobs)				
+					expectedLosses<-rep(basicmean,nobs)
 					ultimateLosses<- ifelse(reopens == 0, NA, ultimateLosses)
 					expectedLosses<- ifelse(reopens == 0, NA, expectedLosses)
 				} else {
@@ -546,9 +522,9 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					newprobs <- probs + (1-probs)*runif(nobs)
 					ultimateLosses<-pmax(as.numeric(claimData[,"Paid"]),pmax((pmin(claimData[,"Limit"]+claimData[,"Deductible"],Quantile(sobj,newprobs)*sindex)-claimData[,"Deductible"]),0))
 					basicmean<-sampleMean(object@severity)
-					expectedLosses<-rep(basicmean,nobs)				
+					expectedLosses<-rep(basicmean,nobs)
 					ultimateLosses<- ifelse(reopens == 0, NA, ultimateLosses)
-					expectedLosses<- ifelse(reopens == 0, NA, expectedLosses)				
+					expectedLosses<- ifelse(reopens == 0, NA, expectedLosses)
 				}
 
 				if(object@roDevFac@FacModel==TRUE & object@roDevFac@fun == "exponential" & object@irDevFac==3){
@@ -642,9 +618,9 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 
 				tmpdata <- rbind(tmpdata,claimData)
 			}
-			
-		} 
-		
+
+		}
+
 		if (object@iIBNR==TRUE) {
 			basicmean<-sampleMean(object@severity)
 			days <- c(31,28,31,30,31,30,31,31,30,31,30,31)
@@ -652,14 +628,14 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 			startyear <- substr(as.character(object@IBNRfreqIndex@startDate),1,4)
 			startmonth <- substr(as.character(object@IBNRfreqIndex@startDate),6,7)
 			ibnrdata = data.frame(ClaimID=character(),
-									LoB=character(), 
-									Type=character(), 
+									LoB=character(),
+									Type=character(),
 									status=character(),
 									occurrenceDate=character(),
 									reportDate=character(),
-									incurredLoss=double(), 
-									osRatio=double(), 
-									settlementDate=character(), 
+									incurredLoss=double(),
+									osRatio=double(),
+									settlementDate=character(),
 									totalLoss=double(),
 									ultimateLoss=double(),
 									Deductible=double(),
@@ -715,7 +691,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 						colnames(ibnrs)<-c("occurrenceDate","reportDate","settlementDate","ultimateLoss","expectedLoss")
 						ibnrs$totalLoss<-totalLoss
 						ibnrs$ultimateLoss<-as.numeric(as.character(ibnrs$ultimateLoss))
-						
+
 						settlementYears<-pmax(1,ceiling(as.numeric(as.Date(settlementDate) - as.Date(occurrenceDate))/365))
 						zeros<-simP0(settlementYears,object@p0@meanList)
 						exzeros<-expectZeros(settlementYears,object@p0@meanList)
@@ -767,11 +743,11 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 						colnames(ibnrs)<-c("occurrenceDate","reportDate","settlementDate","ultimateLoss","expectedLoss")
 						ibnrs$totalLoss<-totalLoss
 						ibnrs$ultimateLoss<-as.numeric(as.character(ibnrs$ultimateLoss))
-						
+
 						settlementYears<-pmax(1,ceiling(as.numeric(as.Date(settlementDate) - as.Date(occurrenceDate))/365))
 						zeros<-simP0(settlementYears,object@p0@meanList)
 						exzeros<-expectZeros(settlementYears,object@p0@meanList)
-						
+
 						ibnrs$claimLiability <- ifelse(zeros==0,FALSE,TRUE)
 						ibnrs$ultimateLoss <- ifelse(ibnrs$claimLiability == FALSE, 0, ibnrs$ultimateLoss)
 						ibnrs[,"Deductible"]<-deductibles
@@ -788,7 +764,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					}
 				}
 			}
-			
+
 			if (nrow(ibnrdata)>0) {
 				developmentYears<-ceiling(as.numeric(as.Date(ibnrdata[,"reportDate"]) - as.Date(ibnrdata[,"occurrenceDate"]))/365)
 				settlementYears<-pmax(1,ceiling(as.numeric(as.Date(ibnrdata[,"settlementDate"]) - as.Date(ibnrdata[,"occurrenceDate"]))/365))
@@ -857,7 +833,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 									"Limit","Paid","LAE","claimLiability","expectedLoss","ultimateLAE","expectedLAE","reopenDate","resettleDate","reopenLoss","Sim")]
 			tmpdata <- rbind(tmpdata,ibnrdata)
 			}
-			
+
 		}
 
 		if (object@iUPR == TRUE)  {
@@ -867,13 +843,13 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 			startyear <- substr(as.character(object@UPRfreqIndex@startDate),1,4)
 			startmonth <- substr(as.character(object@UPRfreqIndex@startDate),6,7)
 			uprdata = data.frame(ClaimID=character(),
-										LoB=character(), 
-										Type=character(), 
+										LoB=character(),
+										Type=character(),
 										status=character(),
 										occurrenceDate=character(),
 										reportDate=character(),
-										incurredLoss=double(), 
-										osRatio=double(), 
+										incurredLoss=double(),
+										osRatio=double(),
 										settlementDate=character(),
 										totalLoss=double(),
 										ultimateLoss=double(),
@@ -925,11 +901,11 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 						colnames(uprs)<-c("occurrenceDate","reportDate","settlementDate","ultimateLoss","expectedLoss")
 						uprs$totalLoss<-totalLoss
 						uprs$ultimateLoss<-as.numeric(as.character(uprs$ultimateLoss))
-						
+
 						settlementYears<-pmax(1,ceiling(as.numeric(as.Date(settlementDate) - as.Date(occurrenceDate))/365))
 						zeros<-simP0(settlementYears,object@p0@meanList)
 						exzeros<-expectZeros(settlementYears,object@p0@meanList)
-						
+
 						uprs$claimLiability <- ifelse(zeros==0,FALSE,TRUE)
 						uprs$ultimateLoss <- ifelse(uprs$claimLiability == FALSE, 0, uprs$ultimateLoss)
 						uprs[,"Deductible"]<-deductibles
@@ -977,11 +953,11 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 						colnames(uprs)<-c("occurrenceDate","reportDate","settlementDate","ultimateLoss","expectedLoss")
 						uprs$totalLoss<-totalLoss
 						uprs$ultimateLoss<-as.numeric(as.character(uprs$ultimateLoss))
-						
+
 						settlementYears<-pmax(1,ceiling(as.numeric(as.Date(settlementDate) - as.Date(occurrenceDate))/365))
 						zeros<-simP0(settlementYears,object@p0@meanList)
-						exzeros<-expectZeros(settlementYears,object@p0@meanList)						
-						
+						exzeros<-expectZeros(settlementYears,object@p0@meanList)
+
 						uprs$claimLiability <- ifelse(zeros==0,FALSE,TRUE)
 						uprs$ultimateLoss <- ifelse(uprs$claimLiability == FALSE, 0, uprs$ultimateLoss)
 						uprs[,"Deductible"]<-deductibles
@@ -998,7 +974,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					}
 				}
 			}
-			
+
 			if (nrow(uprdata)>0) {
 				developmentYears<-ceiling(as.numeric(as.Date(uprdata[,"reportDate"]) - as.Date(uprdata[,"occurrenceDate"]))/365)
 				settlementYears<-pmax(1,ceiling(as.numeric(as.Date(uprdata[,"settlementDate"]) - as.Date(uprdata[,"occurrenceDate"]))/365))
@@ -1067,7 +1043,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 			tmpdata <- rbind(tmpdata,uprdata)
 			}
 		}
-		
+
 		return(tmpdata)
 
 	}, error = function(err){

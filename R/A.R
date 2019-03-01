@@ -25,6 +25,9 @@ setGeneric("setObservation<-", function(this,value) standardGeneric("setObservat
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' toString(xPareto)
 #' @rdname toString
+#'
+#' @importFrom methods new
+#'
 #' @export
 setGeneric("toString", function(object, ...) standardGeneric("toString"))
 

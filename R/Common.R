@@ -66,7 +66,7 @@ truncate <- function(x, lower, upper) {
 #' @rdname empirical
 #' @export
 pempirical <- function(q, cdf) {
-	if (length(unique(cdf[,2]))==1) { 
+	if (length(unique(cdf[,2]))==1) {
 		return(runif(length(q)))
 	} else if (sum(cdf[,1])>1 & cdf[nrow(cdf),1] ==1) { #cumulative probability function for continuous distribution
 		return(approx(cdf[,2],cdf[,1],xout=q, rule=2)$y)
@@ -75,7 +75,7 @@ pempirical <- function(q, cdf) {
 		nx <- nrow(cdf)
 		xend = (cdf[nx,2]-cdf[nx-1,2])/(cdf[nx,1]-cdf[nx-1,1])*(1-cdf[nx-1,1])+cdf[nx-1,2]
 		cdfnew <- rbind(cdfnew,c(1,xend))
-		return(approx(cdfnew[,2],cdfnew[,1],xout=q, rule=2)$y) 
+		return(approx(cdfnew[,2],cdfnew[,1],xout=q, rule=2)$y)
 	} else { #probability mass function for discrete distribution
 		ps <- cdf[,1]/sum(cdf[,1])
 		y <- as.vector(q)
@@ -106,7 +106,7 @@ qempirical <- function(p, cdf) {
 		nx <- nrow(cdf)
 		xend = (cdf[nx,2]-cdf[nx-1,2])/(cdf[nx,1]-cdf[nx-1,1])*(1-cdf[nx-1,1])+cdf[nx-1,2]
 		cdfnew <- rbind(cdfnew,c(1,xend))
-		return(approx(cdfnew[,1],cdfnew[,2],xout=p, rule=2)$y) 
+		return(approx(cdfnew[,1],cdfnew[,2],xout=p, rule=2)$y)
 	} else { #probability mass function for discrete distribution
 		ps <- cumsum(cdf[,1])/sum(cdf[,1])
 		y <- as.vector(p)
@@ -115,7 +115,7 @@ qempirical <- function(p, cdf) {
 		for (i in 1:l) z[i] <- length(cdf[,2]) - sum(y[i] <= ps) + 1
 		z <- as.numeric(z)
 		z <- cdf[,2][z]
-		if (is.array(q)) 
+		if (is.array(q))
 			dim(z) <- dim(q)
 		return(z)
 	}
@@ -146,13 +146,16 @@ rempirical <- function(n, cdf) {
 }
 
 #' Density function of Empirical Distribution based on simulation
-#' @param x Value of the variable 
+#' @param x Value of the variable
 #' @examples
 #' #discrete distribution
 #' dempirical(3,matrix(c(0.1,0.2,0.3,0.05,0.05,0.2,0.1,1:6,10),7,2))
 #' #continuous distribution
 #' dempirical(30,matrix(c(seq(0.01,1,0.01),qnorm(seq(0.01,1,0.01),30,20)),100,2))
 #' @rdname empirical
+#'
+#' @import stats
+#'
 #' @export
 dempirical <- function(x, cdf) {
 	sdf <- approxfun(density(rempirical(100000,cdf)))
@@ -168,7 +171,7 @@ dempirical <- function(x, cdf) {
 #' @rdname tnorm
 #' @export
 dtnorm <- function(x,mean,sd,min=0,max=1e+9) {
-	ifelse(x==0, pnorm(min, mean, sd), 
+	ifelse(x==0, pnorm(min, mean, sd),
 			ifelse(x>=(max-min-1e-10), 1 - pnorm(max, mean, sd),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dnorm(x+min, mean=mean, sd=sd), 0))))
@@ -179,7 +182,7 @@ dtnorm <- function(x,mean,sd,min=0,max=1e+9) {
 #' @rdname tnorm
 #' @export
 ptnorm <- function(q,mean,sd,min=0,max=1e+9) {
-	ifelse(q==0, pnorm(min, mean, sd), 
+	ifelse(q==0, pnorm(min, mean, sd),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pnorm(q+min, mean=mean, sd=sd), 0))))
@@ -190,7 +193,7 @@ ptnorm <- function(q,mean,sd,min=0,max=1e+9) {
 #' @rdname tnorm
 #' @export
 qtnorm <- function(p,mean,sd,min=0,max=1e+9) {
-	ifelse(p<=pnorm(min, mean, sd), 0, 
+	ifelse(p<=pnorm(min, mean, sd), 0,
 			ifelse(p>=pnorm(max, mean, sd), max-min, qnorm(p, mean=mean, sd=sd)-min))
 }
 
@@ -212,7 +215,7 @@ rtnorm <- function(n,mean,sd,min=0,max=1e+9) {qtnorm(runif(n),mean=mean, sd=sd,m
 #' @rdname tbeta
 #' @export
 dtbeta <- function(x, shape1, shape2, ncp = 0, min=0,max=1) {
-	ifelse(x==0, pbeta(min, shape1, shape2, ncp), 
+	ifelse(x==0, pbeta(min, shape1, shape2, ncp),
 			ifelse(x>=(max-min-1e-10), 1 - pbeta(max, shape1, shape2, ncp),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dbeta(x+min, shape1, shape2, ncp), 0))))
@@ -223,7 +226,7 @@ dtbeta <- function(x, shape1, shape2, ncp = 0, min=0,max=1) {
 #' @rdname tbeta
 #' @export
 ptbeta <- function(q, shape1, shape2, ncp = 0, min=0,max=1) {
-	ifelse(q==0, pbeta(min, shape1, shape2, ncp), 
+	ifelse(q==0, pbeta(min, shape1, shape2, ncp),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pbeta(q+min, shape1, shape2, ncp), 0))))
@@ -234,7 +237,7 @@ ptbeta <- function(q, shape1, shape2, ncp = 0, min=0,max=1) {
 #' @rdname tbeta
 #' @export
 qtbeta <- function(p, shape1, shape2, ncp = 0, min=0,max=1) {
-	ifelse(p<=pbeta(min, shape1, shape2, ncp), 0, 
+	ifelse(p<=pbeta(min, shape1, shape2, ncp), 0,
 			ifelse(p>=pbeta(max, shape1, shape2, ncp), max-min, qbeta(p, shape1, shape2, ncp)-min))
 }
 
@@ -254,7 +257,7 @@ rtbeta <- function(n, shape1, shape2, ncp = 0, min=0,max=1) {qtbeta(runif(n),sha
 #' @rdname texp
 #' @export
 dtexp <- function(x,rate,min=0,max=1e+9) {
-	ifelse(x==0, pexp(min, rate), 
+	ifelse(x==0, pexp(min, rate),
 			ifelse(x>=(max-min-1e-10), 1 - pexp(max, rate),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dexp(x+min, rate), 0))))
@@ -265,7 +268,7 @@ dtexp <- function(x,rate,min=0,max=1e+9) {
 #' @rdname texp
 #' @export
 ptexp <- function(q,rate,min=0,max=1e+9) {
-	ifelse(q==0, pexp(min, rate), 
+	ifelse(q==0, pexp(min, rate),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pexp(q+min, rate), 0))))
@@ -276,7 +279,7 @@ ptexp <- function(q,rate,min=0,max=1e+9) {
 #' @rdname texp
 #' @export
 qtexp <- function(p,rate,min=0,max=1e+9) {
-	ifelse(p<=pexp(min, rate), 0, 
+	ifelse(p<=pexp(min, rate), 0,
 			ifelse(p>=pexp(max, rate), max-min, qexp(p, rate)-min))
 }
 
@@ -297,7 +300,7 @@ rtexp <- function(n,rate,min=0,max=1e+9) {qtexp(runif(n),rate,min,max)}
 #' @rdname tgamma
 #' @export
 dtgamma <- function(x,shape,scale,min=0,max=1e+9) {
-	ifelse(x==0, pgamma(min, shape,scale), 
+	ifelse(x==0, pgamma(min, shape,scale),
 			ifelse(x>=(max-min-1e-10), 1 - pgamma(max, shape,scale),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dgamma(x+min, shape,scale), 0))))
@@ -308,7 +311,7 @@ dtgamma <- function(x,shape,scale,min=0,max=1e+9) {
 #' @rdname tgamma
 #' @export
 ptgamma <- function(q,shape,scale,min=0,max=1e+9) {
-	ifelse(q==0, pgamma(min, shape,scale), 
+	ifelse(q==0, pgamma(min, shape,scale),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pgamma(q+min, shape,scale), 0))))
@@ -319,7 +322,7 @@ ptgamma <- function(q,shape,scale,min=0,max=1e+9) {
 #' @rdname tgamma
 #' @export
 qtgamma <- function(p,shape,scale,min=0,max=1e+9) {
-	ifelse(p<=pgamma(min, shape,scale), 0, 
+	ifelse(p<=pgamma(min, shape,scale), 0,
 			ifelse(p>=pgamma(max, shape,scale), max-min, qgamma(p, shape,scale)-min))
 }
 
@@ -339,7 +342,7 @@ rtgamma <- function(n,shape,scale,min=0,max=1e+9) {qtgamma(runif(n),shape,scale,
 #' @rdname tgeom
 #' @export
 dtgeom <- function(x,prob,min=0,max=1e+9) {
-	ifelse(x==0, pgeom(min, prob), 
+	ifelse(x==0, pgeom(min, prob),
 			ifelse(x>=(max-min-1e-10), 1 - pgeom(max, prob),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dgeom(x+min, prob), 0))))
@@ -350,7 +353,7 @@ dtgeom <- function(x,prob,min=0,max=1e+9) {
 #' @rdname tgeom
 #' @export
 ptgeom <- function(q,prob,min=0,max=1e+9) {
-	ifelse(q==0, pgeom(min, prob), 
+	ifelse(q==0, pgeom(min, prob),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pgeom(q+min, prob), 0))))
@@ -361,7 +364,7 @@ ptgeom <- function(q,prob,min=0,max=1e+9) {
 #' @rdname tgeom
 #' @export
 qtgeom <- function(p,prob,min=0,max=1e+9) {
-	ifelse(p<=pgeom(min, prob), 0, 
+	ifelse(p<=pgeom(min, prob), 0,
 			ifelse(p>=pgeom(max, prob), max-min, qgeom(p, prob)-min))
 }
 
@@ -382,7 +385,7 @@ rtgeom <- function(n,prob,min=0,max=1e+9) {qtgeom(runif(n),prob,min,max)}
 #' @rdname tlnorm
 #' @export
 dtlnorm <- function(x,meanlog,sdlog,min=0,max=1e+9) {
-	ifelse(x==0, plnorm(min, meanlog,sdlog), 
+	ifelse(x==0, plnorm(min, meanlog,sdlog),
 			ifelse(x>=(max-min-1e-10), 1 - plnorm(max, meanlog,sdlog),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dlnorm(x+min, meanlog,sdlog), 0))))
@@ -393,7 +396,7 @@ dtlnorm <- function(x,meanlog,sdlog,min=0,max=1e+9) {
 #' @rdname tlnorm
 #' @export
 ptlnorm <- function(q,meanlog,sdlog,min=0,max=1e+9) {
-	ifelse(q==0, plnorm(min, meanlog,sdlog), 
+	ifelse(q==0, plnorm(min, meanlog,sdlog),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), plnorm(q+min, meanlog,sdlog), 0))))
@@ -404,7 +407,7 @@ ptlnorm <- function(q,meanlog,sdlog,min=0,max=1e+9) {
 #' @rdname tlnorm
 #' @export
 qtlnorm <- function(p,meanlog,sdlog,min=0,max=1e+9) {
-	ifelse(p<=plnorm(min, meanlog, sdlog), 0, 
+	ifelse(p<=plnorm(min, meanlog, sdlog), 0,
 			ifelse(p>=plnorm(max, meanlog, sdlog), max-min, qlnorm(p, meanlog, sdlog)-min))
 }
 
@@ -425,7 +428,7 @@ rtlnorm <- function(n,meanlog,sdlog,min=0,max=1e+9) {qtlnorm(runif(n),meanlog, s
 #' @rdname tnbinom
 #' @export
 dtnbinom <- function(x,size,prob,min=0,max=1e+9) {
-	ifelse(x==0, pnbinom(min, size,prob), 
+	ifelse(x==0, pnbinom(min, size,prob),
 			ifelse(x>=(max-min-1e-10), 1 - pnbinom(max, size,prob),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dnbinom(x+min, size,prob), 0))))
@@ -436,7 +439,7 @@ dtnbinom <- function(x,size,prob,min=0,max=1e+9) {
 #' @rdname tnbinom
 #' @export
 ptnbinom <- function(q,size,prob,min=0,max=1e+9) {
-	ifelse(q==0, pnbinom(min, size,prob), 
+	ifelse(q==0, pnbinom(min, size,prob),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pnbinom(q+min, size,prob), 0))))
@@ -447,7 +450,7 @@ ptnbinom <- function(q,size,prob,min=0,max=1e+9) {
 #' @rdname tnbinom
 #' @export
 qtnbinom <- function(p,size,prob,min=0,max=1e+9) {
-	ifelse(p<=pnbinom(min, size,prob), 0, 
+	ifelse(p<=pnbinom(min, size,prob), 0,
 			ifelse(p>=pnbinom(max, size,prob), max-min, qnbinom(p, size,prob)-min))
 }
 
@@ -468,7 +471,7 @@ rtnbinom <- function(n,size,prob,min=0,max=1e+9) {qtnbinom(runif(n),size,prob,mi
 #' @rdname tpareto
 #' @export
 dtpareto <- function(x,xm,alpha,min=xm,max=1e+9) {
-	ifelse(x==0, ppareto(min,xm,alpha), 
+	ifelse(x==0, ppareto(min,xm,alpha),
 			ifelse(x>=(max-min-1e-10), 1 - ppareto(max,xm,alpha),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dpareto(x+min,xm,alpha), 0))))
@@ -479,7 +482,7 @@ dtpareto <- function(x,xm,alpha,min=xm,max=1e+9) {
 #' @rdname tpareto
 #' @export
 ptpareto <- function(q,xm,alpha,min=xm,max=1e+9) {
-	ifelse(q==0, ppareto(min,xm,alpha), 
+	ifelse(q==0, ppareto(min,xm,alpha),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), ppareto(q+min,xm,alpha), 0))))
@@ -490,7 +493,7 @@ ptpareto <- function(q,xm,alpha,min=xm,max=1e+9) {
 #' @rdname tpareto
 #' @export
 qtpareto <- function(p,xm,alpha,min=xm,max=1e+9) {
-	ifelse(p<=ppareto(min,xm,alpha), 0, 
+	ifelse(p<=ppareto(min,xm,alpha), 0,
 			ifelse(p>=ppareto(max,xm,alpha), max-min, qpareto(p,xm,alpha)-min))
 }
 
@@ -509,8 +512,8 @@ rtpareto <- function(n,xm,alpha,min=xm,max=1e+9) {qtpareto(runif(n),xm,alpha,min
 #' @param max Right truncation limit
 #' @rdname tpois
 #' @export
-dtpois <- function(x,lambda,min=0,max=1e+9) {	
-	ifelse(x==0, ppois(min,lambda), 
+dtpois <- function(x,lambda,min=0,max=1e+9) {
+	ifelse(x==0, ppois(min,lambda),
 			ifelse(x>=(max-min-1e-10), 1 - ppois(max,lambda),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dpois(x+min,lambda), 0))))
@@ -521,7 +524,7 @@ dtpois <- function(x,lambda,min=0,max=1e+9) {
 #' @rdname tpois
 #' @export
 ptpois <- function(q,lambda,min=0,max=1e+9) {
-	ifelse(q==0, ppois(min,lambda), 
+	ifelse(q==0, ppois(min,lambda),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), ppois(q+min,lambda), 0))))
@@ -532,7 +535,7 @@ ptpois <- function(q,lambda,min=0,max=1e+9) {
 #' @rdname tpois
 #' @export
 qtpois <- function(p,lambda,min=0,max=1e+9) {
-	ifelse(p<=ppois(min,lambda), 0, 
+	ifelse(p<=ppois(min,lambda), 0,
 			ifelse(p>=ppois(max,lambda), max-min, qpois(p,lambda)-min))
 }
 
@@ -552,8 +555,8 @@ rtpois <- function(n,lambda,min=0,max=1e+9){qtpois(runif(n),lambda,min,max)}
 #' @param max Right truncation limit
 #' @rdname tweibull
 #' @export
-dtweibull <- function(x,shape,scale,min=0,max=1e+9){ 
-	ifelse(x==0, pweibull(min,shape,scale), 
+dtweibull <- function(x,shape,scale,min=0,max=1e+9){
+	ifelse(x==0, pweibull(min,shape,scale),
 			ifelse(x>=(max-min-1e-10), 1 - pweibull(max,shape,scale),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dweibull(x+min,shape,scale), 0))))
@@ -564,7 +567,7 @@ dtweibull <- function(x,shape,scale,min=0,max=1e+9){
 #' @rdname tweibull
 #' @export
 ptweibull <- function(q,shape,scale,min=0,max=1e+9) {
-	ifelse(q==0, pweibull(min,shape,scale), 
+	ifelse(q==0, pweibull(min,shape,scale),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pweibull(q+min,shape,scale), 0))))
@@ -575,7 +578,7 @@ ptweibull <- function(q,shape,scale,min=0,max=1e+9) {
 #' @rdname tweibull
 #' @export
 qtweibull <- function(p,shape,scale,min=0,max=1+e9) {
-	ifelse(p<=pweibull(min,shape,scale), 0, 
+	ifelse(p<=pweibull(min,shape,scale), 0,
 			ifelse(p>=pweibull(max,shape,scale), max-min, qweibull(p,shape,scale)-min))
 }
 
@@ -599,8 +602,8 @@ rtweibull <- function(n,shape,scale,min=0,max=1e+9) {qtweibull(runif(n),shape,sc
 #' dtempirical(30,matrix(c(seq(0.01,1,0.01),qnorm(seq(0.01,1,0.01),30,20)),100,2),200,10000000)
 #' @rdname tempirical
 #' @export
-dtempirical <- function(x,cdf,min=0,max=1e+9) { 
-	ifelse(x==0, pempirical(min,cdf), 
+dtempirical <- function(x,cdf,min=0,max=1e+9) {
+	ifelse(x==0, pempirical(min,cdf),
 			ifelse(x>=(max-min-1e-10), 1 - pempirical(max,cdf),
 			ifelse (x<0, 0,
 			ifelse(x<(max-min), dempirical(x+min,cdf), 0))))
@@ -616,7 +619,7 @@ dtempirical <- function(x,cdf,min=0,max=1e+9) {
 #' @rdname tempirical
 #' @export
 ptempirical <- function(q,cdf,min=0,max=100000) {
-	ifelse(q==0, pempirical(min,cdf), 
+	ifelse(q==0, pempirical(min,cdf),
 			ifelse(q>=(max-min)-1e-10, 1,
 			ifelse (q<0, 0,
 			ifelse(q<(max-min), pempirical(q+min,cdf), 0))))
@@ -633,7 +636,7 @@ ptempirical <- function(q,cdf,min=0,max=100000) {
 #' @rdname tempirical
 #' @export
 qtempirical <- function(p,cdf,min=0,max=100000) {
-	ifelse(p<=pempirical(min,cdf), 0, 
+	ifelse(p<=pempirical(min,cdf), 0,
 			ifelse(p>=pempirical(max,cdf), max-min, qempirical(p,cdf)-min))
 }
 
@@ -654,14 +657,16 @@ rtempirical <- function(n,cdf,min=0,max=100000) {qtempirical(runif(n),cdf,min,ma
 #' @examples
 #' plotText("You are awesome!")
 #' @rdname plotText
+#'
+#' @import graphics
 #' @export
 plotText <- function(content){
-	par(font = 2, ps=10, mar=c(4, 4, 1, 1), cex.main=0.7, cex.sub=0.8, cex.lab=0.8, cex.axis=0.8)#mfrow = c(1,1), 
+	par(font = 2, ps=10, mar=c(4, 4, 1, 1), cex.main=0.7, cex.sub=0.8, cex.lab=0.8, cex.axis=0.8)#mfrow = c(1,1),
 	plot(0:100, 0:100, type = "n", xlab = "", ylab = "", axes=FALSE)
-	text(45,45, content) 
+	text(45,45, content)
 }
 
-#' Calculate ultimate development factor based on current development year, a mean development factor schedule and its volatility. It is used to simulate the ultimate loss for open claims. 
+#' Calculate ultimate development factor based on current development year, a mean development factor schedule and its volatility. It is used to simulate the ultimate loss for open claims.
 #' @param Years Include two columns: Current development year and Settlement Year
 #' @param meanDevFac A vector that contains the expected development factor schedule for Normal distribution. It is mu for Lognormal distribution and shape for Gamma distribution.
 #' @param sdDevFac A vector that contains the standard deviation of expected development factor schedule for Normal distribution. It is sigma for Lognormal distribution and scale for Gamma distribution.
@@ -686,11 +691,11 @@ ultiDevFac <- function(Years,meanDevFac,sdDevFac=rep(0,length(meanDevFac)),distT
 			} else if (distType == "lognormal"){
 				for (j in 1:n) {DevFac <- c(DevFac, rlnorm(1,meanlog=meanDevFac[j],sdlog=sdDevFac[j]))}
 			} else if (distType == "gamma"){
-				for (j in 1:n) {DevFac <- c(DevFac, rgamma(1,shape=meanDevFac[j],scale=sdDevFac[j]))}			
+				for (j in 1:n) {DevFac <- c(DevFac, rgamma(1,shape=meanDevFac[j],scale=sdDevFac[j]))}
 			} else {
 				DevFac<-rep(1,n)
 			}
-			
+
 			if(Years[i,1]==Years[i,2]){
 				result <- c(result,1)
 			} else {
@@ -701,7 +706,7 @@ ultiDevFac <- function(Years,meanDevFac,sdDevFac=rep(0,length(meanDevFac)),distT
 	result
 }
 
-#' Simulate whether closed claims will be reopened or not. 
+#' Simulate whether closed claims will be reopened or not.
 #' @param closeYear Years after claim closure. It could be a number or a numeric vector.
 #' @param reopenProb A vector that contains the reopen probability based on closeYear.
 #' @examples
@@ -714,7 +719,7 @@ rreopen <- function(closeYear,reopenProb){
 	ifelse(runif(length(closeYear))<=reopenProb[pmin(closeYear,nDevFac)],1,0)
 }
 
-#' Simulate whether claims will have zero payment. 
+#' Simulate whether claims will have zero payment.
 #' @param devYear Development Year. It could be a number or a numeric vector.
 #' @param zeroProb A vector that contains the probability of zero payment based on development year.
 #' @examples
@@ -727,7 +732,7 @@ simP0 <- function(devYear,zeroProb){
 	ifelse(runif(length(devYear))<=zeroProb[pmin(devYear,nDevFac)],0,1)
 }
 
-#' Get the expected P0 based on settlement/close year. 
+#' Get the expected P0 based on settlement/close year.
 #' @param closeYear Development years that claims are settled. It could be a number or a numeric vector.
 #' @param zeroProb A vector that contains the P(0) based on development year.
 #' @examples
@@ -740,7 +745,7 @@ expectZeros <- function(closeYear,zeroProb){
 	zeroProb[pmin(closeYear,nProb)]
 }
 
-#' Negative Loglikelihood. 
+#' Negative Loglikelihood.
 #' @param paras A vector contain distribution parameters.
 #' @param dist A Distribution Object.
 #' @param fitdata A vector of loss data for fitting.
@@ -759,7 +764,7 @@ expectZeros <- function(closeYear,zeroProb){
 #' @rdname loglik
 #' @export
 nloglik <- function(paras,dist,fitdata,deductible,limit){
-	
+
 	if (length(paras) == 1){
 		dist@p1 <- paras[1]
 	} else if (length(paras) == 2) {
@@ -770,15 +775,15 @@ nloglik <- function(paras,dist,fitdata,deductible,limit){
 		dist@p2 <- paras[2]
 		dist@p3 <- paras[3]
 	}
-	
-	loglik <- rep(0,length(fitdata)) 
+
+	loglik <- rep(0,length(fitdata))
 
 	withinlimit <- ifelse((is.na(limit) | (fitdata < limit)),TRUE,FALSE)
-	
+
 	loglik <- ifelse(withinlimit,log(Density(dist, (fitdata+deductible))),(1-Probability(dist, (limit+deductible))))
 	loglik <- loglik - log(1-Probability(dist, deductible))
 
-	return(-sum(loglik)) 
+	return(-sum(loglik))
 
 }
 

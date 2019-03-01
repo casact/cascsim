@@ -190,7 +190,7 @@ setMethod("getfoutput",signature("FitDist"), function(object) {object@foutput})
 setGeneric("getsoutput", function(object, ...) standardGeneric("getsoutput"))
 setMethod("getsoutput",signature("FitDist"), function(object) {object@soutput})
 
-setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value) { 
+setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value) {
 	this@startDate<- as.Date(value)
 	this
 })
@@ -201,7 +201,7 @@ setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value
 #' @rdname setTrend
 #' @export
 setGeneric("setTrend<-", function(this,value, ...) standardGeneric("setTrend<-"))
-setReplaceMethod("setTrend",signature("FitDist", "Index"), function(this, value) { 
+setReplaceMethod("setTrend",signature("FitDist", "Index"), function(this, value) {
 	this@trend<- value
 	this
 })
@@ -212,7 +212,7 @@ setReplaceMethod("setTrend",signature("FitDist", "Index"), function(this, value)
 #' @rdname setfitmethod
 #' @export
 setGeneric("setfitmethod<-", function(this,value, ...) standardGeneric("setfitmethod<-"))
-setReplaceMethod("setfitmethod",signature("FitDist", "character"), function(this, value) { 
+setReplaceMethod("setfitmethod",signature("FitDist", "character"), function(this, value) {
 	this@method<- value
 	this
 })
@@ -223,7 +223,7 @@ setReplaceMethod("setfitmethod",signature("FitDist", "character"), function(this
 #' @rdname setidate
 #' @export
 setGeneric("setidate<-", function(this,value, ...) standardGeneric("setidate<-"))
-setReplaceMethod("setidate",signature("FitDist", "logical"), function(this, value) { 
+setReplaceMethod("setidate",signature("FitDist", "logical"), function(this, value) {
 	this@idate<- value
 	this
 })
@@ -234,7 +234,7 @@ setReplaceMethod("setidate",signature("FitDist", "logical"), function(this, valu
 #' @rdname setfreq
 #' @export
 setGeneric("setfreq<-", function(this,value, ...) standardGeneric("setfreq<-"))
-setReplaceMethod("setfreq",signature("FitDist", "character"), function(this, value) { 
+setReplaceMethod("setfreq",signature("FitDist", "character"), function(this, value) {
 	this@freq<- value
 	this
 })
@@ -245,7 +245,7 @@ setReplaceMethod("setfreq",signature("FitDist", "character"), function(this, val
 #' @rdname setifreq
 #' @export
 setGeneric("setifreq<-", function(this,value, ...) standardGeneric("setifreq<-"))
-setReplaceMethod("setifreq",signature("FitDist", "logical"), function(this, value) { 
+setReplaceMethod("setifreq",signature("FitDist", "logical"), function(this, value) {
 	this@ifreq<- value
 	this
 })
@@ -256,12 +256,12 @@ setReplaceMethod("setifreq",signature("FitDist", "logical"), function(this, valu
 #' @rdname setprobs
 #' @export
 setGeneric("setprobs<-", function(this,value, ...) standardGeneric("setprobs<-"))
-setReplaceMethod("setprobs",signature("FitDist", "vector"), function(this, value) { 
+setReplaceMethod("setprobs",signature("FitDist", "vector"), function(this, value) {
 	this@probs<- value
 	this
 })
 
-setReplaceMethod("setObservation",signature("FitDist", "matrix"), function(this, value) { 
+setReplaceMethod("setObservation",signature("FitDist", "matrix"), function(this, value) {
 	if (!is.null(value)){
 		if(ncol(value)==1){
 			value<-value[value[,1] >= 0]
@@ -280,7 +280,7 @@ setReplaceMethod("setObservation",signature("FitDist", "matrix"), function(this,
 #' @rdname setFitdata
 #' @export
 setGeneric("setFitdata", function(object, ...) standardGeneric("setFitdata"))
-setMethod("setFitdata",signature("FitDist"), function(object) { 
+setMethod("setFitdata",signature("FitDist"), function(object) {
 
 	tryCatch({
 		if(ncol(object@observation)==1 && object@idate == FALSE) {
@@ -301,7 +301,7 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 				di <- (tmp[,2] - startYear)*12+12
 				di <- ifelse(di>360,360,ifelse(di<1,1,di))
 				tmp[,1] <- tmp[,1]/object@trend@monthlyIndex[di]*object@trend@seasonality[12]
-				object@fitdata <- round(as.vector(tmp[,1]))	
+				object@fitdata <- round(as.vector(tmp[,1]))
 			} else { #Monthly frequency
 				tmp <- as.matrix(table(format(as.Date(object@observation[,1]), format = "%Y-%m")))
 				tmp <- cbind(tmp,rownames(tmp))
@@ -316,7 +316,7 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 				di <- (tmp[,2] - startYear)*12+(tmp[,3] - startMonth)+1
 				di <- ifelse(di>360,360,ifelse(di<1,1,di))
 				tmp[,1] <- tmp[,1]/object@trend@monthlyIndex[di]
-				object@fitdata <- round(as.vector(tmp[,1]))		
+				object@fitdata <- round(as.vector(tmp[,1]))
 			}
 		} else if(object@ifreq == FALSE) {
 			#object@observation <- object@observation[object@observation[,1] >= object@startDate,]
@@ -327,7 +327,7 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 			di <- (tmp[,2] - startYear)*12+(tmp[,3] - startMonth)+1
 			di <- ifelse(di>360,360,ifelse(di<1,1,di))
 			tmp[,1] <- tmp[,1]/object@trend@monthlyIndex[di]
-			object@fitdata <- as.vector(tmp[,1])		
+			object@fitdata <- as.vector(tmp[,1])
 			object@p0 <- sum(object@fitdata <=0)/length(object@fitdata) #p0 will be replaced by the fitted distribution function
 			#object@fitdata <- object@fitdata[object@fitdata>0]
 			if(object@iDL == TRUE) {
@@ -342,7 +342,7 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 			if (object@freq == "Annual") {
 				startYear <- as.numeric(substr(as.character(object@trend@startDate),1,4))
 				tmp <- cbind(object@observation,as.numeric(substr(as.character(object@observation[,1]),1,4)))
-				tmp <- tmp[,-1]				
+				tmp <- tmp[,-1]
 				colnames(tmp) <- c("data","year")
 				tmp <- aggregate(data ~ year, data=tmp, FUN="sum")
 				endYear <- as.numeric(substr(as.character(object@endDate),1,4))
@@ -350,12 +350,12 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 				di <- (tmp$year - startYear)*12+12
 				di <- ifelse(di>360,360,ifelse(di<1,1,di))
 				tmp$data <- tmp$data/object@trend@monthlyIndex[di]*object@trend@seasonality[12]
-				object@fitdata <- round(as.vector(tmp$data))	
+				object@fitdata <- round(as.vector(tmp$data))
 			} else { #Monthly frequency
 				startYear <- as.numeric(substr(as.character(object@trend@startDate),1,4))
 				startMonth <- as.numeric(substr(as.character(object@trend@startDate),6,7))
 				tmp <- cbind(object@observation,substr(as.character(object@observation[,1]),1,7))
-				tmp <- tmp[,-1]				
+				tmp <- tmp[,-1]
 				colnames(tmp) <- c("data","ym")
 				tmp <- aggregate(data ~ ym, data=tmp, FUN="sum")
 				tmp <- cbind(tmp,as.numeric(substr(tmp$ym,1,4)),as.numeric(substr(tmp$ym,6,7)))
@@ -366,7 +366,7 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 				di <- (tmp[,2] - startYear)*12+(tmp[,3] - startMonth)+1
 				di <- ifelse(di>360,360,ifelse(di<1,1,di))
 				tmp$data <- tmp$data/object@trend@monthlyIndex[di]
-				object@fitdata <- round(as.vector(tmp$data))		
+				object@fitdata <- round(as.vector(tmp$data))
 			}
 		}
 		gc()
@@ -375,148 +375,58 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 		print(paste0(">>>Critical Error for distribution fitting: ", err))
 		gc()
 		return(-1)
-	})	
+	})
 })
 
 #' Distribution fitting and testing.
 #' @param this FitDist Object
 #' @param value Distribution to fit to
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' 
-#' #frequecy fitting example 1
-#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
-#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & claimdata[,"Type"]=="H"),]$occurrenceDate))
-#' colnames(rawdata)<-"occurrenceDate"
-#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Poisson")
-#' xFit@soutput
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#' 
-#' #frequecy fitting example 2            
-#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Liab" & claimdata[,"Type"]=="N"),]$occurrenceDate))
-#' colnames(rawdata)<-"occurrenceDate"
-#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),method="qme",ifreq=TRUE,idate=TRUE, freq="Monthly")
-#' xFit@probs <- c(0.5,0.9)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("NegativeBinomial",p1=20,p2=0.5)
-#' xFit@soutput
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#' 
-#' #severity fitting example 1
-#' sindex <- new("Index", startDate = as.Date("2012-01-01"), monthlyIndex = cumprod(c(1,rep(1.03^(1/12),59))))
-#' sdate <- as.Date("2012-01-01")
-#' rawdata <- as.data.frame(claimdata[(claimdata[,"LoB"]=="Liab" & claimdata[,"Type"]=="H" & claimdata[,"status"]=="Closed" & as.Date(claimdata[,"occurrenceDate"])>=sdate),][,c(9,7)])
-#' xFit <- new("FitDist", observation=rawdata, trend=sindex,startDate = sdate,method="qme",probs=c(0.7,0.5),ifreq=FALSE)
-#' #xFit <- new("FitDist", observation=rawdata, trend=sindex,startDate = sdate,method="mme",ifreq=FALSE)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Pareto",p1=500,p2=2.5)
-#' xFit@soutput
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#' 
-#' #severity fitting example 2 Creating empirical distribution
-#' sindex <- new("Index", startDate = as.Date("2012-01-01"), monthlyIndex = cumprod(c(1,rep(1.03^(1/12),59))))
-#' sdate <- as.Date("2012-01-01")
-#' rawdata <- as.data.frame(claimdata[(claimdata[,"LoB"]=="Liab" & claimdata[,"Type"]=="H" & claimdata[,"status"]=="Closed" & as.Date(claimdata[,"occurrenceDate"])>=sdate),][,c(9,7)])
-#' xFit <- new("FitDist", observation=rawdata, trend=sindex, ifreq=FALSE)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Empirical")
-#' xFit@soutput
-#' xFit@fitted@empirical
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#' 
-#' #severity fitting example 3
-#' sindex <- new("Index", startDate = as.Date("2012-01-01"), monthlyIndex = cumprod(c(1,rep(1.03^(1/12),59))))
-#' sdate <- as.Date("2012-01-01")
-#' rawdata <- as.data.frame(claimdata[(claimdata[,"LoB"]=="Auto" & claimdata[,"Type"]=="H" & claimdata[,"status"]=="Closed" & as.Date(claimdata[,"occurrenceDate"])>=sdate),][,c(9,7)])
-#' xFit <- new("FitDist", observation=rawdata, trend=sindex,startDate = sdate,method="mle",ifreq=FALSE)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Lognormal",p1=2,p2=1,truncated=TRUE,min=0.1)
-#' xFit@soutput
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#' 
-#' #report lag fitting
-#' lindex <- new("Index", startDate = as.Date("2012-01-01"), monthlyIndex = rep(1,360))
-#' rawdata <- as.data.frame(claimdata[(claimdata[,"LoB"]=="Auto" & claimdata[,"Type"]=="H"),][,c(5,6)])
-#' rawdata <- as.numeric(as.Date(rawdata$reportDate)-as.Date(rawdata$occurrenceDate))
-#' rawdata <- as.data.frame(rawdata)
-#' xFit <- new("FitDist", observation=rawdata, trend=lindex,startDate = as.Date("2012-01-01"),method="mle",ifreq=FALSE)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Exponential",p1=1)
-#' xFit@soutput
-#' fitPlot(xFit)
-#' observationPlot(xFit)
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#'
-#' #payment (after deductible and limit) data fitting (truncated distribution) 
-#' sindex <- new("Index", startDate = as.Date("2012-01-01"), monthlyIndex = cumprod(c(1,rep(1^(1/12),59))))
-#' rawdata <- data.frame(rtlnorm(10000,3,2,5,100))
-#' xFit <- new("FitDist", observation=rawdata, trend=sindex,startDate = as.Date("2012-01-01"),method="mle",ifreq=FALSE)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Lognormal",p1=2,p2=1,min=5,max=100,truncated=TRUE)
-#' xFit@soutput
-#' observationPlot(xFit)
-#' fitPlot(xFit)
-#' xFit <- new("FitDist", observation=rawdata, trend=sindex,startDate = as.Date("2012-01-01"),method="qme",probs=c(0.3,0.7),ifreq=FALSE)
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Lognormal",p1=2,p2=1,min=5,max=100,truncated=TRUE)
-#' xFit@soutput
-#' observationPlot(xFit)
-#' fitPlot(xFit)
 #' @rdname setTrialDist
 #' @export
 setGeneric("setTrialDist<-", function(this, value) standardGeneric("setTrialDist<-"))
-setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(this, value) { 
+setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(this, value) {
 	tryCatch({
 		require(fitdistrplus)
 		this@trial <- value
-		
+
 		if (!is.null(this@fitdata)){
-		
+
 			if(this@iDL==TRUE){
 				nl <- length(unique(this@limit))
 				nl <- max(nl, length(unique(this@deductible)))
 			} else {
 				nl <- 0
 			}
-			
+
 			if(this@iDL==TRUE & nl == 1 & unique(this@deductible)[1] == 0 & sum(this@fitdata>=this@limit)==0) {
 				uni <- 1
 			} else {
 				uni <- 0
 			}
-			
+
 			if(fitClassName(value) == "empirical"){
 				perc <- seq(0,1,0.001)
 				quantiles <- as.vector(quantile(this@fitdata,perc))
 				distr <- as.matrix(cbind(perc,quantiles))
-				this@fitted<-new(objName(this@trial), 
+				this@fitted<-new(objName(this@trial),
 					min=value@min,
 					max=value@max,
 					empirical=distr,
 					truncated=this@trial@truncated
 				)
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), NA, NA, NA, round(this@p0,4), NA, NA, NA, NA, NA, NA, NA, NA)
@@ -525,7 +435,7 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 					struncate <- this@trial@truncated
 					this@trial@truncated <- FALSE
 					memp  <-  function(x, order) mean(x^order)
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 					startvalue <- list()
 					for(par in c(1:length(obj$estimate))){
 						startvalue[[names(obj$estimate)[par]]] <- as.numeric(obj$estimate[par])
@@ -535,17 +445,17 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 					startvalue <- fitStartValue(this@trial)
 				}
 				if(this@method == "qme" & this@trial@truncated == FALSE) {
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, probs=this@probs, discrete=this@ifreq)		
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, probs=this@probs, discrete=this@ifreq)
 				} else if (this@method == "qme" & this@trial@truncated == TRUE) {
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, probs=this@probs, discrete=this@ifreq)					
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, probs=this@probs, discrete=this@ifreq)
 				} else if (this@method == "mme" & this@trial@truncated == FALSE){
 					memp  <-  function(x, order) mean(x^order)
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 				} else if (this@method == "mle" & this@trial@truncated == FALSE){
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq)				
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq)
 				} else {
 					this@method <- "mle"
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)							
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)
 				}
 				this@dof = length(this@fitdata) - nParameter(this@trial)
 
@@ -560,11 +470,11 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				} else {
 					this@aic = NaN
 				}
-				
+
 				if (!is.null(obj$bic)) {
 					this@bic = obj$bic
 				} else {
-					this@bic = NaN	
+					this@bic = NaN
 				}
 
 				if (this@method=="mle") {
@@ -574,23 +484,23 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				}
 
 				if (nParameter(value) == 1) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						min=value@min,
 						max=value@max,
 						truncated=this@trial@truncated
 						)
 				} else if (nParameter(value) == 2) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						min=value@min,
 						max=value@max,
 						truncated=this@trial@truncated
 						)
 				} else {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						p3=as.numeric(obj$estimate[3]),
 						min=value@min,
@@ -598,13 +508,13 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 						truncated=this@trial@truncated
 						)
 				}
-				
+
 				if (this@fitted@truncated == TRUE) {
 					this@p0 <- Probability(this@fitted,0)
 				} else {
-					this@p0 <- Probability(this@fitted,this@fitted@min)			
+					this@p0 <- Probability(this@fitted,this@fitted@min)
 				}
-				
+
 				x<-this@fitdata + max(abs(this@fitdata))*0.0001*runif(length(this@fitdata),0,1)
 				if(!this@ifreq) {
 					par<-unlist(params(this@fitted))
@@ -627,15 +537,15 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				mybreak<-c(m-4*s, m-3*s,m-2*s,m-s, m-s/2, m-s/4,m,m+s/4,m+s/2,m+s,m+2*s,m+3*s,m+4*s)
 				if(this@ifreq) {
 					mybreak <-mybreak[mybreak>=0]
-					mybreak<-unique(round(mybreak))	
+					mybreak<-unique(round(mybreak))
 				} else {
 					mybreak<-unique(mybreak)
 				}
 				mycut<-cut(this@fitdata,breaks = mybreak)
 				empirical<-as.vector(table(mycut))
-				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]		
+				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]
 				mybreak1<-mybreak[seq(1, length(mybreak)-1, by=1)]
-			
+
 				prob<- Probability(this@fitted, mybreak2)-Probability(this@fitted, mybreak1)
 				z<-chisq.test(empirical, p=prob,  rescale.p=TRUE)
 				this@chisq <- round(as.numeric(z$statistic),3)
@@ -651,28 +561,28 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				}
 
 				params <- ""
-				
+
 				if(length(params(this@fitted))>0){
 					for (i in c(1:length(params(this@fitted)))) {
 						params <- paste0(params,names(params(this@fitted))[i],":",round(as.numeric(params(this@fitted)[i]),3),"; ")
-					}		
+					}
 				} else {
 					params <- "NA"
 				}
 
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), this@method, params, sdx, round(this@p0,4), round(this@dof,0), round(this@chisq,2), round(this@pchisq,2), round(this@kstest,2), round(this@pkstest,2), round(this@loglik,2), round(this@aic,2), round(this@bic,2))
@@ -680,7 +590,7 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				struncate <- this@trial@truncated
 				this@trial@truncated <- FALSE
 				memp  <-  function(x, order) mean(x^order)
-				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 				startvalue <- list()
 				for(par in c(1:length(obj$estimate))){
 					startvalue[[names(obj$estimate)[par]]] <- as.numeric(obj$estimate[par])
@@ -691,7 +601,7 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				this@trial@min <- unique(this@deductible)[1]
 				this@trial@max <- unique(this@limit)[1]
 				this@method <- "mle"
-				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)							
+				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)
 
 				this@dof = length(this@fitdata) - nParameter(this@trial)
 
@@ -706,11 +616,11 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				} else {
 					this@aic = NaN
 				}
-				
+
 				if (!is.null(obj$bic)) {
 					this@bic = obj$bic
 				} else {
-					this@bic = NaN	
+					this@bic = NaN
 				}
 
 				if (this@method=="mle") {
@@ -720,23 +630,23 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				}
 
 				if (nParameter(value) == 1) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else if (nParameter(value) == 2) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						p3=as.numeric(obj$estimate[3]),
 						min=this@trial@min,
@@ -744,17 +654,17 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 						truncated=this@trial@truncated
 						)
 				}
-				
+
 				#if (this@fitted@truncated == TRUE) {
 				#	this@p0 <- max(0,this@p0 - Probability(this@fitted,0))
 				#} else {
-				#	this@p0 <- max(0,this@p0 - Probability(this@fitted,this@fitted@min))	
+				#	this@p0 <- max(0,this@p0 - Probability(this@fitted,this@fitted@min))
 				#}
-				
+
 				if (this@fitted@truncated == TRUE) {
 					this@p0 <- Probability(this@fitted,0)
 				} else {
-					this@p0 <- Probability(this@fitted,this@fitted@min)			
+					this@p0 <- Probability(this@fitted,this@fitted@min)
 				}
 
 				x<-this@fitdata + max(abs(this@fitdata))*0.0001*runif(1,0,1)
@@ -779,15 +689,15 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				mybreak<-c(m-4*s, m-3*s,m-2*s,m-s, m-s/2, m-s/4,m,m+s/4,m+s/2,m+s,m+2*s,m+3*s,m+4*s)
 				if(this@ifreq) {
 					mybreak <-mybreak[mybreak>=0]
-					mybreak<-unique(round(mybreak))	
+					mybreak<-unique(round(mybreak))
 				} else {
 					mybreak<-unique(mybreak)
 				}
 				mycut<-cut(this@fitdata,breaks = mybreak)
 				empirical<-as.vector(table(mycut))
-				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]		
+				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]
 				mybreak1<-mybreak[seq(1, length(mybreak)-1, by=1)]
-			
+
 				prob<- Probability(this@fitted, mybreak2)-Probability(this@fitted, mybreak1)
 				z<-chisq.test(empirical, p=prob,  rescale.p=TRUE)
 				this@chisq <- round(as.numeric(z$statistic),3)
@@ -803,46 +713,46 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				}
 
 				params <- ""
-				
+
 				if(length(params(this@fitted))>0){
 					for (i in c(1:length(params(this@fitted)))) {
 						params <- paste0(params,names(params(this@fitted))[i],":",round(as.numeric(params(this@fitted)[i]),3),"; ")
-					}		
+					}
 				} else {
 					params <- "NA"
 				}
 
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), this@method, params, sdx, round(this@p0,4), round(this@dof,0), round(this@chisq,2), round(this@pchisq,2), round(this@kstest,2), round(this@pkstest,2), round(this@loglik,2), round(this@aic,2), round(this@bic,2))
-				
+
 				this@fitted@truncated=FALSE
 			} else {
 
 				struncate <- this@trial@truncated
 				this@trial@truncated <- FALSE
 				memp  <-  function(x, order) mean(x^order)
-				obj<-fitdist(pmax(0.01,this@fitdata), distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+				obj<-fitdist(pmax(0.01,this@fitdata), distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 				startvalue <- vector()
 				for(par in c(1:length(obj$estimate))){
 					startvalue<-c(startvalue,as.numeric(obj$estimate[par]))
 				}
 
 				obj<-optim(par=startvalue, fn=nloglik, dist=this@trial, fitdata=this@fitdata, deductible=this@deductible, limit=this@limit,control=list(trace=1))#,  maxit=300, fnscale=c(-10, -10), parscale=c(10,10), factr=0.001, pgtol=0.01, abstol=0.01, reltol=0.01))
-				
+
 				this@dof = length(this@fitdata) - nParameter(this@trial)
 
 				if (!is.null(obj$value)) {
@@ -856,33 +766,33 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				} else {
 					this@aic = NaN
 				}
-				
+
 				if (!is.null(obj$value)) {
 					this@bic = length(this@fitdata)*nParameter(this@trial)+2*obj$value
 				} else {
-					this@bic = NaN	
+					this@bic = NaN
 				}
 
 				this@psd = vector()
 
 				if (nParameter(this@trial) == 1) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$par[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$par[1]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else if (nParameter(value) == 2) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$par[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$par[1]),
 						p2=as.numeric(obj$par[2]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$par[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$par[1]),
 						p2=as.numeric(obj$par[2]),
 						p3=as.numeric(obj$par[3]),
 						min=this@trial@min,
@@ -890,11 +800,11 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 						truncated=this@trial@truncated
 						)
 				}
-				
-				this@p0 <- mean(Probability(this@fitted, this@deductible))		
-				
+
+				this@p0 <- mean(Probability(this@fitted, this@deductible))
+
 				#this@p0 <- max(0, this@p0 - mean(Probability(this@fitted, this@deductible)))
-				
+
 				this@kstest <- NaN
 				this@pkstest <- NaN
 				this@chisq <- NaN
@@ -910,34 +820,34 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 				}
 
 				params <- ""
-				
+
 				if(length(params(this@fitted))>0){
 					for (i in c(1:length(params(this@fitted)))) {
 						params <- paste0(params,names(params(this@fitted))[i],":",round(as.numeric(params(this@fitted)[i]),5),"; ")
-					}		
+					}
 				} else {
 					params <- "NA"
 				}
 
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), this@method, params, sdx, round(this@p0,4), round(this@dof,0), round(this@chisq,2), round(this@pchisq,2), round(this@kstest,2), round(this@pkstest,2), round(this@loglik,2), round(this@aic,2), round(this@bic,2))
-				
+
 				this@fitted@truncated=FALSE
-			
+
 			}
 		}
 		this@fitted@fitsucc <- TRUE
@@ -948,7 +858,7 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 		this@fitted@fitsucc <- FALSE
 		this@soutput[1,] <- c(value, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
 		this
-	})	
+	})
 })
 
 #' Distribution fitting and testing. Same as setTrialDist except for error tolerance.
@@ -958,11 +868,11 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 #' @export
 
 setGeneric("setTrialDistErr<-", function(this, value) standardGeneric("setTrialDistErr<-"))
-setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), function(this, value) { 
+setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), function(this, value) {
 	tryCatch({
 		require(fitdistrplus)
 		this@trial <- value
-		
+
 		if (!is.null(this@fitdata)){
 			if(this@iDL==TRUE){
 				nl <- length(unique(this@limit))
@@ -970,7 +880,7 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 			} else {
 				nl <- 0
 			}
-			
+
 			if(this@iDL==TRUE & nl == 1 & unique(this@deductible)[1] == 0 & sum(this@fitdata>=this@limit)==0) {
 				uni <- 1
 			} else {
@@ -981,25 +891,25 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				perc <- seq(0,1,0.001)
 				quantiles <- as.vector(quantile(this@fitdata,perc))
 				distr <- as.matrix(cbind(perc,quantiles))
-				this@fitted<-new(objName(this@trial), 
+				this@fitted<-new(objName(this@trial),
 					min=value@min,
 					max=value@max,
 					empirical=distr,
 					truncated=this@trial@truncated
 				)
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), NA, NA, NA, round(this@p0,4), NA, NA, NA, NA, NA, NA, NA, NA)
@@ -1008,7 +918,7 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 					struncate <- this@trial@truncated
 					this@trial@truncated <- FALSE
 					memp  <-  function(x, order) mean(x^order)
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 					startvalue <- list()
 					for(par in c(1:length(obj$estimate))){
 						startvalue[[names(obj$estimate)[par]]] <- as.numeric(obj$estimate[par])
@@ -1018,17 +928,17 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 					startvalue <- fitStartValue(this@trial)
 				}
 				if(this@method == "qme" & this@trial@truncated == FALSE) {
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, probs=this@probs, discrete=this@ifreq)		
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, probs=this@probs, discrete=this@ifreq)
 				} else if (this@method == "qme" & this@trial@truncated == TRUE) {
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, probs=this@probs, discrete=this@ifreq)					
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, probs=this@probs, discrete=this@ifreq)
 				} else if (this@method == "mme" & this@trial@truncated == FALSE){
 					memp  <-  function(x, order) mean(x^order)
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 				} else if (this@method == "mle" & this@trial@truncated == FALSE){
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq)				
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, method=this@method, discrete=this@ifreq)
 				} else {
 					this@method <- "mle"
-					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)							
+					obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)
 				}
 				this@dof = length(this@fitdata) - nParameter(this@trial)
 
@@ -1044,11 +954,11 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				} else {
 					this@aic = NaN
 				}
-				
+
 				if (!is.null(obj$bic)) {
 					this@bic = obj$bic
 				} else {
-					this@bic = NaN	
+					this@bic = NaN
 				}
 
 				if (this@method=="mle") {
@@ -1058,23 +968,23 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				}
 
 				if (nParameter(value) == 1) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						min=value@min,
 						max=value@max,
 						truncated=this@trial@truncated
 						)
 				} else if (nParameter(value) == 2) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						min=value@min,
 						max=value@max,
 						truncated=this@trial@truncated
 						)
 				} else {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						p3=as.numeric(obj$estimate[3]),
 						min=value@min,
@@ -1082,13 +992,13 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 						truncated=this@trial@truncated
 						)
 				}
-				
+
 				if (this@fitted@truncated == TRUE) {
 					this@p0 <- Probability(this@fitted,0)
 				} else {
-					this@p0 <- Probability(this@fitted,this@fitted@min)			
+					this@p0 <- Probability(this@fitted,this@fitted@min)
 				}
-				
+
 				x<-this@fitdata + max(abs(this@fitdata))*0.0001*runif(length(this@fitdata),0,1)
 				if(!this@ifreq) {
 					par<-unlist(params(this@fitted))
@@ -1111,15 +1021,15 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				mybreak<-c(m-4*s, m-3*s,m-2*s,m-s, m-s/2, m-s/4,m,m+s/4,m+s/2,m+s,m+2*s,m+3*s,m+4*s)
 				if(this@ifreq) {
 					mybreak <-mybreak[mybreak>=0]
-					mybreak<-unique(round(mybreak))	
+					mybreak<-unique(round(mybreak))
 				} else {
 					mybreak<-unique(mybreak)
 				}
 				mycut<-cut(this@fitdata,breaks = mybreak)
 				empirical<-as.vector(table(mycut))
-				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]		
+				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]
 				mybreak1<-mybreak[seq(1, length(mybreak)-1, by=1)]
-			
+
 				prob<- Probability(this@fitted, mybreak2)-Probability(this@fitted, mybreak1)
 				z<-chisq.test(empirical, p=prob,  rescale.p=TRUE)
 				this@chisq <- round(as.numeric(z$statistic),3)
@@ -1135,28 +1045,28 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				}
 
 				params <- ""
-				
+
 				if(length(params(this@fitted))>0){
 					for (i in c(1:length(params(this@fitted)))) {
 						params <- paste0(params,names(params(this@fitted))[i],":",round(as.numeric(params(this@fitted)[i]),3),"; ")
-					}		
+					}
 				} else {
 					params <- "NA"
 				}
 
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
-										pks=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
+										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), this@method, params, sdx, round(this@p0,4), round(this@dof,0), round(this@chisq,2), round(this@pchisq,2), round(this@kstest,2), round(this@pkstest,2), round(this@loglik,2), round(this@aic,2), round(this@bic,2))
@@ -1165,7 +1075,7 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				struncate <- this@trial@truncated
 				this@trial@truncated <- FALSE
 				memp  <-  function(x, order) mean(x^order)
-				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 				startvalue <- list()
 				for(par in c(1:length(obj$estimate))){
 					startvalue[[names(obj$estimate)[par]]] <- as.numeric(obj$estimate[par])
@@ -1176,7 +1086,7 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				this@trial@min <- unique(this@deductible)[1]
 				this@trial@max <- unique(this@limit)[1]
 				this@method <- "mle"
-				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)							
+				obj<-fitdist(this@fitdata, distr=fitClassName(this@trial), startvalue, fix.arg=list(min=this@trial@min,max=this@trial@max), method=this@method, discrete=this@ifreq)
 
 				this@dof = length(this@fitdata) - nParameter(this@trial)
 
@@ -1191,11 +1101,11 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				} else {
 					this@aic = NaN
 				}
-				
+
 				if (!is.null(obj$bic)) {
 					this@bic = obj$bic
 				} else {
-					this@bic = NaN	
+					this@bic = NaN
 				}
 
 				if (this@method=="mle") {
@@ -1205,23 +1115,23 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				}
 
 				if (nParameter(value) == 1) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else if (nParameter(value) == 2) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$estimate[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$estimate[1]),
 						p2=as.numeric(obj$estimate[2]),
 						p3=as.numeric(obj$estimate[3]),
 						min=this@trial@min,
@@ -1229,17 +1139,17 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 						truncated=this@trial@truncated
 						)
 				}
-				
+
 				#if (this@fitted@truncated == TRUE) {
 				#	this@p0 <- max(0,this@p0 - Probability(this@fitted,0))
 				#} else {
-				#	this@p0 <- max(0,this@p0 - Probability(this@fitted,this@fitted@min))	
+				#	this@p0 <- max(0,this@p0 - Probability(this@fitted,this@fitted@min))
 				#}
-				
+
 				if (this@fitted@truncated == TRUE) {
 					this@p0 <- Probability(this@fitted,0)
 				} else {
-					this@p0 <- Probability(this@fitted,this@fitted@min)			
+					this@p0 <- Probability(this@fitted,this@fitted@min)
 				}
 
 				x<-this@fitdata + max(abs(this@fitdata))*0.0001*runif(length(this@fitdata),0,1)
@@ -1264,15 +1174,15 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				mybreak<-c(m-4*s, m-3*s,m-2*s,m-s, m-s/2, m-s/4,m,m+s/4,m+s/2,m+s,m+2*s,m+3*s,m+4*s)
 				if(this@ifreq) {
 					mybreak <-mybreak[mybreak>=0]
-					mybreak<-unique(round(mybreak))	
+					mybreak<-unique(round(mybreak))
 				} else {
 					mybreak<-unique(mybreak)
 				}
 				mycut<-cut(this@fitdata,breaks = mybreak)
 				empirical<-as.vector(table(mycut))
-				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]		
+				mybreak2<-mybreak[seq(2, length(mybreak), by=1)]
 				mybreak1<-mybreak[seq(1, length(mybreak)-1, by=1)]
-			
+
 				prob<- Probability(this@fitted, mybreak2)-Probability(this@fitted, mybreak1)
 				z<-chisq.test(empirical, p=prob,  rescale.p=TRUE)
 				this@chisq <- round(as.numeric(z$statistic),3)
@@ -1288,45 +1198,45 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				}
 
 				params <- ""
-				
+
 				if(length(params(this@fitted))>0){
 					for (i in c(1:length(params(this@fitted)))) {
 						params <- paste0(params,names(params(this@fitted))[i],":",round(as.numeric(params(this@fitted)[i]),3),"; ")
-					}		
+					}
 				} else {
 					params <- "NA"
 				}
 
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), this@method, params, sdx, round(this@p0,4), round(this@dof,0), round(this@chisq,2), round(this@pchisq,2), round(this@kstest,2), round(this@pkstest,2), round(this@loglik,2), round(this@aic,2), round(this@bic,2))
 				this@fitted@truncated=FALSE
 			} else {
-				
+
 				struncate <- this@trial@truncated
 				this@trial@truncated <- FALSE
 				memp  <-  function(x, order) mean(x^order)
-				obj<-fitdist(pmax(0.01,this@fitdata), distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))							
+				obj<-fitdist(pmax(0.01,this@fitdata), distr=fitClassName(this@trial), fitStartValue(this@trial), method="mme", discrete=this@ifreq, memp=memp, order=c(1:nParameter(value)))
 				startvalue <- vector()
 				for(par in c(1:length(obj$estimate))){
 					startvalue<-c(startvalue,as.numeric(obj$estimate[par]))
 				}
-				
+
 				obj<-optim(par=startvalue, fn=nloglik, dist=this@trial, fitdata=this@fitdata, deductible=this@deductible, limit=this@limit)#,control=list(trace=1))#,  maxit=300, fnscale=c(10, 10), parscale=c(10,10), factr=0.001, pgtol=0.01, abstol=0.01, reltol=0.01))
-				
+
 				this@dof = length(this@fitdata) - nParameter(this@trial)
 
 				if (!is.null(obj$value)) {
@@ -1340,33 +1250,33 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				} else {
 					this@aic = NaN
 				}
-				
+
 				if (!is.null(obj$value)) {
 					this@bic = length(this@fitdata)*nParameter(this@trial)+2*obj$value
 				} else {
-					this@bic = NaN	
+					this@bic = NaN
 				}
-				
+
 				this@psd <- vector()
 
 				if (nParameter(this@trial) == 1) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$par[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$par[1]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else if (nParameter(value) == 2) {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$par[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$par[1]),
 						p2=as.numeric(obj$par[2]),
 						min=this@trial@min,
 						max=this@trial@max,
 						truncated=this@trial@truncated
 						)
 				} else {
-					this@fitted<-new(objName(this@trial), 
-						p1=as.numeric(obj$par[1]), 
+					this@fitted<-new(objName(this@trial),
+						p1=as.numeric(obj$par[1]),
 						p2=as.numeric(obj$par[2]),
 						p3=as.numeric(obj$par[3]),
 						min=this@trial@min,
@@ -1374,9 +1284,9 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 						truncated=this@trial@truncated
 						)
 				}
-				
-				this@p0 <- mean(Probability(this@fitted, this@deductible))			
-				
+
+				this@p0 <- mean(Probability(this@fitted, this@deductible))
+
 				#this@p0 <- max(0, this@p0 - mean(Probability(this@fitted, this@deductible)))
 
 				this@kstest <- NaN
@@ -1394,34 +1304,34 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 				}
 
 				params <- ""
-				
+
 				if(length(params(this@fitted))>0){
 					for (i in c(1:length(params(this@fitted)))) {
 						params <- paste0(params,names(params(this@fitted))[i],":",round(as.numeric(params(this@fitted)[i]),5),"; ")
-					}		
+					}
 				} else {
 					params <- "NA"
 				}
 
 				this@soutput = data.frame(Distribution=character(),
-										Method=character(), 
-										Parameter=character(), 
+										Method=character(),
+										Parameter=character(),
 										SD=character(),
 										p0=numeric(),
 										DoF=integer(),
-										ChiSq=double(), 
-										p=double(), 
-										KS=double(), 
+										ChiSq=double(),
+										p=double(),
+										KS=double(),
 										pks=double(),
 										loglik=double(),
 										AIC=double(),
-										BIC=double(),  
+										BIC=double(),
 										stringsAsFactors=FALSE)
 
 				this@soutput[1,] = c(objName(this@fitted), this@method, params, sdx, round(this@p0,4), round(this@dof,0), round(this@chisq,2), round(this@pchisq,2), round(this@kstest,2), round(this@pkstest,2), round(this@loglik,2), round(this@aic,2), round(this@bic,2))
-				
+
 				this@fitted@truncated=FALSE
-			
+
 			}
 		}
 		this@fitted@fitsucc <- TRUE
@@ -1432,7 +1342,7 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 		this@soutput[1,] <- c(value, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
 		this@fitted@fitsucc <- FALSE
 		this
-	})	
+	})
 })
 
 #' Directly set the fitted distribution without fitting it to the data.
@@ -1441,34 +1351,21 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 #' @rdname setFittedDist
 #' @export
 setGeneric("setFittedDist<-", function(this, value) standardGeneric("setFittedDist<-"))
-setReplaceMethod("setFittedDist",signature("FitDist", "Distribution"), function(this, value) { 
+setReplaceMethod("setFittedDist",signature("FitDist", "Distribution"), function(this, value) {
 	this@fitted<- value
 	this
 })
-	
+
 #' Compare the raw data and fitted distribution on density, CDF, Q-Q plot and P-P plot
 #' @param object FitDist Object
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' 
-#' #frequecy fitting
-#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
-#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & claimdata[,"Type"]=="H"),]$OccurDate))
-#' colnames(rawdata)<-"OccurDate"
-#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Poisson")
-#' xFit@soutput
-#' fitPlot(xFit)
 #' @rdname fitPlot
 #' @export
 setGeneric("fitPlot", function(object, ...) standardGeneric("fitPlot"))
 setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
 	tryCatch({
-		par(mfrow = c(2, 2)) 
+		par(mfrow = c(2, 2))
 		x<-getFitdata(object)
-		
+
 		#draw some basic features with fitted fitted, for a good visual compare
 		if(missing(n) || n==1){
 			y<-object@fitted
@@ -1481,17 +1378,17 @@ setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
 			}
 			d0<-density(x)#,bw=1e-5
 			d1<-density(doSample(y, length(object@fitdata)),na.rm=TRUE)#,bw=1e-5
-			plot(range(d0$x, d1$x), range(d0$y, d1$y), type = "n", xlab = "x", ylab = "Density", main = "Probability Density Function") 
-			lines(d0, col = "blue") 
+			plot(range(d0$x, d1$x), range(d0$y, d1$y), type = "n", xlab = "x", ylab = "Density", main = "Probability Density Function")
+			lines(d0, col = "blue")
 			lines(d1, col = "red")
 	#		legend("topright",c("observed",objName(y)),lty=c(1,1), lwd=c(2.5,2.5),col=c("blue","red"))
-			
+
 			ysample<-doSample(y, 1000)
 			plot(ecdf(x), main = "Cumulative Distribution Function", col="blue")
 			d1<-ecdf(ysample)
 			plot(d1, col="red", add=TRUE) #type="l",
 			legend("bottomright",c("observed",objName(y)),lty=c(1,1), lwd=c(2.5,2.5),col=c("blue","red"))
-			
+
 	#		hist(ysample,breaks=15, main="Histogram of the Fitted Result", xlab="Fitted", ylab="Frequency", col="red")
 
 			qqplot(object@fitdata, doSample(y, length(object@fitdata)), ylim=(c(min(object@fitdata), max(object@fitdata))), main="Q-Q Plot", xlab = "Observed Quantile", ylab = "Fitted Quantile")
@@ -1507,42 +1404,29 @@ setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
 		gc()
 	})
 
-      	
+
 })
 
 #' Plotting the data for distribution fitting
 #' @param object FitDist Object
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' 
-#' #frequecy fitting
-#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
-#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & claimdata[,"Type"]=="H"),]$OccurDate))
-#' colnames(rawdata)<-"OccurDate"
-#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
-#' xFit <- setFitdata(xFit)
-#' setTrialDist(xFit) <- new("Poisson")
-#' xFit@soutput
-#' observationPlot(xFit)
 #' @rdname observationPlot
 #' @export
 setGeneric("observationPlot", function(object, ...) standardGeneric("observationPlot"))
 setMethod("observationPlot",signature("FitDist"), function(object) {
 	tryCatch({
-		par(mfrow = c(2, 2)) 
+		par(mfrow = c(2, 2))
 		x<-getFitdata(object)
-		
-		#draw some basic features 
-		plot(density(x), main = "Observation Empirical Density", col = "blue") 		
-		plot(ecdf(x), main = "Observation Empirical CDF", col="blue")		
+
+		#draw some basic features
+		plot(density(x), main = "Observation Empirical Density", col = "blue")
+		plot(ecdf(x), main = "Observation Empirical CDF", col="blue")
 		hist(x,breaks=15, main="Histogram of the Observation", xlab="observations", ylab="Frequency", col="blue")
 		plot(object@trend@monthlyIndex, xlab="Time", ylab="Index")
 	}, error = function(err){
 		print(paste0(">>>Critical Error for plotting observation data: ", err))
 		gc()
 	})
-	
+
 })
 
 
@@ -1553,16 +1437,16 @@ setMethod("observationPlot",signature("FitDist"), function(object) {
 setGeneric("PDFPlot", function(object, ...) standardGeneric("PDFPlot"))
 setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
 	tryCatch({
-		par(mfrow = c(1, 1)) 
+		par(mfrow = c(1, 1))
 		x<-getFitdata(object)
-		
+
 		if(missing(n) || n==1){
 			y<-object@fitted
-			
+
 			d0<-density(x)
 			d1<-density(doSample(y, length(object@fitdata)))
-			plot(range(d0$x, d1$x), range(d0$y, d1$y), type = "n", xlab = "x", ylab = "Density", main = "Probability Density Function") 
-			lines(d0, col = "blue") 
+			plot(range(d0$x, d1$x), range(d0$y, d1$y), type = "n", xlab = "x", ylab = "Density", main = "Probability Density Function")
+			lines(d0, col = "blue")
 			lines(d1, col = "red")
 			legend("topright",c("observed","fitted"),lty=c(1,1), lwd=c(2.5,2.5),col=c("blue","red"))
 		}
@@ -1579,16 +1463,16 @@ setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
 setGeneric("CDFPlot", function(object, ...) standardGeneric("CDFPlot"))
 setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
 	tryCatch({
-		par(mfrow = c(1, 1)) 
+		par(mfrow = c(1, 1))
 		x<-getFitdata(object)
-		
+
 		if(missing(n) || n==1){
 			y<-object@fitted
-			
+
 			ysample<-doSample(y, 1000)
 			plot(ecdf(x), main = "Cumulative Distribution Fun.", col="blue")
 			d1<-ecdf(ysample)
-			plot(d1, col="red", add=TRUE) #type="l", 
+			plot(d1, col="red", add=TRUE) #type="l",
 			legend("bottomright",c("observed",objName(y)),lty=c(1,1), lwd=c(2.5,2.5),col=c("blue","red"))
 
 		}
@@ -1605,11 +1489,11 @@ setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
 setGeneric("QQPlot", function(object, ...) standardGeneric("QQPlot"))
 setMethod("QQPlot",signature("FitDist"), function(object, n=missing) {
 	tryCatch({
-		par(mfrow = c(1, 1)) 
+		par(mfrow = c(1, 1))
 		if(missing(n) || n==1){
 			qqplot(object@fitdata, doSample(object@fitted, length(object@fitdata)), ylim=(c(min(object@fitdata), max(object@fitdata))), main="Q-Q Plot", xlab = "Observed Quantile", ylab = "Fitted Quantile")
 		}
-		
+
 		abline(0, 1)
 	}, error = function(err){
 		print(paste0(">>>Critical Error for QQ plot in distribution fitting: ", err))
@@ -1624,13 +1508,13 @@ setMethod("QQPlot",signature("FitDist"), function(object, n=missing) {
 setGeneric("PPPlot", function(object, ...) standardGeneric("PPPlot"))
 setMethod("PPPlot",signature("FitDist"), function(object, n=missing) {
 	tryCatch({
-		par(mfrow = c(1, 1)) 
+		par(mfrow = c(1, 1))
 		if(missing(n) || n==1){
 			probDist <- Probability(object@fitted, object@fitdata)
 			plot(ppoints(length(object@fitdata)), sort(probDist), main = "P-P Plot", xlab = "Observed Probability", ylab = "Expected Probability")
 			#qqplot(object@observation, doSample(object@fitted, length(object@observation)), ylim=(c(min(object@observation), max(object@observation))), main="QQ-Plot observation vs. fitted distr")
 		}
-		
+
 		abline(0, 1)
 	}, error = function(err){
 		print(paste0(">>>Critical Error for PP plot in distribution fitting: ", err))
@@ -1657,7 +1541,7 @@ setMethod("KSTest",signature("FitDist"), function(object, n=missing) {
 			}else{
 				z<-ks.test(x,pname, par[1], par[2])
 			}
-			
+
 			return (paste("Statistic=", round(as.numeric(z$statistic),3), ", P-Value=", round(z$p.value, 5), ", Alternative Hypothesis: ", z$alternative, sep=""))
 		}
 		gc()
@@ -1675,14 +1559,14 @@ setGeneric("ChiSqrTest", function(object, ...) standardGeneric("ChiSqrTest"))
 setMethod("ChiSqrTest",signature("FitDist"), function(object) {
 
 	tryCatch({
-		m = mean(object@fitdata); 
+		m = mean(object@fitdata);
 		s=sqrt(var(object@fitdata))
 
 		mybreak<-c(m-4*s, m-3*s,m-2*s,m-s, m-s/2, m-s/4,m,m+s/4,m+s/2,m+s,m+2*s,m+3*s,m+4*s)
 
 		if(object@ifreq) {
 			mybreak <-mybreak[mybreak>=0]
-			mybreak<-unique(round(mybreak))	
+			mybreak<-unique(round(mybreak))
 		} else {
 			mybreak<-unique(mybreak)
 		}
@@ -1691,9 +1575,9 @@ setMethod("ChiSqrTest",signature("FitDist"), function(object) {
 		empirical<-as.vector(table(mycut))
 		mybreak2<-mybreak[seq(2, length(mybreak), by=1)]
 		mybreak1<-mybreak[seq(1, length(mybreak)-1, by=1)]
-		
+
 		prob<- Probability(object@fitted, mybreak2)-Probability(object@fitted, mybreak1)
-		
+
 		z<-chisq.test(empirical, p=prob,  rescale.p=TRUE)
 		return (paste("X-Squared=", round(as.numeric(z$statistic), 3), ", df=", round(as.numeric(z$parameter), 5), ", P-Value=", round(z$p.value,5),sep=""))
 		gc()
