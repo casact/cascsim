@@ -10,6 +10,8 @@ Density(object, x, ...)
 \item{object}{Distribution Object}
 
 \item{x}{Variable value}
+
+\item{...}{Additional function arguments}
 }
 \description{
 Density function.

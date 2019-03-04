@@ -1,16 +1,19 @@
+#' setID
 #' Set the ID for an object
 #' @param this Self
+#' @param ... Additional function arguments
 #' @param value ID
 #' @rdname setID
 #' @export
-setGeneric("setID<-", function(this,value, ...) standardGeneric("setID<-"))
+setGeneric("setID<-", function(this, ..., value) standardGeneric("setID<-"))
 
 #' Set the start date for the claim simulation exercise
 #' @param this Self
+#' @param ... Additional function arguments
 #' @param value Start Date
 #' @rdname setStartDate
 #' @export
-setGeneric("setStartDate<-", function(this,value, ...) standardGeneric("setStartDate<-"))
+setGeneric("setStartDate<-", function(this, ..., value) standardGeneric("setStartDate<-"))
 
 #' Input the raw data.
 #' @param this FitDist Object or Copula Object
@@ -21,6 +24,7 @@ setGeneric("setObservation<-", function(this,value) standardGeneric("setObservat
 
 #' Object explanation.
 #' @param object Object
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' toString(xPareto)
@@ -34,6 +38,7 @@ setGeneric("toString", function(object, ...) standardGeneric("toString"))
 #' Density function.
 #' @param object Distribution Object
 #' @param x Variable value
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' Density(xPareto,50)
@@ -44,6 +49,7 @@ setGeneric("Density", function(object, x, ...) standardGeneric("Density"))
 #' Probability function.
 #' @param object Distribution Object
 #' @param q Variable value
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' Probability(xPareto,50)
@@ -54,6 +60,7 @@ setGeneric("Probability", function(object, q, ...) standardGeneric("Probability"
 #' Quantile function.
 #' @param object Distribution Object
 #' @param p Probability
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' Quantile(xPareto,0.6)
@@ -63,6 +70,7 @@ setGeneric("Quantile", function(object, p, ...) standardGeneric("Quantile"))
 
 #' Plot function.
 #' @param object Object
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' doPlot(xPareto)
@@ -72,12 +80,14 @@ setGeneric("doPlot", function(object, ...) standardGeneric("doPlot"))
 
 #' Get input data from an object.
 #' @param object Object
+#' @param ... Additional function arguments
 #' @rdname getObservation
 #' @export
 setGeneric("getObservation", function(object,...) standardGeneric("getObservation"))
 
 #' Get the trend index.
 #' @param object Object
+#' @param ... Additional function arguments
 #' @rdname getTrend
 #' @export
 setGeneric("getTrend", function(object,...) standardGeneric("getTrend"))

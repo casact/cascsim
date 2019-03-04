@@ -5,10 +5,10 @@
 #' @slot tabulate A boolean to indicate whether the index is determined by a constant rate (FALSE) or a series of index values (TRUE).
 #' @slot annualizedRate A yearly index growth rate. It is only used when tabulate == FALSE.
 #' @slot yearlyIndex A vector that contains index value on a yearly basis.
-#' @slot monthlyIndex A vector that contains index value on a monthly basis. 
-#' @slot seasonality A vector that contains seasonal adjustment factor on a monthly basis. 
+#' @slot monthlyIndex A vector that contains index value on a monthly basis.
+#' @slot seasonality A vector that contains seasonal adjustment factor on a monthly basis.
 
-setClass("Index", 
+setClass("Index",
 	slots=c(
 			indexID="character",
 			startDate="Date",
@@ -18,7 +18,7 @@ setClass("Index",
 			monthlyIndex="vector",
 			seasonality="vector"
 	),
-	prototype=list(	
+	prototype=list(
 			indexID="XXXXXX",
 			startDate=as.Date("2012-01-01"),
 			tabulate=FALSE,
@@ -29,12 +29,12 @@ setClass("Index",
 	)
 )
 
-setReplaceMethod("setID",signature("Index", "character"), function(this, value) { 
+setReplaceMethod("setID",signature("Index", "character"), function(this, value) {
 	this@indexID<- as.character(value)
 	this
 })
 
-setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value) { 
+setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value) {
 	this@startDate<- as.Date(value)
 	this
 })
@@ -44,8 +44,8 @@ setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value
 #' @param value Logical Value (default:FALSE)
 #' @rdname setTabulate
 #' @export
-setGeneric("setTabulate<-", function(this,value, ...) standardGeneric("setTabulate<-"))
-setReplaceMethod("setTabulate",signature("Index", "logical"), function(this, value) { 
+setGeneric("setTabulate<-", function(this, ..., value) standardGeneric("setTabulate<-"))
+setReplaceMethod("setTabulate",signature("Index", "logical"), function(this, value) {
 	this@tabulate<- value
 	this
 })
@@ -56,8 +56,8 @@ setReplaceMethod("setTabulate",signature("Index", "logical"), function(this, val
 #' @param value Numeric Value (default:0.02)
 #' @rdname setAnnualizedRate
 #' @export
-setGeneric("setAnnualizedRate<-", function(this,value, ...) standardGeneric("setAnnualizedRate<-"))
-setReplaceMethod("setAnnualizedRate",signature("Index", "numeric"), function(this, value) { 
+setGeneric("setAnnualizedRate<-", function(this, ..., value) standardGeneric("setAnnualizedRate<-"))
+setReplaceMethod("setAnnualizedRate",signature("Index", "numeric"), function(this, value) {
 	this@annualizedRate<- value
 	this
 })
@@ -69,8 +69,8 @@ setReplaceMethod("setAnnualizedRate",signature("Index", "numeric"), function(thi
 #' @param value Numeric Vector
 #' @rdname setYearlyIndex
 #' @export
-setGeneric("setYearlyIndex<-", function(this,value, ...) standardGeneric("setYearlyIndex<-"))
-setReplaceMethod("setYearlyIndex",signature("Index", "vector"), function(this, value) { 
+setGeneric("setYearlyIndex<-", function(this, ..., value) standardGeneric("setYearlyIndex<-"))
+setReplaceMethod("setYearlyIndex",signature("Index", "vector"), function(this, value) {
 	this@yearlyIndex<- value
 	this@tabulate<- TRUE
 	this
@@ -83,8 +83,8 @@ setReplaceMethod("setYearlyIndex",signature("Index", "vector"), function(this, v
 #' @param value Numeric Vector
 #' @rdname setMonthlyIndex
 #' @export
-setGeneric("setMonthlyIndex<-", function(this,value, ...) standardGeneric("setMonthlyIndex<-"))
-setReplaceMethod("setMonthlyIndex",signature("Index", "vector"), function(this, value) { 
+setGeneric("setMonthlyIndex<-", function(this, ..., value) standardGeneric("setMonthlyIndex<-"))
+setReplaceMethod("setMonthlyIndex",signature("Index", "vector"), function(this, value) {
 	this@monthlyIndex<- value
 	this@tabulate<- TRUE
 	this
@@ -97,8 +97,8 @@ setReplaceMethod("setMonthlyIndex",signature("Index", "vector"), function(this, 
 #' @param value Numeric Vector (default:rep(1,12))
 #' @rdname setSeasonality
 #' @export
-setGeneric("setSeasonality<-", function(this,value, ...) standardGeneric("setSeasonality<-"))
-setReplaceMethod("setSeasonality",signature("Index", "vector"), function(this, value) { 
+setGeneric("setSeasonality<-", function(this, ..., value) standardGeneric("setSeasonality<-"))
+setReplaceMethod("setSeasonality",signature("Index", "vector"), function(this, value) {
 	this@seasonality<- value
 	this
 })
@@ -111,7 +111,7 @@ setReplaceMethod("setSeasonality",signature("Index", "vector"), function(this, v
 #' xindex <- new("Index", indexID = "IDX1", tabulate = FALSE, annualizedRate = 0.03)
 #' xindex<-setIndex(xindex)
 #' xindex@monthlyIndex
-#' 
+#'
 #' xindex <- new("Index")
 #' setID(xindex)<-"IDX1"
 #' setTabulate(xindex)<-TRUE
@@ -141,7 +141,7 @@ setMethod("setIndex",signature("Index"), function(object) {
 			}
 
 			if (sum(object@yearlyIndex<0)>0){
-				stop("yearlyIndex cannot be negative.")		
+				stop("yearlyIndex cannot be negative.")
 			}
 
 			object@monthlyIndex <- rep(1,360)
@@ -166,12 +166,12 @@ setMethod("setIndex",signature("Index"), function(object) {
 				object@monthlyIndex[i] <- object@monthlyIndex[i]*object@seasonality[mth]
 			}
 		}
-		
+
 		if (sum(object@monthlyIndex<0)>0){
-			stop("monthlyIndex cannot be negative.")		
+			stop("monthlyIndex cannot be negative.")
 		}
 
-		
+
 		gc()
 		object
 	}, error = function(err){

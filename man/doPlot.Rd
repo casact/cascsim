@@ -8,6 +8,8 @@ doPlot(object, ...)
 }
 \arguments{
 \item{object}{Object}
+
+\item{...}{Additional function arguments}
 }
 \description{
 Plot function.

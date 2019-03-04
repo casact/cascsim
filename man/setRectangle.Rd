@@ -20,29 +20,3 @@ setRectangle(object, data, ...)
 \description{
 \code{setRectangle} sets up the rectangle based on a data file.
 }
-\examples{
-library(cascsim)
-data(claimdata)
-simdata <- read.csv("C:/temp/CAS/demo/sim2016.csv")
-xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
-frequency="yearly", sim=1, percentile=50)
-xTri<-setUpperTriangle(xTri,claimdata)
-xTri<-setUpperKeep(xTri,claimdata)
-xTri<-setRectangle(xTri,simdata)
-xTri@rectangle
-
-xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
-frequency="yearly", sim=1, percentile=50)
-xTri<-setUpperTriangle(xTri,claimdata)
-xTri<-setUpperKeep(xTri,claimdata)
-xTri<-setRectangle(xTri,simdata)
-xTri@rectangle
-
-xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
-frequency="yearly", sim=NaN, percentile=80)
-xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
-xTri<-setUpperKeep(xTri,claimdata)
-xTri<-setRectangle(xTri,simdata,lob="Auto",ctype="H")
-xTri@rectangle
-
-}

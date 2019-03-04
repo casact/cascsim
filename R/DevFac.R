@@ -7,9 +7,9 @@
 #' @slot xname A vector that includes the names of explanatory variables. They will have to be matched exactly to the claim data file. It is only used when model == TRUE.
 #' @slot paras A vector that contains the parameters of the model. It is only used when model == TRUE.
 #' @slot meanList A vector that contains the mean yearly development factor if distribution type is Normal. It is mu for Lognormal distribution and shape for Gamma distribution. It is only used when model == FALSE.
-#' @slot volList A vector that contains the volatility of yearly development factor if distribution type is Normal. It is sigma for Lognormal distribution and scale for Gamma distribution. It is used for simulating IBNER factors. It is only used when model == FALSE. 
+#' @slot volList A vector that contains the volatility of yearly development factor if distribution type is Normal. It is sigma for Lognormal distribution and scale for Gamma distribution. It is used for simulating IBNER factors. It is only used when model == FALSE.
 
-setClass("DevFac", 
+setClass("DevFac",
 	slots=c(
 			FacID="character",
 			FacModel="logical",
@@ -20,7 +20,7 @@ setClass("DevFac",
 			meanList="vector",
 			volList="vector"
 	),
-	prototype=list(	
+	prototype=list(
 			FacID="XXXXXX",
 			FacModel=FALSE,
 			fun="identity",
@@ -32,7 +32,7 @@ setClass("DevFac",
 	)
 )
 
-setReplaceMethod("setID",signature("DevFac", "character"), function(this, value) { 
+setReplaceMethod("setID",signature("DevFac", "character"), function(this, value) {
 	this@FacID<- as.character(value)
 	this
 })
@@ -42,8 +42,8 @@ setReplaceMethod("setID",signature("DevFac", "character"), function(this, value)
 #' @param value Logical Value (default:FALSE)
 #' @rdname setFacModel
 #' @export
-setGeneric("setFacModel<-", function(this,value, ...) standardGeneric("setFacModel<-"))
-setReplaceMethod("setFacModel",signature("DevFac", "logical"), function(this, value) { 
+setGeneric("setFacModel<-", function(this, ..., value) standardGeneric("setFacModel<-"))
+setReplaceMethod("setFacModel",signature("DevFac", "logical"), function(this, value) {
 	this@FacModel<- value
 	this
 })
@@ -54,8 +54,8 @@ setReplaceMethod("setFacModel",signature("DevFac", "logical"), function(this, va
 #' @param value String Value (default:"identity")
 #' @rdname setFun
 #' @export
-setGeneric("setFun<-", function(this,value, ...) standardGeneric("setFun<-"))
-setReplaceMethod("setFun",signature("DevFac", "character"), function(this, value) { 
+setGeneric("setFun<-", function(this, ..., value) standardGeneric("setFun<-"))
+setReplaceMethod("setFun",signature("DevFac", "character"), function(this, value) {
 	this@fun<- value
 	this
 })
@@ -67,8 +67,8 @@ setReplaceMethod("setFun",signature("DevFac", "character"), function(this, value
 #' @param value Character Vector
 #' @rdname setXname
 #' @export
-setGeneric("setXname<-", function(this,value, ...) standardGeneric("setXname<-"))
-setReplaceMethod("setXname",signature("DevFac", "vector"), function(this, value) { 
+setGeneric("setXname<-", function(this, ..., value) standardGeneric("setXname<-"))
+setReplaceMethod("setXname",signature("DevFac", "vector"), function(this, value) {
 	this@xname<- value
 	this@FacModel<- TRUE
 	this
@@ -81,8 +81,8 @@ setReplaceMethod("setXname",signature("DevFac", "vector"), function(this, value)
 #' @param value Numeric Vector
 #' @rdname setParas
 #' @export
-setGeneric("setParas<-", function(this,value, ...) standardGeneric("setParas<-"))
-setReplaceMethod("setParas",signature("DevFac", "vector"), function(this, value) { 
+setGeneric("setParas<-", function(this, ..., value) standardGeneric("setParas<-"))
+setReplaceMethod("setParas",signature("DevFac", "vector"), function(this, value) {
 	this@paras<- value
 	this@FacModel<- TRUE
 	this
@@ -95,8 +95,8 @@ setReplaceMethod("setParas",signature("DevFac", "vector"), function(this, value)
 #' @param value Numeric Vector
 #' @rdname setMeanList
 #' @export
-setGeneric("setMeanList<-", function(this,value, ...) standardGeneric("setMeanList<-"))
-setReplaceMethod("setMeanList",signature("DevFac", "vector"), function(this, value) { 
+setGeneric("setMeanList<-", function(this, ..., value) standardGeneric("setMeanList<-"))
+setReplaceMethod("setMeanList",signature("DevFac", "vector"), function(this, value) {
 	this@meanList<- value
 	this@FacModel<- FALSE
 	this
@@ -109,8 +109,8 @@ setReplaceMethod("setMeanList",signature("DevFac", "vector"), function(this, val
 #' @param value Numeric Vector
 #' @rdname setVolList
 #' @export
-setGeneric("setVolList<-", function(this,value, ...) standardGeneric("setVolList<-"))
-setReplaceMethod("setVolList",signature("DevFac", "vector"), function(this, value) { 
+setGeneric("setVolList<-", function(this, ..., value) standardGeneric("setVolList<-"))
+setReplaceMethod("setVolList",signature("DevFac", "vector"), function(this, value) {
 	this@volList<- value
 	this@FacModel<- FALSE
 	this
@@ -121,11 +121,11 @@ setReplaceMethod("setVolList",signature("DevFac", "vector"), function(this, valu
 #' \code{setDevFac} sets a loss development schedule, from either a predictive model or a year-to-year factor vector.
 #' @param object DevFac Object
 #' @examples
-#' xIBNERFactor <- new("DevFac", FacID = "IF1", FacModel = FALSE, meanList = c(1.26,1.1,1.05,1.02,1), 
+#' xIBNERFactor <- new("DevFac", FacID = "IF1", FacModel = FALSE, meanList = c(1.26,1.1,1.05,1.02,1),
 #' volList = rep(0.02,5))
 #' xIBNERFactor<-setDevFac(xIBNERFactor)
 #' xIBNERFactor
-#' 
+#'
 #' xIBNERFactor <- new("DevFac")
 #' setID(xIBNERFactor)<-"IF1"
 #' setFacModel(xIBNERFactor)<-TRUE
@@ -146,11 +146,11 @@ setMethod("setDevFac",signature("DevFac"), function(object) {
 		}
 
 		if (sum(object@meanList<0)>0){
-			stop(paste0("DevFac ",object@ibnerfID,": year-to-year development factor in meanList cannot be negative."))		
+			stop(paste0("DevFac ",object@ibnerfID,": year-to-year development factor in meanList cannot be negative."))
 		}
 
 		if (sum(object@volList<0)>0){
-			stop(paste0("DevFac ",object@ibnerfID,": volatility of year-to-year development factors in volList cannot be negative."))		
+			stop(paste0("DevFac ",object@ibnerfID,": volatility of year-to-year development factors in volList cannot be negative."))
 		}
 
 		gc()
@@ -178,15 +178,15 @@ setMethod("toString",signature("DevFac"), function(object) {
 		}
 		if(object@fun=="log"){
 			result<-paste0("exp(",result,")")
-		}		
+		}
 	}else{
 		result<-rbind(object@meanList,object@volList)
 		if (object@distType == "normal"){
 			rownames(result)<-c("mean","vol")
 		} else if (object@distType == "lognormal") {
-			rownames(result)<-c("meanlog","sdlog")		
+			rownames(result)<-c("meanlog","sdlog")
 		} else {
-			rownames(result)<-c("shape","scale")				
+			rownames(result)<-c("shape","scale")
 		}
 		colnames(result)<-c(1:length(object@meanList))
 	}

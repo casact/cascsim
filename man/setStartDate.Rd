@@ -9,6 +9,8 @@ setStartDate(this, ...) <- value
 \arguments{
 \item{this}{Self}
 
+\item{...}{Additional function arguments}
+
 \item{value}{Start Date}
 }
 \description{

@@ -10,6 +10,8 @@ Quantile(object, p, ...)
 \item{object}{Distribution Object}
 
 \item{p}{Probability}
+
+\item{...}{Additional function arguments}
 }
 \description{
 Quantile function.

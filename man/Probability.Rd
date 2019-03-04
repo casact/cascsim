@@ -10,6 +10,8 @@ Probability(object, q, ...)
 \item{object}{Distribution Object}
 
 \item{q}{Variable value}
+
+\item{...}{Additional function arguments}
 }
 \description{
 Probability function.

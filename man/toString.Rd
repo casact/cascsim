@@ -8,6 +8,8 @@ toString(object, ...)
 }
 \arguments{
 \item{object}{Object}
+
+\item{...}{Additional function arguments}
 }
 \description{
 Object explanation.

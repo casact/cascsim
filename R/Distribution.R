@@ -9,30 +9,30 @@
 #' @slot fitsucc Whether a distribution fitting is successful.
 #' @slot info A character string that contains additional information of the distribution to identify line/type/frequency or severity.
 
-setClass("Distribution", 
+setClass("Distribution",
 	slots=c(
-		p1="numeric", 
-		p2="numeric", 
-		p3="numeric", 
-		empirical="matrix", 
-		min="numeric", 
-		max="numeric", 
+		p1="numeric",
+		p2="numeric",
+		p3="numeric",
+		empirical="matrix",
+		min="numeric",
+		max="numeric",
 		truncated="logical",
 		fitsucc="logical",
 		info="character"
 	),
 	prototype=list(
-		p1=0.8, 
-		p2=1, 
-		p3=0.0, 
-		min=1e-8, 
+		p1=0.8,
+		p2=1,
+		p3=0.0,
+		min=1e-8,
 		max=1e8,
 		truncated=FALSE,
 		fitsucc=FALSE,
 		info=""
 	)
 )
-	
+
 setClass("Normal", contains="Distribution")
 setClass("Beta", contains="Distribution")
 setClass("Exponential", contains="Distribution")
@@ -48,11 +48,11 @@ setClass("Empirical", contains="Distribution")
 
 #' Set distribution parameters.
 #' @param this Distribution Object
-#' @param value Numeric vector containing parameters 
+#' @param value Numeric vector containing parameters
 #' @rdname setParams
 #' @export
-setGeneric("setParams<-", function(this,value, ...) standardGeneric("setParams<-"))
-setReplaceMethod("setParams",signature("Distribution","numeric"), function(this, value) { 	
+setGeneric("setParams<-", function(this, ..., value) standardGeneric("setParams<-"))
+setReplaceMethod("setParams",signature("Distribution","numeric"), function(this, value) {
 	this@p1<-value[1]
 	this@p2<-value[2]
 	this@p3<-value[3]
@@ -65,8 +65,8 @@ setReplaceMethod("setParams",signature("Distribution","numeric"), function(this,
 #' @param value Two-column matrix with values and probabilities
 #' @rdname setEmpirical
 #' @export
-setGeneric("setEmpirical<-", function(this,value, ...) standardGeneric("setEmpirical<-"))
-setReplaceMethod("setEmpirical",signature("Distribution", "matrix"), function(this, value) { 
+setGeneric("setEmpirical<-", function(this, ..., value) standardGeneric("setEmpirical<-"))
+setReplaceMethod("setEmpirical",signature("Distribution", "matrix"), function(this, value) {
 	this@empirical<- value
 	this
 	})
@@ -76,8 +76,8 @@ setReplaceMethod("setEmpirical",signature("Distribution", "matrix"), function(th
 #' @param value a two-element vector contains min and max.
 #' @rdname setRange
 #' @export
-setGeneric("setRange<-", function(this,value, ...) standardGeneric("setRange<-"))
-setReplaceMethod("setRange",signature("Distribution","numeric"), function(this, value) { 	
+setGeneric("setRange<-", function(this, ..., value) standardGeneric("setRange<-"))
+setReplaceMethod("setRange",signature("Distribution","numeric"), function(this, value) {
 	this@min <-value[1]
 	this@max <-value[2]
 	this
@@ -85,11 +85,11 @@ setReplaceMethod("setRange",signature("Distribution","numeric"), function(this, 
 
 #' Set the indicator of truncated distribution.
 #' @param this Distribution Object
-#' @param value Boolean to indicate whether the distribution is truncated by min and max or not. 
+#' @param value Boolean to indicate whether the distribution is truncated by min and max or not.
 #' @rdname setTruncated
 #' @export
-setGeneric("setTruncated<-", function(this,value, ...) standardGeneric("setTruncated<-"))
-setReplaceMethod("setTruncated",signature("Distribution","logical"), function(this, value) { 	
+setGeneric("setTruncated<-", function(this, ..., value) standardGeneric("setTruncated<-"))
+setReplaceMethod("setTruncated",signature("Distribution","logical"), function(this, value) {
 	this@truncated<-value
 	this
 })
@@ -103,7 +103,7 @@ setReplaceMethod("setTruncated",signature("Distribution","logical"), function(th
 #' @rdname setMin
 #' @export
 setGeneric("setMin", function(object,...) standardGeneric("setMin"))
-setMethod("setMin",signature("Distribution"), function(object,minval) { 
+setMethod("setMin",signature("Distribution"), function(object,minval) {
 	results <- list()
 	for(x in minval){
 		object@min<-x
@@ -142,7 +142,7 @@ setMethod("sampleSd",signature("Distribution"), function(object) { return (sd(do
 #' @rdname sampleSkew
 #' @export
 setGeneric("sampleSkew", function(object,...) standardGeneric("sampleSkew"))
-setMethod("sampleSkew",signature("Distribution"), function(object) { 
+setMethod("sampleSkew",signature("Distribution"), function(object) {
 	require(moments)
 	return (skewness(doSample(object, 10000)))
 })
@@ -155,7 +155,7 @@ setMethod("sampleSkew",signature("Distribution"), function(object) {
 #' @rdname sampleKurtosis
 #' @export
 setGeneric("sampleKurtosis", function(object,...) standardGeneric("sampleKurtosis"))
-setMethod("sampleKurtosis",signature("Distribution"), function(object) { 
+setMethod("sampleKurtosis",signature("Distribution"), function(object) {
 	require(moments)
 	return (kurtosis(doSample(object, 10000))-3)
 })
@@ -170,7 +170,7 @@ setMethod("sampleKurtosis",signature("Distribution"), function(object) {
 #' @export
 setGeneric("doSample", function(object, n, ...) standardGeneric("doSample"))
 
-setMethod("doSample",signature("Normal", "numeric"), function(object, n) { 
+setMethod("doSample",signature("Normal", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
 			rnorm(n,object@p1, object@p2)
@@ -185,7 +185,7 @@ setMethod("doSample",signature("Normal", "numeric"), function(object, n) {
 	}
 )
 
-setMethod("doSample",signature("Beta", "numeric"), function(object, n) { 
+setMethod("doSample",signature("Beta", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
 			rbeta(n,object@p1, object@p2, object@p3)
@@ -200,7 +200,7 @@ setMethod("doSample",signature("Beta", "numeric"), function(object, n) {
 	}
 )
 
-setMethod("doSample",signature("Exponential", "numeric"),  function(object, n) { 
+setMethod("doSample",signature("Exponential", "numeric"),  function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
 			rexp(n,object@p1)
@@ -305,7 +305,7 @@ setMethod("doSample",signature("Geometric", "numeric"), function(object, n) {
 	}
 )
 
-setMethod("doSample",signature("Uniform", "numeric"), function(object, n) { 
+setMethod("doSample",signature("Uniform", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
 			runif(n,object@p1, max(object@p1,object@p2))
@@ -320,7 +320,7 @@ setMethod("doSample",signature("Uniform", "numeric"), function(object, n) {
 	}
 )
 
-setMethod("doSample",signature("Weibull", "numeric"), function(object, n) { 
+setMethod("doSample",signature("Weibull", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
 			rweibull(n,object@p1, object@p2)
@@ -335,7 +335,7 @@ setMethod("doSample",signature("Weibull", "numeric"), function(object, n) {
 	}
 )
 
-setMethod("doSample",signature("Empirical", "numeric"), function(object, n) { 
+setMethod("doSample",signature("Empirical", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
 			rempirical(n,object@empirical)
@@ -351,7 +351,7 @@ setMethod("doSample",signature("Empirical", "numeric"), function(object, n) {
 )
 
 #Density function
-setMethod("Density",signature("Normal"), function(object, x, log = FALSE) { 
+setMethod("Density",signature("Normal"), function(object, x, log = FALSE) {
 	if (object@truncated == FALSE) {
 		dnorm(x, mean=object@p1, sd=object@p2, log=log)
 	}else{
@@ -455,7 +455,7 @@ setMethod("Probability",signature("Normal"), function(object, q) {
 		ptnorm(q, mean=object@p1, sd=object@p2, min=object@min, max=max(object@min, object@max))
 	}
  })
- 
+
 setMethod("Probability",signature("Beta"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pbeta(q, object@p1, object@p2)
@@ -480,7 +480,7 @@ setMethod("Probability",signature("Gamma"), function(object, q) {
 	}
 })
 
-setMethod("Probability",signature("Geometric"), function(object, q) { 
+setMethod("Probability",signature("Geometric"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pgeom(q, prob =object@p1)
 	}else{
@@ -488,7 +488,7 @@ setMethod("Probability",signature("Geometric"), function(object, q) {
 	}
 })
 
-setMethod("Probability",signature("Lognormal"), function(object, q) { 
+setMethod("Probability",signature("Lognormal"), function(object, q) {
 	if (object@truncated == FALSE) {
 		plnorm(q, meanlog =object@p1, sdlog=object@p2)
 	}else{
@@ -496,7 +496,7 @@ setMethod("Probability",signature("Lognormal"), function(object, q) {
 	}
 })
 
-setMethod("Probability",signature("NegativeBinomial"), function(object, q) { 
+setMethod("Probability",signature("NegativeBinomial"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pnbinom(q, size =object@p1, prob=object@p2)
 	}else{
@@ -504,7 +504,7 @@ setMethod("Probability",signature("NegativeBinomial"), function(object, q) {
 	}
 })
 
-setMethod("Probability",signature("Pareto"), function(object, q) { 
+setMethod("Probability",signature("Pareto"), function(object, q) {
 	if (object@truncated == FALSE) {
 		ppareto(q, xm =object@p1, alpha=object@p2)
 	}else{
@@ -512,7 +512,7 @@ setMethod("Probability",signature("Pareto"), function(object, q) {
 	}
 })
 
-setMethod("Probability",signature("Poisson"), function(object, q) { 
+setMethod("Probability",signature("Poisson"), function(object, q) {
 	if (object@truncated == FALSE) {
 		ppois(q, lambda =object@p1)
 	}else{
@@ -520,7 +520,7 @@ setMethod("Probability",signature("Poisson"), function(object, q) {
 	}
 })
 
-setMethod("Probability",signature("Uniform"), function(object, q) { 
+setMethod("Probability",signature("Uniform"), function(object, q) {
 	if (object@truncated == FALSE) {
 		punif(q, min=object@p1, max=max(object@p1,object@p2))
 	}else{
@@ -641,16 +641,16 @@ setMethod("Quantile",signature("Empirical"), function(object, p) {
 	}
 })
 
-setMethod("doPlot",signature("Distribution"), function(object) { 
-	par(mfrow = c(2, 2)) 
-	#draw some basic features 
+setMethod("doPlot",signature("Distribution"), function(object) {
+	par(mfrow = c(2, 2))
+	#draw some basic features
 	x<-doSample(object, 1000)
 	p<-seq(0,1, by=0.005)
 	q<-Quantile(object, p)
 
-	plot(q, Density(object, q),type="l",  main = "PDF Plot", xlab="q", ylab="density", col = "red") 
+	plot(q, Density(object, q),type="l",  main = "PDF Plot", xlab="q", ylab="density", col = "red")
 	plot(q, p, type="l", main = "CDF Plot", col="red")
-	hist(x,breaks=100, main="Histogram", xlab="observations", ylab="Frequency", col="red")      	
+	hist(x,breaks=100, main="Histogram", xlab="observations", ylab="Frequency", col="red")
 	plot(p, q, type="l", main = "Quantile Plot", col="red")
 })
 
@@ -906,7 +906,7 @@ setMethod("nParameter",signature("Weibull"), function(object) { return (2) })
 
 #' Return parameter list for distribution fitting.
 #' These methods are just for fitDistr function in MASS package. They are little bit different then R names
-#' plus, that function cannot fit all the distributions. 
+#' plus, that function cannot fit all the distributions.
 #' @param object Distribution Object
 #' @rdname params
 #' @export

@@ -13,7 +13,7 @@ setDevFac(object, ...)
 \code{setDevFac} sets a loss development schedule, from either a predictive model or a year-to-year factor vector.
 }
 \examples{
-xIBNERFactor <- new("DevFac", FacID = "IF1", FacModel = FALSE, meanList = c(1.26,1.1,1.05,1.02,1), 
+xIBNERFactor <- new("DevFac", FacID = "IF1", FacModel = FALSE, meanList = c(1.26,1.1,1.05,1.02,1),
 volList = rep(0.02,5))
 xIBNERFactor<-setDevFac(xIBNERFactor)
 xIBNERFactor

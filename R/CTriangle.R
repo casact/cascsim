@@ -5,15 +5,15 @@
 #' @slot startDate The start date for the accident year or Quarter.
 #' @slot frequency A character that indicates the frequency of the triangle, "yearly" or "quarterly".
 #' @slot sim A number that indicates the simulation number used to complete the rectangle. Zero means using the average value.
-#' @slot percentile A number that indicates the percentile used to complete the rectangle. It is only used when sim is NA. 
-#' @slot iRBNER A Boolean that indicates whether open claims are simulated. If not, current information will be used for constructing rectangles. Otherwise, simulated data will be used. 
-#' @slot iROPEN A Boolean that indicates whether claim reopen are simulated. If not, current information will be used for constructing rectangles. Otherwise, simulated data will be used. 
-#' @slot percentile A number that indicates the percentile used to complete the rectangle. It is only used when sim is NA. 
+#' @slot percentile A number that indicates the percentile used to complete the rectangle. It is only used when sim is NA.
+#' @slot iRBNER A Boolean that indicates whether open claims are simulated. If not, current information will be used for constructing rectangles. Otherwise, simulated data will be used.
+#' @slot iROPEN A Boolean that indicates whether claim reopen are simulated. If not, current information will be used for constructing rectangles. Otherwise, simulated data will be used.
+#' @slot percentile A number that indicates the percentile used to complete the rectangle. It is only used when sim is NA.
 #' @slot upper A matrix that contains the upper triangle based on claim data.
 #' @slot upperkeep A matrix that contains the upper triangle that are not simulated. It will be used to construct the rectangle for the non-simulated part.
 #' @slot rectangle A matrix that contains the entire rectangle based on simulation data.
 
-setClass("Triangle", 
+setClass("Triangle",
 	slots=c(
 			triID="character",
 			type="character",
@@ -27,7 +27,7 @@ setClass("Triangle",
 			upperkeep="matrix",
 			rectangle="matrix"
 	),
-	prototype=list(	
+	prototype=list(
 			triID="XXXXXX",
 			type="reportedCount",
 			startDate=as.Date("2012-01-01"),
@@ -53,22 +53,22 @@ setClass("Triangle",
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
-#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"),
 #' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri@upper
-#' 
-#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+#'
+#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"),
 #' frequency="quarterly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri@upper
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"),
 #' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upper
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "paidLoss", startDate=as.Date("2012-01-01"), 
+#' xTri <- new("Triangle", triID = "TRI1", type = "paidLoss", startDate=as.Date("2012-01-01"),
 #' frequency="yearly", sim=1, percentile=50)
 #' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upper
@@ -78,24 +78,24 @@ setClass("Triangle",
 setGeneric("setUpperTriangle", function(object,data,...) standardGeneric("setUpperTriangle"))
 setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object,data,evaluationDate=as.Date("2016-12-31"),lob="Total",ctype="Total") {
 	tryCatch({
-	
+
 		if (lob != "Total") {data <- data[data[,"LoB"]==lob,]}
 		if (ctype != "Total") {data <- data[data[,"Type"]==ctype,]}
-	
+
 		startYear <- as.numeric(substr(as.character(object@startDate),1,4))
 		endYear <- as.numeric(substr(as.character(evaluationDate),1,4))
 		startMonth <- as.numeric(substr(as.character(object@startDate),6,7))
 		endMonth <- as.numeric(substr(as.character(evaluationDate),6,7))
 		startQuarter <- ceiling(startMonth/3)
 		endQuarter <- ceiling(endMonth/3)
-		
+
 		if (object@frequency=="yearly") {
 			ncols <- endYear - startYear + 1
 			rowname <- c(startYear:endYear)
 			colname <- paste0("M",seq(12,(12*ncols),12))
 		} else {
 			ncols <- (endYear - startYear)*4 + endQuarter - startQuarter + 1
-			
+
 			rowname <- vector()
 			for (i in c(startYear:endYear)){
 				if (i==startYear){
@@ -115,16 +115,16 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 
 			colname <- paste0("M",seq(3,(3*ncols),3))
 		}
-		
+
 		rec <- matrix(0,ncols,ncols,dimnames = list(rowname,colname))
-		
+
 		if ("Sim" %in% colnames(data)) {
 			sim <- data$Sim[1]
 			data <- data[data[,"Sim"]==sim,]
 		}
-		
+
 		data <- data[,colnames(data) %in% c("occurrenceDate","reportDate","settlementDate","incurredLoss","Paid")]
-		
+
 		accidentYears <- as.numeric(substr(as.character(data$occurrenceDate),1,4))
 		accidentMonths <- as.numeric(substr(as.character(data$occurrenceDate),6,7))
 		accidentQuarters <- ceiling(accidentMonths/3)
@@ -167,15 +167,15 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 					data$colno <- (settleYears - accidentYears) * 4 + (settleQuarters - accidentQuarters) + 1
 				}
 		}
-		
+
 		if (object@type == "reportedCount" | object@type == "closedCount") {
 			agg<-aggregate(occurrenceDate ~ rowno + colno, data = data, length)
 		} else if (object@type == "incurredLoss") {
 			agg<-aggregate(incurredLoss ~ rowno + colno, data = data, sum)
 		} else {
-			agg<-aggregate(Paid ~ rowno + colno, data = data, sum)			
+			agg<-aggregate(Paid ~ rowno + colno, data = data, sum)
 		}
-		
+
 		for (i in c(1:length(rowname))){
 			rowsum <- 0
 			for (j in c(1:(ncols-i+1))){
@@ -183,12 +183,12 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 				if (!is.na(tmp)) {
 					rowsum <- rowsum + tmp
 				}
-				
+
 				rec[i,j] <- rowsum
 			}
 		}
-		
-		
+
+
 		object@upper <- rec
 		gc()
 		object
@@ -211,19 +211,19 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
-#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
+#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"),
 #' frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=TRUE)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri@upperkeep
-#' 
-#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
+#'
+#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"),
 #' frequency="quarterly", sim=1, percentile=50, iRBNER=FALSE, iROPEN=TRUE)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata)
 #' xTri@upperkeep
 #'
-#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
+#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"),
 #' frequency="yearly", sim=1, percentile=50, iRBNER=TRUE, iROPEN=FALSE)
 #' xTri<-setUpperTriangle(xTri,claimdata)
 #' xTri<-setUpperKeep(xTri,claimdata,lob="Auto",ctype="H")
@@ -234,7 +234,7 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 setGeneric("setUpperKeep", function(object,data,...) standardGeneric("setUpperKeep"))
 setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,data,evaluationDate=as.Date("2016-12-31"),lob="Total",ctype="Total") {
 	tryCatch({
-	
+
 		if (lob != "Total") {data <- data[data[,"LoB"]==lob,]}
 		if (ctype != "Total") {data <- data[data[,"Type"]==ctype,]}
 #		if(object@iRBNER == TRUE & object@iROPEN == FALSE){
@@ -242,21 +242,21 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 #		} else if(object@iRBNER == FALSE & object@iROPEN == TRUE){
 #			data <- data[data[,"status"]=="OPEN",]
 #		}
-		
+
 		startYear <- as.numeric(substr(as.character(object@startDate),1,4))
 		endYear <- as.numeric(substr(as.character(evaluationDate),1,4))
 		startMonth <- as.numeric(substr(as.character(object@startDate),6,7))
 		endMonth <- as.numeric(substr(as.character(evaluationDate),6,7))
 		startQuarter <- ceiling(startMonth/3)
 		endQuarter <- ceiling(endMonth/3)
-		
+
 		if (object@frequency=="yearly") {
 			ncols <- endYear - startYear + 1
 			rowname <- c(startYear:endYear)
 			colname <- paste0("M",seq(12,(12*ncols),12))
 		} else {
 			ncols <- (endYear - startYear)*4 + endQuarter - startQuarter + 1
-			
+
 			rowname <- vector()
 			for (i in c(startYear:endYear)){
 				if (i==startYear){
@@ -276,21 +276,21 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 
 			colname <- paste0("M",seq(3,(3*ncols),3))
 		}
-		
+
 		rec <- matrix(0,ncols,ncols,dimnames = list(rowname,colname))
-		
+
 		if ("Sim" %in% colnames(data)) {
 			sim <- data$Sim[1]
 			data <- data[data[,"Sim"]==sim,]
 		}
-		
+
 	#	if (object@iRBNER == FALSE & object@iROPEN == FALSE) {
 	#		rec <- object@upper
 		#} else if (object@iRBNER == TRUE & object@iROPEN == TRUE) {
 		#
 	#	} else {
 			data <- data[,colnames(data) %in% c("occurrenceDate","reportDate","settlementDate","incurredLoss","Paid")]
-			
+
 			accidentYears <- as.numeric(substr(as.character(data$occurrenceDate),1,4))
 			accidentMonths <- as.numeric(substr(as.character(data$occurrenceDate),6,7))
 			accidentQuarters <- ceiling(accidentMonths/3)
@@ -333,15 +333,15 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 						data$colno <- (settleYears - accidentYears) * 4 + (settleQuarters - accidentQuarters) + 1
 					}
 			}
-			
+
 			if (object@type == "reportedCount" | object@type == "closedCount") {
 				agg<-aggregate(occurrenceDate ~ rowno + colno, data = data, length)
 			} else if(object@type == "incurredLoss"){
 				agg<-aggregate(incurredLoss ~ rowno + colno, data = data, sum)
 			} else {
-				agg<-aggregate(Paid ~ rowno + colno, data = data, sum)			
+				agg<-aggregate(Paid ~ rowno + colno, data = data, sum)
 			}
-			
+
 			for (i in c(1:length(rowname))){
 				rowsum <- 0
 				for (j in c(1:(ncols-i+1))){
@@ -349,12 +349,12 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 					if (!is.na(tmp)) {
 						rowsum <- rowsum + tmp
 					}
-					
+
 					rec[i,j] <- rowsum
 				}
 			}
 	#	}
-		
+
 		object@upperkeep <- rec
 		gc()
 		object
@@ -374,37 +374,12 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 #' @param evaluationDate Evaluation Date
 #' @param lob Line of Business
 #' @param ctype Claim Type
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' simdata <- read.csv("C:/temp/CAS/demo/sim2016.csv")
-#' xTri <- new("Triangle", triID = "TRI1", type = "reportedCount", startDate=as.Date("2012-01-01"), 
-#' frequency="yearly", sim=1, percentile=50)
-#' xTri<-setUpperTriangle(xTri,claimdata)
-#' xTri<-setUpperKeep(xTri,claimdata)
-#' xTri<-setRectangle(xTri,simdata)
-#' xTri@rectangle
-#' 
-#' xTri <- new("Triangle", triID = "TRI1", type = "closedCount", startDate=as.Date("2012-01-01"), 
-#' frequency="yearly", sim=1, percentile=50)
-#' xTri<-setUpperTriangle(xTri,claimdata)
-#' xTri<-setUpperKeep(xTri,claimdata)
-#' xTri<-setRectangle(xTri,simdata)
-#' xTri@rectangle
-#'
-#' xTri <- new("Triangle", triID = "TRI1", type = "incurredLoss", startDate=as.Date("2012-01-01"), 
-#' frequency="yearly", sim=NaN, percentile=80)
-#' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
-#' xTri<-setUpperKeep(xTri,claimdata)
-#' xTri<-setRectangle(xTri,simdata,lob="Auto",ctype="H")
-#' xTri@rectangle
-#'
 #' @rdname setRectangle
 #' @export
 setGeneric("setRectangle", function(object,data,...) standardGeneric("setRectangle"))
 setMethod("setRectangle",signature("Triangle","data.frame"), function(object,data,evaluationDate=as.Date("2016-12-31"),futureDate=as.Date("2017-12-31"),lob="Total",ctype="Total") {
 	tryCatch({
-		
+
 		if (lob != "Total") {data <- data[data[,"LoB"]==lob,]}
 		if (ctype != "Total") {data <- data[data[,"Type"]==ctype,]}
 		if (!is.nan(object@sim) & object@sim > 0) {
@@ -419,7 +394,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 			lsim <- ultAgg[lsim,1]
 			usim <- ultAgg[usim,1]
 		}
-		
+
 		if (nrow(data)<=0){
 			stop("No data available for rectangle construction.")
 		} else {
@@ -430,7 +405,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 			settleYears <- ifelse(is.na(resettleYears), settleYears, resettleYears)
 			settleMonths <- ifelse(is.na(resettleMonths), settleMonths, resettleMonths)
 			settleQuarters <- ceiling(settleMonths/3)
-			
+
 			startYear <- as.numeric(substr(as.character(object@startDate),1,4))
 			endYear <- max(settleYears)
 			evaluationYear <- as.numeric(substr(as.character(evaluationDate),1,4))
@@ -443,7 +418,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 			endQuarter <- ceiling(endMonth/3)
 			evaluationQuarter <- ceiling(evaluationMonth/3)
 			futureQuarter <- ceiling(futureMonth/3)
-			
+
 			if (object@frequency=="yearly") {
 				ncols <- endYear - startYear + 1
 				nevals <- evaluationYear - startYear + 1
@@ -473,7 +448,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 
 				colname <- paste0("M",seq(3,(3*ncols),3))
 			}
-			
+
 			rec <- matrix(0,nrows,ncols,dimnames = list(rowname,colname))
 			nsims <- 1
 			if (!is.nan(object@sim)) {
@@ -483,9 +458,9 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 				} else {
 					nsims <- length(unique(data[,"Sim"]))
 				}
-				
+
 				data <- data[,colnames(data) %in% c("occurrenceDate","reportDate","settlementDate","ultimateLoss","Paid")]
-				
+
 				accidentYears <- as.numeric(substr(as.character(data$occurrenceDate),1,4))
 				accidentMonths <- as.numeric(substr(as.character(data$occurrenceDate),6,7))
 				accidentQuarters <- ceiling(accidentMonths/3)
@@ -517,13 +492,13 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 							data$colno <- (settleYears - accidentYears) * 4 + (settleQuarters - accidentQuarters) + 1
 						}
 				}
-				
+
 				if (object@type == "reportedCount" | object@type == "closedCount") {
 					agg<-aggregate(occurrenceDate ~ rowno + colno, data = data, length)
 				} else {
 					agg<-aggregate(ultimateLoss ~ rowno + colno, data = data, sum)
 				}
-				
+
 				for (i in c(1:length(rowname))){
 					rowsum <- 0
 					for (j in c(1:length(colname))){
@@ -534,13 +509,13 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 						rec[i,j] <- rowsum
 					}
 				}
-				
+
 				for (i in c(1:length(rowname))){
 					for (j in c(1:length(colname))){
 						rec[i,j] <- rec[i,j]/nsims
 					}
 				}
-				
+
 				if(any(is.na(object@upperkeep))==FALSE){
 					for (i in c(1:length(rowname))){
 						if(i <= nrow(object@upperkeep)){
@@ -557,7 +532,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 
 				data <- data[data[,"Sim"]==lsim | data[,"Sim"]==usim,]
 				data <- data[,colnames(data) %in% c("occurrenceDate","reportDate","settlementDate","ultimateLoss","Sim")]
-				
+
 				accidentYears <- as.numeric(substr(as.character(data$occurrenceDate),1,4))
 				accidentMonths <- as.numeric(substr(as.character(data$occurrenceDate),6,7))
 				accidentQuarters <- ceiling(accidentMonths/3)
@@ -589,7 +564,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 							data$colno <- (settleYears - accidentYears) * 4 + (settleQuarters - accidentQuarters) + 1
 						}
 				}
-				
+
 				if (object@type == "reportedCount" | object@type == "closedCount") {
 					lagg<-aggregate(occurrenceDate ~ rowno + colno, data = data[data[,"Sim"]==lsim,], length)
 					uagg<-aggregate(occurrenceDate ~ rowno + colno, data = data[data[,"Sim"]==usim,], length)
@@ -597,7 +572,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 					lagg<-aggregate(ultimateLoss ~ rowno + colno, data = data[data[,"Sim"]==lsim,], sum)
 					uagg<-aggregate(ultimateLoss ~ rowno + colno, data = data[data[,"Sim"]==usim,], sum)
 				}
-				
+
 				for (i in c(1:length(rowname))){
 					rowsum <- 0
 					for (j in c(1:length(colname))){
@@ -612,7 +587,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 						rec[i,j] <- rowsum
 					}
 				}
-				
+
 				if(any(is.na(object@upperkeep))==FALSE){
 					for (i in c(1:length(rowname))){
 						if(i <= nrow(object@upperkeep)){
@@ -626,8 +601,8 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 					}
 				}
 			}
-			
-			
+
+
 			if(any(is.na(object@upperkeep))==FALSE){
 				for (i in c(1:min(nrows,nrow(object@upper)))){
 					for (j in c(1:(min(ncol(object@upper),ncols)-i+1))){

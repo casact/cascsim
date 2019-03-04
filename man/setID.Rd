@@ -2,15 +2,19 @@
 % Please edit documentation in R/A.R
 \name{setID<-}
 \alias{setID<-}
-\title{Set the ID for an object}
+\title{setID
+Set the ID for an object}
 \usage{
 setID(this, ...) <- value
 }
 \arguments{
 \item{this}{Self}
 
+\item{...}{Additional function arguments}
+
 \item{value}{ID}
 }
 \description{
+setID
 Set the ID for an object
 }

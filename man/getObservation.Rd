@@ -8,6 +8,8 @@ getObservation(object, ...)
 }
 \arguments{
 \item{object}{Object}
+
+\item{...}{Additional function arguments}
 }
 \description{
 Get input data from an object.

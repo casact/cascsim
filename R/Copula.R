@@ -12,13 +12,13 @@
 #' @slot coutput Goodness of fit results.
 #' @slot info A character string that contains additional information of the copula to identify line/type/frequency/time lag/severity.
 
-setClass("CopulaObj", 
+setClass("CopulaObj",
 	slots=c(
-		type="character", 
+		type="character",
 		param="numeric",
 		marginal="list",
 		dimension="numeric",
-		dispstr="character", 
+		dispstr="character",
 		df="numeric",
 		observation="matrix",
 		fitmethod="character",
@@ -28,7 +28,7 @@ setClass("CopulaObj",
 		info="character"
 	),
 	prototype=list(
-		type="normal", 
+		type="normal",
 		param=c(0),
 		marginal=list(),
 		dimension=2,
@@ -43,22 +43,22 @@ setClass("CopulaObj",
 
 #' Set copula type.
 #' @param this Copula Object
-#' @param value The copula type 
+#' @param value The copula type
 #' @rdname setCopulaType
 #' @export
-setGeneric("setCopulaType<-", function(this,value, ...) standardGeneric("setCopulaType<-"))
-setReplaceMethod("setCopulaType",signature("CopulaObj", "character"), function(this, value) { 
+setGeneric("setCopulaType<-", function(this, ..., value) standardGeneric("setCopulaType<-"))
+setReplaceMethod("setCopulaType",signature("CopulaObj", "character"), function(this, value) {
 	this@type <- value
 	this
 })
 
 #' Set copula parameters.
 #' @param this Copula Object
-#' @param value The copula parameters 
+#' @param value The copula parameters
 #' @rdname setCopulaParam
 #' @export
-setGeneric("setCopulaParam<-", function(this,value, ...) standardGeneric("setCopulaParam<-"))
-setReplaceMethod("setCopulaParam",signature("CopulaObj", "numeric"), function(this, value) { 
+setGeneric("setCopulaParam<-", function(this, ..., value) standardGeneric("setCopulaParam<-"))
+setReplaceMethod("setCopulaParam",signature("CopulaObj", "numeric"), function(this, value) {
 	this@param<- value
 	this
 })
@@ -68,8 +68,8 @@ setReplaceMethod("setCopulaParam",signature("CopulaObj", "numeric"), function(th
 #' @param value The list of marginal distributions.
 #' @rdname setMarginal
 #' @export
-setGeneric("setMarginal<-", function(this,value, ...) standardGeneric("setMarginal<-"))
-setReplaceMethod("setMarginal",signature("CopulaObj", "list"), function(this, value) { 
+setGeneric("setMarginal<-", function(this, ..., value) standardGeneric("setMarginal<-"))
+setReplaceMethod("setMarginal",signature("CopulaObj", "list"), function(this, value) {
 	this@marginal<- value
 	this@dimension<-length(value)
 	this
@@ -77,11 +77,11 @@ setReplaceMethod("setMarginal",signature("CopulaObj", "list"), function(this, va
 
 #' Set the dimension of the copula.
 #' @param this Copula Object
-#' @param value The dimension of the copula. It can also be set by providing marginal distributions 
+#' @param value The dimension of the copula. It can also be set by providing marginal distributions
 #' @rdname setDimension
 #' @export
-setGeneric("setDimension<-", function(this,value, ...) standardGeneric("setDimension<-"))
-setReplaceMethod("setDimension",signature("CopulaObj", "numeric"), function(this, value) { 
+setGeneric("setDimension<-", function(this, ..., value) standardGeneric("setDimension<-"))
+setReplaceMethod("setDimension",signature("CopulaObj", "numeric"), function(this, value) {
 	this@dimension<- max(2,value)
 	this
 })
@@ -91,24 +91,24 @@ setReplaceMethod("setDimension",signature("CopulaObj", "numeric"), function(this
 #' @param value The matrix format. The default is "un" for unstructured. Other choices include "ex" for exchangeable, "ar1" for AR(1), and "toep" for Toeplitz (toeplitz).
 #' @rdname setDispstr
 #' @export
-setGeneric("setDispstr<-", function(this,value, ...) standardGeneric("setDispstr<-"))
-setReplaceMethod("setDispstr",signature("CopulaObj", "character"), function(this, value) { 
+setGeneric("setDispstr<-", function(this, ..., value) standardGeneric("setDispstr<-"))
+setReplaceMethod("setDispstr",signature("CopulaObj", "character"), function(this, value) {
 	this@dispstr<- value
 	this
 })
-	
+
 #' Set the degree of freedom for t Copula.
 #' @param this Copula Object
 #' @param value The degree of freedom. The default value is 3.
 #' @rdname setDf
 #' @export
-setGeneric("setDf<-", function(this,value, ...) standardGeneric("setDf<-"))
-setReplaceMethod("setDf",signature("CopulaObj", "numeric"), function(this, value) { 
+setGeneric("setDf<-", function(this, ..., value) standardGeneric("setDf<-"))
+setReplaceMethod("setDf",signature("CopulaObj", "numeric"), function(this, value) {
 	this@df<- value
 	this
 })
 
-setReplaceMethod("setObservation",signature("CopulaObj", "matrix"), function(this, value) { 
+setReplaceMethod("setObservation",signature("CopulaObj", "matrix"), function(this, value) {
 	this@observation<- value
 	this
 })
@@ -119,7 +119,7 @@ setReplaceMethod("setObservation",signature("CopulaObj", "matrix"), function(thi
 #' @export
 setGeneric("getCopula", function(object, ...) standardGeneric("getCopula"))
 setMethod("getCopula", signature("CopulaObj"), function(object)
-{	
+{
 	tryCatch({
 		require(copula)
 		if (object@type=="normal" || object@type=="t"){
@@ -134,7 +134,7 @@ setMethod("getCopula", signature("CopulaObj"), function(object)
 		print(paste0(">>>Critical Error for copula construction: ", object@info,", ",err))
 		gc()
 		return(-1)
-	})	
+	})
 })
 
 #' Copula sampling. It will generate correlated variables or percentiles when marginal distributions are not specified.
@@ -150,7 +150,7 @@ setMethod("getCopula", signature("CopulaObj"), function(object)
 #' @export
 setGeneric("copulaSample", function(object, n, ...) standardGeneric("copulaSample"))
 setMethod("copulaSample", signature("CopulaObj","numeric"), function(object, n)
-{	
+{
 	tryCatch({
 		require(copula)
 		obj<-getCopula(object)
@@ -180,7 +180,7 @@ setMethod("copulaSample", signature("CopulaObj","numeric"), function(object, n)
 		print(paste0(">>>Critical Error for copula sampling: ", object@info,", ",err))
 		gc()
 		return(-1)
-	})	
+	})
 })
 
 #' Copula plotting. Only for 2 or 3 variables
@@ -195,7 +195,7 @@ setMethod("copulaSample", signature("CopulaObj","numeric"), function(object, n)
 #' @export
 setGeneric("copulaPlot", function(object, ...) standardGeneric("copulaPlot"))
 setMethod("copulaPlot", signature("CopulaObj"), function(object)
-{	
+{
 	samples<-copulaSample(object, 1000)
 	par(mfrow = c(1, 1))
 	if (object@dimension==2)
@@ -210,8 +210,8 @@ setMethod("copulaPlot", signature("CopulaObj"), function(object)
 })
 
 
-setMethod("toString",signature("CopulaObj"), function(object) 
-{ 
+setMethod("toString",signature("CopulaObj"), function(object)
+{
 	return(paste("Copula type=", object@type, " info=", object@info, " dim=", length(object@marginal), " param=c(", paste(object@param, collapse=";"), ") marginal=list(", paste(unlist(lapply(object@marginal, toString)), collapse=";") , ") df=", object@df, " dispstr=", object@dispstr, sep=""))
 })
 
@@ -223,12 +223,12 @@ setGeneric("copulaDataPlot", function(object, ...) standardGeneric("copulaDataPl
 setMethod("copulaDataPlot",signature("CopulaObj"), function(object) {
 	par(mfrow = c(1,1))
 	if (nrow(object@observation) >0 && ncol(object@observation) < 3){
-		plot(object@observation, main = "Correlated Observation Plot", col = "blue") 
+		plot(object@observation, main = "Correlated Observation Plot", col = "blue")
 	}else if (nrow(object@observation) >0 && ncol(object@observation) >= 3){
 		require(scatterplot3d)
 		scatterplot3d(object@observation[,1:3], main = "Correlated Observation Plot", col = "blue")
 	} else {
-		plotText("The observation data is not available") 
+		plotText("The observation data is not available")
 	}
 })
 
@@ -263,7 +263,7 @@ setMethod("copulaDataPlot",signature("CopulaObj"), function(object) {
 #' @rdname copulaFit
 #' @export
 setGeneric("copulaFit", function(object, ...) standardGeneric("copulaFit"))
-setMethod("copulaFit",signature("CopulaObj"), function(object) 
+setMethod("copulaFit",signature("CopulaObj"), function(object)
 {
 	tryCatch({
 		require(copula)
@@ -277,30 +277,30 @@ setMethod("copulaFit",signature("CopulaObj"), function(object)
 			} else {
 				object@param <- para
 			}
-			
+
 			sdx <- coef(fitcop,SE=TRUE)[,2]
-			
+
 			if (object@fittest==TRUE){
 				gof <- gofCopula(getCopula(object), u, N=200, estim.method=object@fitmethod, simulation="mult", method="Sn", ties=FALSE, hideWarnings = TRUE)
-				
+
 				object@coutput = data.frame(Copula=character(),
-									Method=character(), 
-									Parameter=character(), 
+									Method=character(),
+									Parameter=character(),
 									SD=character(),
 									DoF=integer(),
-									Sn=double(), 
-									p=double(), 
+									Sn=double(),
+									p=double(),
 									stringsAsFactors=FALSE)
 
 				object@coutput[1,] = c(object@type, object@fitmethod, paste(round(object@param,4),collapse=';'), paste(round(sdx,4),collapse=';'), object@df, round(gof$statistic,4), round(gof$p.value,4))
 			} else {
 				object@coutput = data.frame(Copula=character(),
-									Method=character(), 
-									Parameter=character(), 
+									Method=character(),
+									Parameter=character(),
 									SD=character(),
 									DoF=integer(),
-									Sn=double(), 
-									p=double(), 
+									Sn=double(),
+									p=double(),
 									stringsAsFactors=FALSE)
 
 				object@coutput[1,] = c(object@type, object@fitmethod, paste(round(object@param,4),collapse=';'), paste(round(sdx,4),collapse=';'), object@df, NA, NA)
@@ -320,12 +320,12 @@ setMethod("copulaFit",signature("CopulaObj"), function(object)
 		print(paste0(">>>Critical Error for copula fitting: ", object@info,", ",err))
 		gc()
 		object@coutput = data.frame(Copula=character(),
-							Method=character(), 
-							Parameter=character(), 
+							Method=character(),
+							Parameter=character(),
 							SD=character(),
 							DoF=integer(),
-							Sn=double(), 
-							p=double(), 
+							Sn=double(),
+							p=double(),
 							stringsAsFactors=FALSE)
 
 		object@coutput[1,] <- c(object@type, object@fitmethod, paste(round(object@param,4),collapse=';'), paste(round(sdx,4),collapse=';'), object@df, NA, NA)
@@ -335,7 +335,7 @@ setMethod("copulaFit",signature("CopulaObj"), function(object)
 })
 
 setGeneric("copulaFitErr", function(object, ...) standardGeneric("copulaFitErr"))
-setMethod("copulaFitErr",signature("CopulaObj"), function(object) 
+setMethod("copulaFitErr",signature("CopulaObj"), function(object)
 {
 	tryCatch({
 		require(copula)
@@ -349,30 +349,30 @@ setMethod("copulaFitErr",signature("CopulaObj"), function(object)
 			} else {
 				object@param <- para
 			}
-			
+
 			sdx <- coef(fitcop,SE=TRUE)[,2]
-			
+
 			if (object@fittest==TRUE){
 				gof <- gofCopula(getCopula(object), u, N=200, estim.method=object@fitmethod, simulation="mult", method="Sn", ties=FALSE, hideWarnings = TRUE)
-				
+
 				object@coutput = data.frame(Copula=character(),
-									Method=character(), 
-									Parameter=character(), 
+									Method=character(),
+									Parameter=character(),
 									SD=character(),
 									DoF=integer(),
-									Sn=double(), 
-									p=double(), 
+									Sn=double(),
+									p=double(),
 									stringsAsFactors=FALSE)
 
 				object@coutput[1,] = c(object@type, object@fitmethod, paste(round(object@param,4),collapse=';'), paste(round(sdx,4),collapse=';'), object@df, round(gof$statistic,4), round(gof$p.value,4))
 			} else {
 				object@coutput = data.frame(Copula=character(),
-									Method=character(), 
-									Parameter=character(), 
+									Method=character(),
+									Parameter=character(),
 									SD=character(),
 									DoF=integer(),
-									Sn=double(), 
-									p=double(), 
+									Sn=double(),
+									p=double(),
 									stringsAsFactors=FALSE)
 
 				object@coutput[1,] = c(object@type, object@fitmethod, paste(round(object@param,4),collapse=';'), paste(round(sdx,4),collapse=';'), object@df, NA, NA)
@@ -392,12 +392,12 @@ setMethod("copulaFitErr",signature("CopulaObj"), function(object)
 		#print(paste0(">>>Critical Error for copula fitting: ", object@info,", ",err))
 		gc()
 		object@coutput = data.frame(Copula=character(),
-							Method=character(), 
-							Parameter=character(), 
+							Method=character(),
+							Parameter=character(),
 							SD=character(),
 							DoF=integer(),
-							Sn=double(), 
-							p=double(), 
+							Sn=double(),
+							p=double(),
 							stringsAsFactors=FALSE)
 
 		object@coutput[1,] <- c(object@type, object@fitmethod, paste(round(object@param,4),collapse=';'), paste(round(sdx,4),collapse=';'), object@df, NA, NA)
@@ -443,14 +443,14 @@ setMethod("copulaFitPlot",signature("CopulaObj"), function(object) {
 		par(mfrow = c(1,2))
 		xlabs="Margin 1"; ylabs="Margin 2"; zlabs="Margin 3"
 		marginals<-copulaSample(object, 1000)
-		
+
 		y<-object@observation
 			if (nrow(y) >0 && ncol(y)==2){
 				xmin <- round(min(y[,1],marginals[,1]))
 				xmax <- round(max(y[,1],marginals[,1]))
 				ymin <- round(min(y[,2],marginals[,2]))
 				ymax <- round(max(y[,2],marginals[,2]))
-				plot(y, main = "Observation Plot", col = "blue", cex=0.3, xlab = xlabs, ylab =ylabs, xlim=c(xmin,xmax),ylim=c(ymin,ymax)) 
+				plot(y, main = "Observation Plot", col = "blue", cex=0.3, xlab = xlabs, ylab =ylabs, xlim=c(xmin,xmax),ylim=c(ymin,ymax))
 			}
 			else if (nrow(y) >0 && ncol(y)>=3){
 				require(scatterplot3d)
@@ -469,7 +469,7 @@ setMethod("copulaFitPlot",signature("CopulaObj"), function(object) {
 		if (is.null(colnames(marginals)) && !is.null(colnames(y))){
 			colnames(marginals)<-colnames(y)
 		}
-		
+
 		#mtx <- ifelse(length(object@marginal)==0,"Fitted Marginal Percentile Plot","Fitted Marginal Plot")
 		mtx <- paste0("Fitted ",object@type, " Copula Plot")
 		if (ncol(marginals)==2){
