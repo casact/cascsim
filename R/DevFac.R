@@ -32,17 +32,23 @@ setClass("DevFac",
 	)
 )
 
+#' @rdname setID-methods
+#' @aliases setID,ANY-method
 setReplaceMethod("setID",signature("DevFac", "character"), function(this, value) {
 	this@FacID<- as.character(value)
 	this
 })
 
 #' Determine whether the development factor is determined by a predictive model or a fixed schedule by development year
+#' @name setFacModel<-
 #' @param this DevFac Object
+#' @param ... Additional function arguments
 #' @param value Logical Value (default:FALSE)
-#' @rdname setFacModel
-#' @export
+#' @rdname setFacModel-methods
+#' @exportMethod setFacModel<-
 setGeneric("setFacModel<-", function(this, ..., value) standardGeneric("setFacModel<-"))
+#' @rdname setFacModel-methods
+#' @aliases setFacModel,ANY-method
 setReplaceMethod("setFacModel",signature("DevFac", "logical"), function(this, value) {
 	this@FacModel<- value
 	this
@@ -50,11 +56,15 @@ setReplaceMethod("setFacModel",signature("DevFac", "logical"), function(this, va
 
 #' Set the model format/link function (identity/inverse/log/exponential).
 #' Only used when FacModel == TRUE.
+#' @name setFun<-
 #' @param this DevFac Object
+#' @param ... Additional function arguments
 #' @param value String Value (default:"identity")
-#' @rdname setFun
-#' @export
+#' @rdname setFun-methods
+#' @exportMethod setFun<-
 setGeneric("setFun<-", function(this, ..., value) standardGeneric("setFun<-"))
+#' @rdname setFun-methods
+#' @aliases setFun,ANY-method
 setReplaceMethod("setFun",signature("DevFac", "character"), function(this, value) {
 	this@fun<- value
 	this
@@ -63,11 +73,15 @@ setReplaceMethod("setFun",signature("DevFac", "character"), function(this, value
 #' @title Set additional explanatory variable names.
 #' @description
 #' \code{setXname<-} sets explanatory variable names in addition to "Intercept","DevelopmentYear","IncurredLoss", and "OSRatio". Additional variable names must match exactly with claim data. The xname vector is only used when ibnerfModel == TRUE.
+#' @name setXname<-
 #' @param this DevFac Object
+#' @param ... Additional function arguments
 #' @param value Character Vector
-#' @rdname setXname
-#' @export
+#' @rdname setXname-methods
+#' @exportMethod setXname<-
 setGeneric("setXname<-", function(this, ..., value) standardGeneric("setXname<-"))
+#' @rdname setXname-methods
+#' @aliases setXname,ANY-method
 setReplaceMethod("setXname",signature("DevFac", "vector"), function(this, value) {
 	this@xname<- value
 	this@FacModel<- TRUE
@@ -77,11 +91,15 @@ setReplaceMethod("setXname",signature("DevFac", "vector"), function(this, value)
 #' @title Set the values of model parameters.
 #' @description
 #' \code{setParas<-} sets model parameters. Their order must match the order of c("Intercept","DevelopmentYear","IncurredLoss","OSRatio",xname,"Volatility"). "Volatility" stands for the volatility of the error term in the model and used to simulate IBNER development factors. The parameter vector is only used when ibnerfModel == TRUE.
+#' @name setParas<-
 #' @param this DevFac Object
+#' @param ... Additional function arguments
 #' @param value Numeric Vector
-#' @rdname setParas
-#' @export
+#' @rdname setParas-methods
+#' @exportMethod setParas<-
 setGeneric("setParas<-", function(this, ..., value) standardGeneric("setParas<-"))
+#' @rdname setParas-methods
+#' @aliases setParas,ANY-method
 setReplaceMethod("setParas",signature("DevFac", "vector"), function(this, value) {
 	this@paras<- value
 	this@FacModel<- TRUE
@@ -91,11 +109,15 @@ setReplaceMethod("setParas",signature("DevFac", "vector"), function(this, value)
 #' @title Set the year-to-year loss development factor.
 #' @description
 #' \code{setMeanList<-} sets expected year-to-year loss development factor. Years after It is only used when ibnerfModel == FALSE.
+#' @name setMeanList<-
 #' @param this DevFac Object
+#' @param ... Additional function arguments
 #' @param value Numeric Vector
-#' @rdname setMeanList
-#' @export
+#' @rdname setMeanList-methods
+#' @exportMethod setMeanList<-
 setGeneric("setMeanList<-", function(this, ..., value) standardGeneric("setMeanList<-"))
+#' @rdname setMeanList-methods
+#' @aliases setMeanList,ANY-method
 setReplaceMethod("setMeanList",signature("DevFac", "vector"), function(this, value) {
 	this@meanList<- value
 	this@FacModel<- FALSE
@@ -105,11 +127,15 @@ setReplaceMethod("setMeanList",signature("DevFac", "vector"), function(this, val
 #' @title Set the year-to-year loss development factor volatility.
 #' @description
 #' \code{setMeanList<-} sets year-to-year loss development factor volatility. It is used to simulate loss development factor assuming a normal distribution. It can be set to zero for deterministic estimation. It is only used when ibnerfModel == FALSE.
+#' @name setVolList<-
 #' @param this DevFac Object
+#' @param ... Additional function arguments
 #' @param value Numeric Vector
-#' @rdname setVolList
-#' @export
+#' @rdname setVolList-methods
+#' @exportMethod setVolList<-
 setGeneric("setVolList<-", function(this, ..., value) standardGeneric("setVolList<-"))
+#' @rdname setVolList-methods
+#' @aliases setVolList,ANY-method
 setReplaceMethod("setVolList",signature("DevFac", "vector"), function(this, value) {
 	this@volList<- value
 	this@FacModel<- FALSE
@@ -119,7 +145,9 @@ setReplaceMethod("setVolList",signature("DevFac", "vector"), function(this, valu
 #' @title Set up an IBNER loss development schedule.
 #' @description
 #' \code{setDevFac} sets a loss development schedule, from either a predictive model or a year-to-year factor vector.
+#' @name setDevFac
 #' @param object DevFac Object
+#' @param ... Additional function arguments
 #' @examples
 #' xIBNERFactor <- new("DevFac", FacID = "IF1", FacModel = FALSE, meanList = c(1.26,1.1,1.05,1.02,1),
 #' volList = rep(0.02,5))
@@ -134,9 +162,11 @@ setReplaceMethod("setVolList",signature("DevFac", "vector"), function(this, valu
 #' setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
 #' xIBNERFactor<-setDevFac(xIBNERFactor)
 #' xIBNERFactor
-#' @rdname setDevFac
-#' @export
+#' @rdname setDevFac-methods
+#' @exportMethod setDevFac
 setGeneric("setDevFac", function(object,...) standardGeneric("setDevFac"))
+#' @rdname setDevFac-methods
+#' @aliases setDevFac,ANY-method
 setMethod("setDevFac",signature("DevFac"), function(object) {
 	tryCatch({
 		xnamelen <- length(object@xname)

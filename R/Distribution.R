@@ -47,11 +47,15 @@ setClass("Weibull", contains="Distribution")
 setClass("Empirical", contains="Distribution")
 
 #' Set distribution parameters.
+#' @name setParams<-
 #' @param this Distribution Object
+#' @param ... Additional function arguments.
 #' @param value Numeric vector containing parameters
-#' @rdname setParams
-#' @export
+#' @rdname setParams-methods
+#' @exportMethod setParams<-
 setGeneric("setParams<-", function(this, ..., value) standardGeneric("setParams<-"))
+#' @rdname setParams-methods
+#' @aliases setParams,ANY-method
 setReplaceMethod("setParams",signature("Distribution","numeric"), function(this, value) {
 	this@p1<-value[1]
 	this@p2<-value[2]
@@ -61,22 +65,30 @@ setReplaceMethod("setParams",signature("Distribution","numeric"), function(this,
 
 #' Set the list of values and corresponding probabilities (Pr(X<value) for continuous variable and Pr(X==value) for discrete variable).
 #' It is only used for empirical distribution.
+#' @name setEmpirical<-
 #' @param this Distribution Object
+#' @param ... Additional function arguments.
 #' @param value Two-column matrix with values and probabilities
-#' @rdname setEmpirical
-#' @export
+#' @rdname setEmpirical-methods
+#' @exportMethod setEmpirical<-
 setGeneric("setEmpirical<-", function(this, ..., value) standardGeneric("setEmpirical<-"))
+#' @rdname setEmpirical-methods
+#' @aliases setEmpirical,ANY-method
 setReplaceMethod("setEmpirical",signature("Distribution", "matrix"), function(this, value) {
 	this@empirical<- value
 	this
 	})
 
 #' Set the min and max of the variable.
+#' @name setRange<-
 #' @param this Distribution Object
+#' @param ... Additional function arguments.
 #' @param value a two-element vector contains min and max.
-#' @rdname setRange
-#' @export
+#' @rdname setRange-methods
+#' @exportMethod setRange<-
 setGeneric("setRange<-", function(this, ..., value) standardGeneric("setRange<-"))
+#' @rdname setRange-methods
+#' @aliases setRange,ANY-method
 setReplaceMethod("setRange",signature("Distribution","numeric"), function(this, value) {
 	this@min <-value[1]
 	this@max <-value[2]
@@ -84,25 +96,33 @@ setReplaceMethod("setRange",signature("Distribution","numeric"), function(this, 
 })
 
 #' Set the indicator of truncated distribution.
+#' @name setTruncated<-
 #' @param this Distribution Object
+#' @param ... Additional function arguments.
 #' @param value Boolean to indicate whether the distribution is truncated by min and max or not.
-#' @rdname setTruncated
-#' @export
+#' @rdname setTruncated-methods
+#' @exportMethod setTruncated<-
 setGeneric("setTruncated<-", function(this, ..., value) standardGeneric("setTruncated<-"))
+#' @rdname setTruncated-methods
+#' @aliases setTruncated,ANY-method
 setReplaceMethod("setTruncated",signature("Distribution","logical"), function(this, value) {
 	this@truncated<-value
 	this
 })
 
 #' Set the minimum of the distribution. For example, the distribution of settlement lag for open claims
+#' @name setMin
 #' @param object A Distribution Object
-#' @param minval The minimum value.
+#' @param ... Additional function arguments.
 #' @examples
 #' xLognormal <- new("Lognormal",p1=2,p2=3)
 #' xLognormal <- setMin(xLognormal,50)
-#' @rdname setMin
-#' @export
+#' @rdname setMin-methods
+#' @exportMethod setMin
 setGeneric("setMin", function(object,...) standardGeneric("setMin"))
+#' @param minval The minimum value.
+#' @rdname setMin-methods
+#' @aliases setMin,ANY-method
 setMethod("setMin",signature("Distribution"), function(object,minval) {
 	results <- list()
 	for(x in minval){
@@ -115,61 +135,83 @@ setMethod("setMin",signature("Distribution"), function(object,minval) {
 
 
 #' Calculate the mean of 100000 sampled values from the distribution.
+#' @name sampleMean
 #' @param object A Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xLognormal <- new("Lognormal",p1=2,p2=3)
 #' sampleMean(xLognormal)
-#' @rdname sampleMean
-#' @export
+#' @rdname sampleMean-methods
+#' @exportMethod sampleMean
 setGeneric("sampleMean", function(object,...) standardGeneric("sampleMean"))
+#' @rdname sampleMean-methods
+#' @aliases sampleMean,ANY-method
 setMethod("sampleMean",signature("Distribution"), function(object) { return (mean(doSample(object, 100000)))})
 
 #' Calculate the standard deviation of 10000 sampled values from the distribution.
+#' @name sampleSd
 #' @param object A Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xLognormal <- new("Lognormal",p1=2,p2=3)
 #' sampleSd(xLognormal)
-#' @rdname sampleSd
-#' @export
+#' @rdname sampleSd-methods
+#' @exportMethod sampleSd
 setGeneric("sampleSd", function(object,...) standardGeneric("sampleSd"))
+#' @rdname sampleSd-methods
+#' @aliases sampleSd,ANY-method
 setMethod("sampleSd",signature("Distribution"), function(object) { return (sd(doSample(object, 10000)))})
 
 #' Calculate the skewness of 10000 sampled values from the distribution.
+#' @name sampleSkew
 #' @param object A Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xLognormal <- new("Lognormal",p1=2,p2=3)
 #' sampleSkew(xLognormal)
-#' @rdname sampleSkew
-#' @export
+#' @rdname sampleSkew-methods
+#' @importFrom moments skewness
+#' @exportMethod sampleSkew
 setGeneric("sampleSkew", function(object,...) standardGeneric("sampleSkew"))
+#' @rdname sampleSkew-methods
+#' @aliases sampleSkew,ANY-method
 setMethod("sampleSkew",signature("Distribution"), function(object) {
-	require(moments)
+	#require(moments)
 	return (skewness(doSample(object, 10000)))
 })
 
 #' Calculate the excess kurtosis of 10000 sampled values from the distribution.
+#' @name sampleKurtosis
 #' @param object A Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xLognormal <- new("Lognormal",p1=2,p2=3)
 #' sampleKurtosis(xLognormal)
-#' @rdname sampleKurtosis
-#' @export
+#' @rdname sampleKurtosis-methods
+#' @importFrom moments kurtosis
+#' @exportMethod sampleKurtosis
 setGeneric("sampleKurtosis", function(object,...) standardGeneric("sampleKurtosis"))
+#' @rdname sampleKurtosis-methods
+#' @aliases sampleKurtosis,ANY-method
 setMethod("sampleKurtosis",signature("Distribution"), function(object) {
-	require(moments)
+	#require(moments)
 	return (kurtosis(doSample(object, 10000))-3)
 })
 
 #' Sampling from the distribution.
+#' @name doSample
 #' @param object A Distribution Object
 #' @param n Number of samples
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' doSample(xPareto,10000)
-#' @rdname doSample
-#' @export
+#' @rdname doSample-methods
+#' @exportMethod doSample
 setGeneric("doSample", function(object, n, ...) standardGeneric("doSample"))
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Normal", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -185,6 +227,8 @@ setMethod("doSample",signature("Normal", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Beta", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -200,6 +244,8 @@ setMethod("doSample",signature("Beta", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Exponential", "numeric"),  function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -215,6 +261,8 @@ setMethod("doSample",signature("Exponential", "numeric"),  function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Gamma", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -230,6 +278,8 @@ setMethod("doSample",signature("Gamma", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Lognormal", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -245,6 +295,8 @@ setMethod("doSample",signature("Lognormal", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Pareto", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -260,6 +312,8 @@ setMethod("doSample",signature("Pareto", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Poisson", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -275,6 +329,8 @@ setMethod("doSample",signature("Poisson", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("NegativeBinomial", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -290,6 +346,8 @@ setMethod("doSample",signature("NegativeBinomial", "numeric"), function(object, 
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Geometric", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -305,6 +363,8 @@ setMethod("doSample",signature("Geometric", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Uniform", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -320,6 +380,8 @@ setMethod("doSample",signature("Uniform", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Weibull", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -335,6 +397,8 @@ setMethod("doSample",signature("Weibull", "numeric"), function(object, n) {
 	}
 )
 
+#' @rdname doSample-methods
+#' @aliases doSample,ANY-method
 setMethod("doSample",signature("Empirical", "numeric"), function(object, n) {
 	tryCatch({
 		if(object@truncated==FALSE){
@@ -351,6 +415,9 @@ setMethod("doSample",signature("Empirical", "numeric"), function(object, n) {
 )
 
 #Density function
+#' @param log Boolean variable to indicate whether to return log of probability
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Normal"), function(object, x, log = FALSE) {
 	if (object@truncated == FALSE) {
 		dnorm(x, mean=object@p1, sd=object@p2, log=log)
@@ -359,6 +426,8 @@ setMethod("Density",signature("Normal"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Beta"), function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dbeta(x, object@p1, object@p2, object@p3, log=log)
@@ -367,6 +436,8 @@ setMethod("Density",signature("Beta"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Exponential"),  function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dexp(x, rate=object@p1, log=log)
@@ -375,6 +446,8 @@ setMethod("Density",signature("Exponential"),  function(object, x, log = FALSE) 
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Gamma"), function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dgamma(x, shape =object@p1, scale=object@p2, log=log)
@@ -383,6 +456,8 @@ setMethod("Density",signature("Gamma"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Geometric"), function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dgeom(x, prob =object@p1, log=log)
@@ -391,6 +466,8 @@ setMethod("Density",signature("Geometric"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Lognormal"), function(object, x, log = FALSE) {
 	if (object@truncated == FALSE) {
 		dlnorm(x, meanlog=object@p1, sdlog=object@p2, log=log)
@@ -399,6 +476,8 @@ setMethod("Density",signature("Lognormal"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("NegativeBinomial"), function(object, x, log = FALSE) {
 	if (object@truncated == FALSE) {
 		dnbinom(x, size =object@p1, prob=object@p2, log=log)
@@ -407,6 +486,8 @@ setMethod("Density",signature("NegativeBinomial"), function(object, x, log = FAL
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Pareto"), function(object, x, log = FALSE) {
 	if (object@truncated == FALSE) {
 		dpareto(x, xm =object@p1, alpha=object@p2)
@@ -415,6 +496,8 @@ setMethod("Density",signature("Pareto"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Poisson"), function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dpois(x, lambda =object@p1, log=log)
@@ -423,6 +506,8 @@ setMethod("Density",signature("Poisson"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Uniform"), function(object, x, log = FALSE) {
 	if (object@truncated == FALSE) {
 		dunif(x, min =object@p1, max=max(object@p1,object@p2), log=log)
@@ -431,6 +516,8 @@ setMethod("Density",signature("Uniform"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Weibull"), function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dweibull(x, shape =object@p1, scale=object@p2, log=log)
@@ -439,6 +526,8 @@ setMethod("Density",signature("Weibull"), function(object, x, log = FALSE) {
 	}
 })
 
+#' @rdname Density-methods
+#' @aliases Density,ANY-method
 setMethod("Density",signature("Empirical"), function(object, x, log = FALSE) {
  	if (object@truncated == FALSE) {
 		dempirical(x, cdf =object@empirical)
@@ -448,6 +537,8 @@ setMethod("Density",signature("Empirical"), function(object, x, log = FALSE) {
 })
 
 #Probability function
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Normal"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pnorm(q, mean=object@p1, sd=object@p2)
@@ -456,6 +547,8 @@ setMethod("Probability",signature("Normal"), function(object, q) {
 	}
  })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Beta"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pbeta(q, object@p1, object@p2)
@@ -464,6 +557,8 @@ setMethod("Probability",signature("Beta"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Exponential"),  function(object, q) {
 	if (object@truncated == FALSE) {
 		pexp(q, rate =object@p1)
@@ -472,6 +567,8 @@ setMethod("Probability",signature("Exponential"),  function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Gamma"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pgamma(q, shape =object@p1, scale=object@p2)
@@ -480,6 +577,8 @@ setMethod("Probability",signature("Gamma"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Geometric"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pgeom(q, prob =object@p1)
@@ -488,6 +587,8 @@ setMethod("Probability",signature("Geometric"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Lognormal"), function(object, q) {
 	if (object@truncated == FALSE) {
 		plnorm(q, meanlog =object@p1, sdlog=object@p2)
@@ -496,6 +597,8 @@ setMethod("Probability",signature("Lognormal"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("NegativeBinomial"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pnbinom(q, size =object@p1, prob=object@p2)
@@ -504,6 +607,8 @@ setMethod("Probability",signature("NegativeBinomial"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Pareto"), function(object, q) {
 	if (object@truncated == FALSE) {
 		ppareto(q, xm =object@p1, alpha=object@p2)
@@ -512,6 +617,8 @@ setMethod("Probability",signature("Pareto"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Poisson"), function(object, q) {
 	if (object@truncated == FALSE) {
 		ppois(q, lambda =object@p1)
@@ -520,6 +627,8 @@ setMethod("Probability",signature("Poisson"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Uniform"), function(object, q) {
 	if (object@truncated == FALSE) {
 		punif(q, min=object@p1, max=max(object@p1,object@p2))
@@ -528,6 +637,8 @@ setMethod("Probability",signature("Uniform"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Weibull"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pweibull(q, shape =object@p1, scale=object@p2)
@@ -536,6 +647,8 @@ setMethod("Probability",signature("Weibull"), function(object, q) {
 	}
 })
 
+#' @rdname Probability-methods
+#' @aliases Probability,ANY-method
 setMethod("Probability",signature("Empirical"), function(object, q) {
 	if (object@truncated == FALSE) {
 		pempirical(q, cdf =object@empirical)
@@ -545,6 +658,8 @@ setMethod("Probability",signature("Empirical"), function(object, q) {
 })
 
 #Quantile function
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Normal"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qnorm(p, mean=object@p1, sd=object@p2)
@@ -553,6 +668,8 @@ setMethod("Quantile",signature("Normal"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Beta"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qbeta(p, object@p1, object@p2)
@@ -561,6 +678,8 @@ setMethod("Quantile",signature("Beta"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Exponential"),  function(object, p) {
 	if (object@truncated == FALSE) {
 		qexp(p, rate =object@p1)
@@ -569,6 +688,8 @@ setMethod("Quantile",signature("Exponential"),  function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Gamma"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qgamma(p, shape =object@p1, scale=object@p2)
@@ -577,6 +698,8 @@ setMethod("Quantile",signature("Gamma"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Geometric"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qgeom(p, prob =object@p1)
@@ -585,6 +708,8 @@ setMethod("Quantile",signature("Geometric"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Lognormal"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qlnorm(p, meanlog =object@p1, sdlog=object@p2)
@@ -593,6 +718,8 @@ setMethod("Quantile",signature("Lognormal"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("NegativeBinomial"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qnbinom(p, size =object@p1, prob=object@p2)
@@ -601,6 +728,8 @@ setMethod("Quantile",signature("NegativeBinomial"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Pareto"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qpareto(p, xm =object@p1, alpha=object@p2)
@@ -609,6 +738,8 @@ setMethod("Quantile",signature("Pareto"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Poisson"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qpois(p, lambda =object@p1)
@@ -617,6 +748,8 @@ setMethod("Quantile",signature("Poisson"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Uniform"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qunif(p, min=object@p1, max=max(object@p1,object@p2))
@@ -625,6 +758,8 @@ setMethod("Quantile",signature("Uniform"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Weibull"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qweibull(p, shape =object@p1, scale=object@p2)
@@ -633,6 +768,8 @@ setMethod("Quantile",signature("Weibull"), function(object, p) {
 	}
 })
 
+#' @rdname Quantile-methods
+#' @aliases Quantile,ANY-method
 setMethod("Quantile",signature("Empirical"), function(object, p) {
 	if (object@truncated == FALSE) {
 		qempirical(p, cdf =object@empirical)
@@ -641,6 +778,8 @@ setMethod("Quantile",signature("Empirical"), function(object, p) {
 	}
 })
 
+#' @rdname doPlot-methods
+#' @aliases doPlot,ANY-method
 setMethod("doPlot",signature("Distribution"), function(object) {
 	par(mfrow = c(2, 2))
 	#draw some basic features
@@ -670,98 +809,230 @@ setMethod("toString",signature("Empirical"), function(object) { return(paste("Em
 
 #' Calculate Theoretical Mean of distribution.
 #' min and max are not applied
+#' @name TMean
 #' @param object Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' TMean(xPareto)
-#' @rdname TMean
-#' @export
+#' @rdname TMean-methods
+#' @export TMean
 setGeneric("TMean", function(object, ...) standardGeneric("TMean"))
 
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Normal"), function(object) { return (object@p1)})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Beta"), function(object) { return (object@p1/(object@p1+object@p2))})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Exponential"), function(object) { return (object@p1^(-1))})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Gamma"), function(object) { return (object@p1*object@p2)})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Geometric"), function(object) { return (1/object@p1)})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Lognormal"), function(object) { return (exp(object@p1+object@p2^2/2))})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("NegativeBinomial"), function(object) { return (object@p1*(1-object@p2)/object@p2)})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Pareto"), function(object) { return (ifelse(object@p2>1, object@p1*object@p2/(object@p2-1), Inf))})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Poisson"), function(object) { return (object@p1)})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Uniform"), function(object) { return ((object@p1+object@p2)/2)})
+
+#' @rdname TMean-methods
+#' @aliases TMean,ANY-method
 setMethod("TMean",signature("Weibull"), function(object) { return (object@p2*gamma(1+1/object@p1))})
 
 #' Calculate Theoretical Standard Deviation of distribution.
 #' min and max are not applied
+#' @name TSD
 #' @param object Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=3)
 #' TSD(xPareto)
-#' @rdname TSD
-#' @export
+#' @rdname TSD-methods
+#' @exportMethod TSD
 setGeneric("TSD", function(object, ...) standardGeneric("TSD"))
 
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Normal"), function(object) { return (object@p2)})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Beta"), function(object) { return (sqrt(object@p1*object@p2/(object@p1+object@p2+1))/(object@p1+object@p2))})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Exponential"), function(object) { return ((object@p1)^(-1))})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Gamma"), function(object) { return (object@p1^0.5*object@p2)})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Geometric"), function(object) { return ((1-object@p1)^0.5/object@p1)})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Lognormal"), function(object) { return (sqrt((exp(object@p2^2)-1)*exp(2*object@p1+object@p2^2)))})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("NegativeBinomial"), function(object) { return (sqrt(object@p1*(1-object@p2))/object@p2)})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Pareto"), function(object) { return (ifelse(object@p2>2, object@p1/(object@p2-1)*sqrt(object@p2/(object@p2-2)), Inf))})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Poisson"), function(object) { return (object@p1)})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Uniform"), function(object) { return ((object@p2-object@p1)/sqrt(12))})
+
+#' @rdname TSD-methods
+#' @aliases TSD,ANY-method
 setMethod("TSD",signature("Weibull"), function(object) { return (object@p2*sqrt(gamma(1+2/object@p1)-gamma(1+1/object@p1)^2))})
 
 
 #' Calculate Theoretical Skewness of distribution.
 #' min and max are not applied
+#' @name TSkewness
 #' @param object Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=4)
 #' TSkewness(xPareto)
-#' @rdname TSkewness
-#' @export
+#' @rdname TSkewness-methods
+#' @exportMethod TSkewness
 setGeneric("TSkewness", function(object, ...) standardGeneric("TSkewness"))
 
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Normal"), function(object) { return (0)})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Beta"), function(object) { return (2*(object@p2-object@p1)*sqrt(object@p1+object@p2+1)/(object@p1+object@p2+2)/sqrt(object@p1*object@p2))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Exponential"), function(object) { return (2)})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Gamma"), function(object) { return (2/object@p1^(-0.5))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Geometric"), function(object) { return ((2-object@p1)/(1-object@p1)^(-0.5))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Lognormal"), function(object) { return ((exp(object@p2^2)+2)*sqrt(exp(object@p2^2)-1))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("NegativeBinomial"), function(object) { return ((2-object@p2)/sqrt(object@p1*(1-object@p2)))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Pareto"), function(object) { return (ifelse(object@p2>3, (2+2*object@p2)/(object@p2-3)*sqrt((object@p2-2)/object@p2), Inf))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Poisson"), function(object) { return (object@p1^(-0.5))})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Uniform"), function(object) { return (0)})
+
+#' @rdname TSkewness-methods
+#' @aliases TSkewness,ANY-method
 setMethod("TSkewness",signature("Weibull"), function(object) { return ((gamma(1+3/object@p1)*object@p2^3-3*TMean(object)*TSD(object)^2-TMean(object)^3)/TSD(object)^3)})
 
 
 #' Calculate Theoretical Excessive Kurtosis of distribution.
 #' min and max are not applied
+#' @name TEKurt
 #' @param object Distribution Object
+#' @param ... Additional function arguments
 #' @examples
 #' xPareto <- new("Pareto",p1=20,p2=5)
 #' TEKurt(xPareto)
-#' @rdname TEKurt
-#' @export
+#' @rdname TEKurt-methods
+#' @exportMethod TEKurt
 setGeneric("TEKurt", function(object, ...) standardGeneric("TEKurt"))
 
-setMethod("TEKurt",signature("Normal"), function(object, n, log = FALSE) { return (0)})
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
+setMethod("TEKurt",signature("Normal"), function(object) { return (0)})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Beta"), function(object) { return (6*((object@p1-object@p2)*(object@p1-object@p2)*(object@p1+object@p2+1)-object@p1*object@p2*(object@p1+object@p2+2))/(object@p1*object@p2*(object@p1+object@p2+2)*(object@p1+object@p2+3)))})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Exponential"), function(object) { return (6)})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Gamma"), function(object) { return (6/object@p1)})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Geometric"), function(object) { return (6+object@p1^2/(1-object@p1))})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Lognormal"), function(object) { return ((exp(4*object@p2^2)+2*exp(3*object@p2^2)+3*exp(2*object@p2^2)-6))})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("NegativeBinomial"), function(object) { return (6/object@p1+object@p2^2/((1-object@p2)*object@p1))})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Pareto"), function(object) { return (ifelse(object@p2>4, 6*(object@p2^3+object@p2^2-6*object@p2-2)/(object@p2*(object@p2-3)*(object@p2-4)), Inf))})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Poisson"), function(object) { return (object@p1^(-1))})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Uniform"), function(object) { return (-6/5)})
+
+#' @rdname TEKurt-methods
+#' @aliases TEKurt,ANY-method
 setMethod("TEKurt",signature("Weibull"), function(object) { return ((gamma(1+4/object@p1)*object@p2^4-4*TSkewness(object)*TMean(object)*TSD(object)^3-6*TMean(object)^2*TSD(object)^2-TMean(object)^4)/TSD(object)^4-3)})
 
-#' Set the class name of distribution.
-#' @param object Distribution Object
-#' @rdname objName
-#' @export
 setGeneric("objName", function(object, ...) standardGeneric("objName"))
 
 setMethod("objName",signature("Normal"), function(object) { return ("Normal")})
@@ -777,10 +1048,6 @@ setMethod("objName",signature("Uniform"), function(object) { return ("Uniform")}
 setMethod("objName",signature("Weibull"), function(object) { return ("Weibull")})
 setMethod("objName",signature("Empirical"), function(object) { return ("Empirical")})
 
-#' Set the distribution name for k-s test.
-#' @param object Distribution Object
-#' @rdname fitClassName
-#' @export
 setGeneric("fitClassName", function(object, ...) standardGeneric("fitClassName"))
 
 setMethod("fitClassName",signature("Normal"), function(object) {
@@ -868,10 +1135,6 @@ setMethod("fitClassName",signature("Empirical"), function(object) {
 	return ("empirical")
 })
 
-#' Set the initial parameter values of distribution fitting.
-#' @param object Distribution Object
-#' @rdname fitStartValue
-#' @export
 setGeneric("fitStartValue", function(object, ...) standardGeneric("fitStartValue"))
 
 setMethod("fitStartValue",signature("Normal"), function(object, n) {return (list(mean=object@p1, sd=max(0.1,object@p2)))})
@@ -886,10 +1149,6 @@ setMethod("fitStartValue",signature("Poisson"), function(object, n) {return (lis
 setMethod("fitStartValue",signature("Uniform"), function(object, n) {})
 setMethod("fitStartValue",signature("Weibull"), function(object, n) {return (list(shape=max(0.1,object@p1), scale=max(0.1,object@p2)))})
 
-#' Set the number of parameters for distribution fitting.
-#' @param object Distribution Object
-#' @rdname nParameter
-#' @export
 setGeneric("nParameter", function(object, ...) standardGeneric("nParameter"))
 
 setMethod("nParameter",signature("Normal"), function(object) { return (2) })
@@ -904,12 +1163,6 @@ setMethod("nParameter",signature("Poisson"), function(object) { return (1) })
 setMethod("nParameter",signature("Uniform"), function(object) { return (2) })
 setMethod("nParameter",signature("Weibull"), function(object) { return (2) })
 
-#' Return parameter list for distribution fitting.
-#' These methods are just for fitDistr function in MASS package. They are little bit different then R names
-#' plus, that function cannot fit all the distributions.
-#' @param object Distribution Object
-#' @rdname params
-#' @export
 setGeneric("params", function(object, ...) standardGeneric("params"))
 
 setMethod("params",signature("Normal"), function(object) {return (list(mean=object@p1, sd=object@p2))})

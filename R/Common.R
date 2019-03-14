@@ -577,7 +577,7 @@ ptweibull <- function(q,shape,scale,min=0,max=1e+9) {
 #' @param p Value of the probability
 #' @rdname tweibull
 #' @export
-qtweibull <- function(p,shape,scale,min=0,max=1+e9) {
+qtweibull <- function(p,shape,scale,min=0,max=1000000000) {
 	ifelse(p<=pweibull(min,shape,scale), 0,
 			ifelse(p>=pweibull(max,shape,scale), max-min, qweibull(p,shape,scale)-min))
 }
@@ -670,6 +670,7 @@ plotText <- function(content){
 #' @param Years Include two columns: Current development year and Settlement Year
 #' @param meanDevFac A vector that contains the expected development factor schedule for Normal distribution. It is mu for Lognormal distribution and shape for Gamma distribution.
 #' @param sdDevFac A vector that contains the standard deviation of expected development factor schedule for Normal distribution. It is sigma for Lognormal distribution and scale for Gamma distribution.
+#' @param distType distribution type for development factor. It can be "normal", "lognormal" or "gamma".
 #' @examples
 #' meanfac<-c(1.1,1.08,1.05,1.03,1.01,1)
 #' volfac<-rep(0.02,6)

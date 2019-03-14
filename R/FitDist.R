@@ -90,72 +90,35 @@ setClass("FitDist",
          )
 )
 
+#' @rdname getObservation-methods
+#' @aliases getObservation,ANY-method
 setMethod("getObservation",signature("FitDist"), function(object) { return(object@observation)})
 
-#' getFitdata
-#' Get processed data used for distribution fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getFitdata
-#' @export
 setGeneric("getFitdata", function(object,...) standardGeneric("getFitdata"))
 setMethod("getFitdata",signature("FitDist"), function(object) { return(object@fitdata)})
 
+#' @rdname getTrend-methods
+#' @aliases getTrend,ANY-method
 setMethod("getTrend",signature("FitDist"), function(object) { return(object@trend)})
 
-#' Get fitted distribution.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getFittedDist
-#' @export
 setGeneric("getFittedDist", function(object,...) standardGeneric("getFittedDist"))
 setMethod("getFittedDist",signature("FitDist"), function(object) { return(object@fitted)})
 
-#' Get the mean of experience data used for fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getMean
-#' @export
 setGeneric("getMean", function(object,...) standardGeneric("getMean"))
 setMethod("getMean",signature("FitDist"), function(object) { return(mean(object@fitdata))})
 
-#' Get the standard deviation of experience data used for fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getSd
-#' @export
 setGeneric("getSd", function(object,...) standardGeneric("getSd"))
 setMethod("getSd",signature("FitDist"), function(object) { return(sd(object@fitdata))})
 
-#' Get the degree of freedom in distribution fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getDoF
-#' @export
 setGeneric("getDoF", function(object, ...) standardGeneric("getDoF"))
 setMethod("getDoF",signature("FitDist"), function(object) {object@dof})
 
-#' Get the standard deviation of parameter estimation in distribution fitting. It is only available for mle.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getPSD
-#' @export
 setGeneric("getPSD", function(object, ...) standardGeneric("getPSD"))
 setMethod("getPSD",signature("FitDist"), function(object) {object@psd})
 
-#' Get the AIC of distribution fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getAIC
-#' @export
 setGeneric("getAIC", function(object, ...) standardGeneric("getAIC"))
 setMethod("getAIC",signature("FitDist"), function(object) {object@aic})
 
-#' Get the BIC of distribution fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getBIC
-#' @export
 setGeneric("getBIC", function(object, ...) standardGeneric("getBIC"))
 setMethod("getBIC",signature("FitDist"), function(object) {object@bic})
 
@@ -165,43 +128,18 @@ setMethod("getChiSq",signature("FitDist"), function(object) {object@chisq})
 setGeneric("getpChiSq", function(object, ...) standardGeneric("getpChiSq"))
 setMethod("getpChiSq",signature("FitDist"), function(object) {object@pchisq})
 
-#' Check if occurrence dates are used (TRUE) or not (FALSE) for frequency fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getiDate
-#' @export
 setGeneric("getiDate", function(object, ...) standardGeneric("getiDate"))
 setMethod("getiDate",signature("FitDist"), function(object) {object@idate})
 
-#' Get the frequency of data: Annual or Monthly. Only used for frequency fitting.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getFreq
-#' @export
 setGeneric("getFreq", function(object, ...) standardGeneric("getFreq"))
 setMethod("getFreq",signature("FitDist"), function(object) {object@freq})
 
-#' Get the distribution fitting method: mle, mme or qme.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getfitmethod
-#' @export
 setGeneric("getfitmethod", function(object, ...) standardGeneric("getfitmethod"))
 setMethod("getfitmethod",signature("FitDist"), function(object) {object@method})
 
-#' Get frequency distribution fitting summary.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getfoutput
-#' @export
 setGeneric("getfoutput", function(object, ...) standardGeneric("getfoutput"))
 setMethod("getfoutput",signature("FitDist"), function(object) {object@foutput})
 
-#' Get severity distribution fitting summary.
-#' @param object FitDist Object
-#' @param ... Additional function arguments
-#' @rdname getsoutput
-#' @export
 setGeneric("getsoutput", function(object, ...) standardGeneric("getsoutput"))
 setMethod("getsoutput",signature("FitDist"), function(object) {object@soutput})
 
@@ -211,77 +149,97 @@ setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value
 })
 
 #' Set the trend with an Index Object.
+#' @name setTrend<-
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value An Index Object
-#' @rdname setTrend
-#' @export
+#' @rdname setTrend-methods
+#' @exportMethod setTrend<-
 setGeneric("setTrend<-", function(this, ..., value) standardGeneric("setTrend<-"))
+#' @rdname setTrend-methods
+#' @aliases setTrend,ANY-method
 setReplaceMethod("setTrend",signature("FitDist", "Index"), function(this, value) {
   this@trend<- value
   this
 })
 
 #' Set distribution fitting method.
+#' @name setfitmethod<-
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A character string: "mle", "mme", or "qme"
-#' @rdname setfitmethod
-#' @export
+#' @rdname setfitmethod-methods
+#' @exportMethod setfitmethod<-
 setGeneric("setfitmethod<-", function(this, ..., value) standardGeneric("setfitmethod<-"))
+#' @rdname setfitmethod-methods
+#' @aliases setfitmethod,ANY-method
 setReplaceMethod("setfitmethod",signature("FitDist", "character"), function(this, value) {
   this@method<- value
   this
 })
 
 #' Set whether occurrence dates will be used for frequency data.
+#' @name setidate<-
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A boolean
-#' @rdname setidate
-#' @export
+#' @rdname setidate-methods
+#' @exportMethod setidate<-
 setGeneric("setidate<-", function(this, ..., value) standardGeneric("setidate<-"))
+#' @rdname setidate-methods
+#' @aliases setidate,ANY-method
 setReplaceMethod("setidate",signature("FitDist", "logical"), function(this, value) {
   this@idate<- value
   this
 })
 
 #' Set the data frequency.
+#' @name setfreq<-
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A character string: "Annual" or "Monthly"
-#' @rdname setfreq
-#' @export
+#' @rdname setfreq-methods
+#' @exportMethod setfreq<-
 setGeneric("setfreq<-", function(this, ..., value) standardGeneric("setfreq<-"))
+#' @rdname setfreq-methods
+#' @aliases setfreq,ANY-method
 setReplaceMethod("setfreq",signature("FitDist", "character"), function(this, value) {
   this@freq<- value
   this
 })
 
 #' Set the data type: frequency or severity/time lag.
+#' @name setifreq<-
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A boolean
-#' @rdname setifreq
-#' @export
+#' @rdname setifreq-methods
+#' @exportMethod setifreq<-
 setGeneric("setifreq<-", function(this, ..., value) standardGeneric("setifreq<-"))
+#' @rdname setifreq-methods
+#' @aliases setifreq,ANY-method
 setReplaceMethod("setifreq",signature("FitDist", "logical"), function(this, value) {
   this@ifreq<- value
   this
 })
 
 #' Set the percentiles to be matched. Only used when qme is chosen for fitting method.
+#' @name setprobs<-
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A numeric vector with values between 0 and 1.
-#' @rdname setprobs
-#' @export
+#' @rdname setprobs-methods
+#' @exportMethod setprobs<-
 setGeneric("setprobs<-", function(this, ..., value) standardGeneric("setprobs<-"))
+#' @rdname setprobs-methods
+#' @aliases setprobs,ANY-method
 setReplaceMethod("setprobs",signature("FitDist", "vector"), function(this, value) {
   this@probs<- value
   this
 })
 
+#' @rdname setObservation-methods
+#' @aliases setObservation,ANY-method
 setReplaceMethod("setObservation",signature("FitDist", "matrix"), function(this, value) {
   if (!is.null(value)){
     if(ncol(value)==1){
@@ -297,11 +255,14 @@ setReplaceMethod("setObservation",signature("FitDist", "matrix"), function(this,
 })
 
 #' Preparing the input data (observation) for distribution fitting, including detrending, translating occurrence dates to frequency data, etc.
+#' @name setFitdata
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname setFitdata
-#' @export
+#' @rdname setFitdata-methods
+#' @exportMethod setFitdata
 setGeneric("setFitdata", function(object, ...) standardGeneric("setFitdata"))
+#' @rdname setFitdata-methods
+#' @aliases setFitdata,ANY-method
 setMethod("setFitdata",signature("FitDist"), function(object) {
 
   tryCatch({
@@ -401,14 +362,18 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 })
 
 #' Distribution fitting and testing.
+#' @name setTrialDist<-
 #' @param this FitDist Object
 #' @param value Distribution to fit to
-#' @rdname setTrialDist
-#' @export
+#' @rdname setTrialDist-methods
+#' @importFrom fitdistrplus fitdist
+#' @exportMethod setTrialDist<-
 setGeneric("setTrialDist<-", function(this, value) standardGeneric("setTrialDist<-"))
+#' @rdname setTrialDist-methods
+#' @aliases setTrialDist,ANY-method
 setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(this, value) {
   tryCatch({
-    require(fitdistrplus)
+    #require(fitdistrplus)
     this@trial <- value
 
     if (!is.null(this@fitdata)){
@@ -884,15 +849,18 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 })
 
 #' Distribution fitting and testing. Same as setTrialDist except for error tolerance.
+#' @name setTrialDistErr<-
 #' @param this FitDist Object
 #' @param value Distribution to fit to
-#' @rdname setTrialDistErr
-#' @export
-
+#' @rdname setTrialDistErr-methods
+#' @importFrom fitdistrplus fitdist
+#' @exportMethod setTrialDistErr<-
 setGeneric("setTrialDistErr<-", function(this, value) standardGeneric("setTrialDistErr<-"))
+#' @rdname setTrialDistErr-methods
+#' @aliases setTrialDistErr,ANY-method
 setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), function(this, value) {
   tryCatch({
-    require(fitdistrplus)
+    #require(fitdistrplus)
     this@trial <- value
 
     if (!is.null(this@fitdata)){
@@ -1368,22 +1336,29 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 })
 
 #' Directly set the fitted distribution without fitting it to the data.
+#' @name setFittedDist<-
 #' @param this FitDist Object
 #' @param value Fitted distribution
-#' @rdname setFittedDist
-#' @export
+#' @rdname setFittedDist-methods
+#' @exportMethod setFittedDist<-
 setGeneric("setFittedDist<-", function(this, value) standardGeneric("setFittedDist<-"))
+#' @rdname setFittedDist-methods
+#' @aliases setFittedDist,ANY-method
 setReplaceMethod("setFittedDist",signature("FitDist", "Distribution"), function(this, value) {
   this@fitted<- value
   this
 })
 
 #' Compare the raw data and fitted distribution on density, CDF, Q-Q plot and P-P plot
+#' @name fitPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname fitPlot
-#' @export
+#' @param n Number of samples, should not be used in current setting
+#' @rdname fitPlot-methods
+#' @exportMethod fitPlot
 setGeneric("fitPlot", function(object, ...) standardGeneric("fitPlot"))
+#' @rdname fitPlot-methods
+#' @aliases fitPlot,ANY-method
 setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     par(mfrow = c(2, 2))
@@ -1431,11 +1406,14 @@ setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
 })
 
 #' Plotting the data for distribution fitting
+#' @name observationPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname observationPlot
-#' @export
+#' @rdname observationPlot-methods
+#' @exportMethod observationPlot
 setGeneric("observationPlot", function(object, ...) standardGeneric("observationPlot"))
+#' @rdname observationPlot-methods
+#' @aliases observationPlot,ANY-method
 setMethod("observationPlot",signature("FitDist"), function(object) {
   tryCatch({
     par(mfrow = c(2, 2))
@@ -1455,11 +1433,15 @@ setMethod("observationPlot",signature("FitDist"), function(object) {
 
 
 #' Plotting the PDF of data and fitted distribution
+#' @name PDFPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname PDFPlot
-#' @export
+#' @param n Number of samples, should not be used in current setting
+#' @rdname PDFPlot-methods
+#' @export PDFPlot
 setGeneric("PDFPlot", function(object, ...) standardGeneric("PDFPlot"))
+#' @rdname PDFPlot-methods
+#' @aliases PDFPlot,ANY-method
 setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     par(mfrow = c(1, 1))
@@ -1482,11 +1464,15 @@ setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
 })
 
 #' Plotting the CDF of data and fitted distribution
+#' @name CDFPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname CDFPlot
-#' @export
+#' @param n Number of samples, should not be used in current setting
+#' @rdname CDFPlot-methods
+#' @exportMethod CDFPlot
 setGeneric("CDFPlot", function(object, ...) standardGeneric("CDFPlot"))
+#' @rdname CDFPlot-methods
+#' @aliases CDFPlot,ANY-method
 setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     par(mfrow = c(1, 1))
@@ -1509,11 +1495,15 @@ setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
 })
 
 #' Q-Q Plot of data and fitted distribution
+#' @name QQPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname QQPlot
-#' @export
+#' @param n Number of samples, should not be used in current setting
+#' @rdname QQPlot-methods
+#' @exportMethod QQPlot
 setGeneric("QQPlot", function(object, ...) standardGeneric("QQPlot"))
+#' @rdname QQPlot-methods
+#' @aliases QQPlot,ANY-method
 setMethod("QQPlot",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     par(mfrow = c(1, 1))
@@ -1529,11 +1519,15 @@ setMethod("QQPlot",signature("FitDist"), function(object, n=missing) {
 })
 
 #' P-P Plot of data and fitted distribution
+#' @name PPPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname PPPlot
-#' @export
+#' @param n Number of samples, should not be used in current setting
+#' @rdname PPPlot-methods
+#' @exportMethod PPPlot
 setGeneric("PPPlot", function(object, ...) standardGeneric("PPPlot"))
+#' @rdname PPPlot-methods
+#' @aliases PPPlot,ANY-method
 setMethod("PPPlot",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     par(mfrow = c(1, 1))
@@ -1551,11 +1545,15 @@ setMethod("PPPlot",signature("FitDist"), function(object, n=missing) {
 })
 
 #' K-S Test
+#' @name KSTest
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname KSTest
-#' @export
+#' @param n Number of samples, should not be used in current setting
+#' @rdname KSTest-methods
+#' @exportMethod KSTest
 setGeneric("KSTest", function(object, ...) standardGeneric("KSTest"))
+#' @rdname KSTest-methods
+#' @aliases KSTest,ANY-method
 setMethod("KSTest",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     if(missing(n) || n==1){
@@ -1581,11 +1579,14 @@ setMethod("KSTest",signature("FitDist"), function(object, n=missing) {
 })
 
 #' Chi-Squared Test
+#' @name ChiSqrTest
 #' @param object FitDist Object
 #' @param ... Additional function arguments
-#' @rdname ChiSqrTest
-#' @export
+#' @rdname ChiSqrTest-methods
+#' @exportMethod ChiSqrTest
 setGeneric("ChiSqrTest", function(object, ...) standardGeneric("ChiSqrTest"))
+#' @rdname ChiSqrTest-methods
+#' @aliases ChiSqrTest,ANY-method
 setMethod("ChiSqrTest",signature("FitDist"), function(object) {
 
   tryCatch({

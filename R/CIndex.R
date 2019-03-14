@@ -29,22 +29,30 @@ setClass("Index",
 	)
 )
 
+#' @rdname setID-methods
+#' @aliases setID,ANY-method
 setReplaceMethod("setID",signature("Index", "character"), function(this, value) {
 	this@indexID<- as.character(value)
 	this
 })
 
+#' @rdname setStartDate-methods
+#' @aliases setStartDate,ANY-method
 setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value) {
 	this@startDate<- as.Date(value)
 	this
 })
 
 #' Determine whether the index values are constructed from a constant rate or provided directly
+#' @name setTabulate<-
 #' @param this Index Object
+#' @param ... Additional function arguments
 #' @param value Logical Value (default:FALSE)
-#' @rdname setTabulate
-#' @export
+#' @rdname setTabulate-methods
+#' @exportMethod setTabulate<-
 setGeneric("setTabulate<-", function(this, ..., value) standardGeneric("setTabulate<-"))
+#' @rdname setTabulate-methods
+#' @aliases setTabulate,ANY-method
 setReplaceMethod("setTabulate",signature("Index", "logical"), function(this, value) {
 	this@tabulate<- value
 	this
@@ -52,11 +60,15 @@ setReplaceMethod("setTabulate",signature("Index", "logical"), function(this, val
 
 #' Set the annualized level rate to construct the index.
 #' Only used when tabulate == FALSE.
+#' @name setAnnualizedRate<-
 #' @param this Index Object
+#' @param ... Additional function arguments
 #' @param value Numeric Value (default:0.02)
-#' @rdname setAnnualizedRate
-#' @export
+#' @rdname setAnnualizedRate-methods
+#' @exportMethod setAnnualizedRate<-
 setGeneric("setAnnualizedRate<-", function(this, ..., value) standardGeneric("setAnnualizedRate<-"))
+#' @rdname setAnnualizedRate-methods
+#' @aliases setAnnualizedRate,ANY-method
 setReplaceMethod("setAnnualizedRate",signature("Index", "numeric"), function(this, value) {
 	this@annualizedRate<- value
 	this
@@ -65,11 +77,15 @@ setReplaceMethod("setAnnualizedRate",signature("Index", "numeric"), function(thi
 #' @title Set yearly index values.
 #' @description
 #' \code{setYearlyIndex<-} sets yearly index values. Monthly index will be constructed assuming constant growth rate during a year.
+#' @name setYearlyIndex<-
 #' @param this Index Object
+#' @param ... Additional function arguments
 #' @param value Numeric Vector
-#' @rdname setYearlyIndex
-#' @export
+#' @rdname setYearlyIndex-methods
+#' @exportMethod setYearlyIndex<-
 setGeneric("setYearlyIndex<-", function(this, ..., value) standardGeneric("setYearlyIndex<-"))
+#' @rdname setYearlyIndex-methods
+#' @aliases setYearlyIndex,ANY-method
 setReplaceMethod("setYearlyIndex",signature("Index", "vector"), function(this, value) {
 	this@yearlyIndex<- value
 	this@tabulate<- TRUE
@@ -79,11 +95,15 @@ setReplaceMethod("setYearlyIndex",signature("Index", "vector"), function(this, v
 #' @title Set monthly index values.
 #' @description
 #' \code{setMonthlyIndex<-} sets monthly index values.
+#' @name setMonthlyIndex<-
 #' @param this Index Object
+#' @param ... Additional function arguments
 #' @param value Numeric Vector
-#' @rdname setMonthlyIndex
-#' @export
+#' @rdname setMonthlyIndex-methods
+#' @exportMethod setMonthlyIndex<-
 setGeneric("setMonthlyIndex<-", function(this, ..., value) standardGeneric("setMonthlyIndex<-"))
+#' @rdname setMonthlyIndex-methods
+#' @aliases setMonthlyIndex,ANY-method
 setReplaceMethod("setMonthlyIndex",signature("Index", "vector"), function(this, value) {
 	this@monthlyIndex<- value
 	this@tabulate<- TRUE
@@ -93,11 +113,15 @@ setReplaceMethod("setMonthlyIndex",signature("Index", "vector"), function(this, 
 #' @title Set seasonality on a monthly basis.
 #' @description
 #' \code{setSeasonality<-} sets monthly multiplier to reflect seasonal impact.
+#' @name setSeasonality<-
 #' @param this Index Object
+#' @param ... Additional function arguments
 #' @param value Numeric Vector (default:rep(1,12))
-#' @rdname setSeasonality
-#' @export
+#' @rdname setSeasonality-methods
+#' @exportMethod setSeasonality<-
 setGeneric("setSeasonality<-", function(this, ..., value) standardGeneric("setSeasonality<-"))
+#' @rdname setSeasonality-methods
+#' @aliases setSeasonality,ANY-method
 setReplaceMethod("setSeasonality",signature("Index", "vector"), function(this, value) {
 	this@seasonality<- value
 	this
@@ -106,7 +130,9 @@ setReplaceMethod("setSeasonality",signature("Index", "vector"), function(this, v
 #' @title Set up a time index for frequency or severity.
 #' @description
 #' \code{setIndex} sets a time index to reflect inflation, underwriting cycle or seasonality.
+#' @name setIndex
 #' @param object Index Object
+#' @param ... Additional function arguments
 #' @examples
 #' xindex <- new("Index", indexID = "IDX1", tabulate = FALSE, annualizedRate = 0.03)
 #' xindex<-setIndex(xindex)
@@ -121,9 +147,11 @@ setReplaceMethod("setSeasonality",signature("Index", "vector"), function(this, v
 #' setSeasonality(xindex)<-rnorm(12,mean=1,sd=0.03)
 #' xindex<-setIndex(xindex)
 #' xindex@monthlyIndex
-#' @rdname setIndex
-#' @export
+#' @rdname setIndex-methods
+#' @exportMethod setIndex
 setGeneric("setIndex", function(object,...) standardGeneric("setIndex"))
+#' @rdname setIndex-methods
+#' @aliases setIndex,ANY-method
 setMethod("setIndex",signature("Index"), function(object) {
 	tryCatch({
 		yearlylen <- length(object@yearlyIndex)
@@ -184,17 +212,22 @@ setMethod("setIndex",signature("Index"), function(object) {
 
 #' @title Retrieve index value based on dates.
 #' @description
-#' \code{getIndex} sets a time index to reflect inflation, underwriting cycle or seasonality.
+#' \code{getIndex} get a time index to reflect inflation, underwriting cycle or seasonality.
+#' @name getIndex
 #' @param object Index Object
+#' @param ... Additional function arguments
 #' @examples
 #' xindex <- new("Index", indexID = "IDX1", tabulate = FALSE, annualizedRate = 0.03)
 #' xindex<-setIndex(xindex)
 #' xindex@monthlyIndex
 #' dates<-as.Date("2015-12-31")
 #' getIndex(xindex,dates)
-#' @rdname getIndex
-#' @export
+#' @rdname getIndex-methods
+#' @exportMethod getIndex
 setGeneric("getIndex", function(object,...) standardGeneric("getIndex"))
+#' @param dates dates to get index information
+#' @rdname getIndex-methods
+#' @aliases getIndex,ANY-method
 setMethod("getIndex",signature("Index"), function(object,dates) {
 	tryCatch({
 		years <- as.numeric(substr(as.character(dates),1,4))
@@ -212,16 +245,22 @@ setMethod("getIndex",signature("Index"), function(object,dates) {
 })
 
 #' @title Shift monthly index with a new start date and replace the unknown index value with zero.
+#' @name shiftIndex
 #' @param object Index Object
+#' @param ... Additional function arguments
 #' @examples
 #' xindex <- new("Index", indexID = "IDX1", tabulate = FALSE, annualizedRate = 0.03)
 #' xindex<-setIndex(xindex)
 #' xindex@monthlyIndex
 #' shiftIndex(xindex,as.Date("2016-10-15"),as.Date("2018-10-15"))
 #' shiftIndex(xindex,as.Date("2010-10-15"),as.Date("2013-10-15"))
-#' @rdname shiftIndex
-#' @export
+#' @rdname shiftIndex-methods
+#' @exportMethod shiftIndex
 setGeneric("shiftIndex", function(object,...) standardGeneric("shiftIndex"))
+#' @param newStartDate new start date
+#' @param endDate end date
+#' @rdname shiftIndex-methods
+#' @aliases shiftIndex,ANY-method
 setMethod("shiftIndex",signature("Index"), function(object,newStartDate,endDate) {
 	tryCatch({
 		newyear <- as.numeric(substr(as.character(newStartDate),1,4))

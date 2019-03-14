@@ -45,11 +45,10 @@ setClass("Triangle",
 #' @title Set up the upper triangle based on claim data.
 #' @description
 #' \code{setUpperTriangle} sets up the upper triangle based on a data file.
+#' @name setUpperTriangle
 #' @param object Triangle Object
 #' @param data Claim Data
-#' @param evaluationDate Evaluation Date
-#' @param lob Line of Business
-#' @param ctype Claim Type
+#' @param ... Additional function arguments.
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
@@ -73,9 +72,14 @@ setClass("Triangle",
 #' xTri<-setUpperTriangle(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upper
 #'
-#' @rdname setUpperTriangle
-#' @export
+#' @rdname setUpperTriangle-methods
+#' @exportMethod setUpperTriangle
 setGeneric("setUpperTriangle", function(object,data,...) standardGeneric("setUpperTriangle"))
+#' @param evaluationDate Evaluation Date;
+#' @param lob Line of Business;
+#' @param ctype Claim Type.
+#' @rdname setUpperTriangle-methods
+#' @aliases setUpperTriangle,ANY-method
 setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object,data,evaluationDate=as.Date("2016-12-31"),lob="Total",ctype="Total") {
 	tryCatch({
 
@@ -203,11 +207,10 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 #' @title Set up the upper triangle for non-simulated data.
 #' @description
 #' \code{setUpperKeep} sets up the upper triangle for non-simulated data.
+#' @name setUpperKeep
 #' @param object Triangle Object
 #' @param data Claim Data
-#' @param evaluationDate Evaluation Date
-#' @param lob Line of Business
-#' @param ctype Claim Type
+#' @param ... Additional function arguments.
 #' @examples
 #' library(cascsim)
 #' data(claimdata)
@@ -229,9 +232,14 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 #' xTri<-setUpperKeep(xTri,claimdata,lob="Auto",ctype="H")
 #' xTri@upperkeep
 #'
-#' @rdname setUpperKeep
-#' @export
+#' @rdname setUpperKeep-methods
+#' @exportMethod setUpperKeep
 setGeneric("setUpperKeep", function(object,data,...) standardGeneric("setUpperKeep"))
+#' @param evaluationDate Evaluation Date;
+#' @param lob Line of Business;
+#' @param ctype Claim Type.
+#' @rdname setUpperKeep-methods
+#' @aliases setUpperKeep,ANY-method
 setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,data,evaluationDate=as.Date("2016-12-31"),lob="Total",ctype="Total") {
 	tryCatch({
 
@@ -369,14 +377,19 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 #' @title Set up the rectangle based on simulated data.
 #' @description
 #' \code{setRectangle} sets up the rectangle based on a data file.
+#' @name setRectangle
 #' @param object Triangle Object
 #' @param data Simulated Data
-#' @param evaluationDate Evaluation Date
-#' @param lob Line of Business
-#' @param ctype Claim Type
-#' @rdname setRectangle
-#' @export
+#' @param ... Additional function arguments.
+#' @rdname setRectangle-methods
+#' @exportMethod setRectangle
 setGeneric("setRectangle", function(object,data,...) standardGeneric("setRectangle"))
+#' @param evaluationDate Evaluation Date;
+#' @param futureDate End of projection date;
+#' @param lob Line of Business;
+#' @param ctype Claim Type.
+#' @rdname setRectangle-methods
+#' @aliases setRectangle,ANY-method
 setMethod("setRectangle",signature("Triangle","data.frame"), function(object,data,evaluationDate=as.Date("2016-12-31"),futureDate=as.Date("2017-12-31"),lob="Total",ctype="Total") {
 	tryCatch({
 

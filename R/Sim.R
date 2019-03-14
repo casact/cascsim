@@ -88,32 +88,38 @@ setClass("Simulation",
 )
 
 #' Claim data fitting analysis at line/type/status level
+#' @name claimFitting
 #' @param object Simulation object
 #' @param claimData claim data including existing claims for RBNER and claim reopenness analysis
-#' @param startDate Date after which claims are analyzed
-#' @param evaluationDate Date of evaluation for existing claims and IBNR
-#' @param lineList List of business lines to be included in claim fitting
-#' @param typeList List of claim types to be included in claim fitting
-#' @param discreteDist List of discrete distributions to try fitting (report lag, settlemet lag, frequency)
-#' @param continuousDist List of continuous distribution to try fitting (severity)
-#' @param copulaList List of copula to try fitting
-#' @param fReportLag Boolean variable to indicate whether report lag needs to be fitted.
-#' @param fSettlementLag Boolean variable to indicate whether settlement lag needs to be fitted.
-#' @param fFrequency Boolean variable to indicate whether monthly frequency needs to be fitted.
-#' @param fSeverity Boolean variable to indicate whether severity needs to be fitted.
-#' @param fSSRCorrelation Boolean variable to indicate whether copula among severity, report lag and settlement lag needs to be fitted.
-#' @param fFreqCorrelation Boolean variable to indicate whether copula among frequencies of business lines needs to be fitted.
-#' @param copulaTest Whether to test copula. The testing could take a very long time.
-#' @param iTotalLoss Boolean variable to indicate whether total loss before deductible and limit is available for severity fitting
-#' @param fDeductible Boolean variable to indicate whether deductible empirical distribution needs to be fitted.
-#' @param fLimit Boolean variable to indicate whether limit empirical distribution needs to be fitted.
-#' @param check Boolean variable to indicate whether graph of each tried distribution fitting needs to be generated and saved.
-#' @rdname claimFitting
+#' @param ... Additional parameters that may or may not be used. 
+#' @rdname claimFitting-methods
 #'
 #' @import grDevices
 #'
-#' @export
+#' @importFrom R2HTML HTML.title HTML HTMLhr HTMLInsertGraph HTMLCSS
+#'
+#' @exportMethod claimFitting
 setGeneric("claimFitting", function(object, claimData, ...) standardGeneric("claimFitting"))
+#' @param startDate Date after which claims are analyzed; 
+#' @param evaluationDate Date of evaluation for existing claims and IBNR; 
+#' @param lineList List of business lines to be included in claim fitting; 
+#' @param typeList List of claim types to be included in claim fitting; 
+#' @param discreteDist List of discrete distributions to try fitting (report lag, settlemet lag, frequency); 
+#' @param continuousDist List of continuous distribution to try fitting (severity); 
+#' @param copulaList List of copula to try fitting; 
+#' @param fReportLag Boolean variable to indicate whether report lag needs to be fitted; 
+#' @param fSettlementLag Boolean variable to indicate whether settlement lag needs to be fitted; 
+#' @param fFrequency Boolean variable to indicate whether monthly frequency needs to be fitted; 
+#' @param fSeverity Boolean variable to indicate whether severity needs to be fitted; 
+#' @param fSSRCorrelation Boolean variable to indicate whether copula among severity, report lag and settlement lag needs to be fitted; 
+#' @param fFreqCorrelation Boolean variable to indicate whether copula among frequencies of business lines needs to be fitted.
+#' @param copulaTest Whether to test copula. The testing could take a very long time;
+#' @param iTotalLoss Boolean variable to indicate whether total loss before deductible and limit is available for severity fitting;
+#' @param fDeductible Boolean variable to indicate whether deductible empirical distribution needs to be fitted;
+#' @param fLimit Boolean variable to indicate whether limit empirical distribution needs to be fitted;
+#' @param check Boolean variable to indicate whether graph of each tried distribution fitting needs to be generated and saved.
+#' @rdname claimFitting-methods
+#' @aliases claimFitting,ANY-method
 setMethod("claimFitting", signature("Simulation", "data.frame"), function(object, claimData, startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),
 																			lineList = object@lines,
 																			typeList = object@types,
@@ -1033,7 +1039,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 				if(object@iReport==TRUE){
 
-					require(R2HTML)
+					#require(R2HTML)
 					pckgdir <- find.package("cascsim")
 					pckgdir <- paste0(pckgdir,"/doc/")
 					dir.create("fit")
@@ -1322,17 +1328,23 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 
 #' Claim simulation at line/type/status level
+#' @name claimSimulation
 #' @param object Simulation object
-#' @param claimData claim data including existing claims for RBNER and claim reopenness analysis
-#' @param startDate Date after which claims are analyzed
-#' @param evaluationDate Date of evaluation for existing claims and IBNR
-#' @param futureDate Date of evaluation for UPR (future claims)
-#' @rdname claimSimulation
+#' @param ... Additional parameters that may or may not be used. 
+#' @rdname claimSimulation-methods
 #'
 #' @importFrom utils write.table
+#' @importFrom parallel clusterSetRNGStream makeCluster clusterExport parLapply stopCluster
 #'
-#' @export
+#' @exportMethod claimSimulation
 setGeneric("claimSimulation", function(object, ...) standardGeneric("claimSimulation"))
+#' @param claimData claim data including existing claims for RBNER and claim reopenness analysis;
+#' @param startDate Date after which claims are analyzed;
+#' @param evaluationDate Date of evaluation for existing claims and IBNR;
+#' @param futureDate Date of evaluation for UPR (future claims).
+#' @param append Boolean variable to indicate whether existing simulation results need to be kept.
+#' @rdname claimSimulation-methods
+#' @aliases claimSimulation,ANY-method
 setMethod("claimSimulation", signature("Simulation"), function(object, claimData=data.frame(), startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),futureDate=as.Date("2017-12-31"),append=TRUE)
 {
 	tryCatch({
@@ -1417,7 +1429,7 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 			}
 
 			if(object@ncores>1 & object@simNo >1){
-				require(parallel)
+				#require(parallel)
 
 				pC <- makeCluster(object@ncores, outfile = mcfile)
 				vsim <- rep(0,object@ncores)
@@ -1708,14 +1720,18 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 })
 
 #' Claim simulation result summary
+#' @name simSummary
 #' @param object Simulation object
 #' @param simdata simulation data generated by claimSimulation
-#' @param startDate Date after which claims are analyzed
-#' @param evaluationDate Date of evaluation for existing claims and IBNR
-#' @param futureDate Date of evaluation for UPR (future claims)
-#' @rdname simSummary
-#' @export
+#' @param ... Additional parameters that may or may not be used.
+#' @rdname simSummary-methods
+#' @exportMethod simSummary
 setGeneric("simSummary", function(object, simdata, ...) standardGeneric("simSummary"))
+#' @param startDate Date after which claims are analyzed;
+#' @param evaluationDate Date of evaluation for existing claims and IBNR;
+#' @param futureDate Date of evaluation for UPR (future claims).
+#' @rdname simSummary-methods
+#' @aliases simSummary,ANY-method
 setMethod("simSummary", signature("Simulation", "data.frame"), function(object, simdata, startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),futureDate=as.Date("2017-12-31"))
 {
 	tryCatch({
@@ -1914,16 +1930,20 @@ setMethod("simSummary", signature("Simulation", "data.frame"), function(object, 
 })
 
 #' Claim simulation result triangles
+#' @name simTriangle
 #' @param object Simulation object
 #' @param claimdata claim data used as basis for simulation
 #' @param simdata simulation data generated by claimSimulation
-#' @param frequency triangle frequency, either "yearly" or "quarterly"
-#' @param startDate Date after which claims are analyzed
-#' @param evaluationDate Date of evaluation for existing claims and IBNR
-#' @param futureDate Date of evaluation for UPR (future claims)
-#' @rdname simTriangle
-#' @export
+#' @param ... Additional parameters that may or may not be used. 
+#' @rdname simTriangle-methods
+#' @exportMethod simTriangle
 setGeneric("simTriangle", function(object, claimdata, simdata, ...) standardGeneric("simTriangle"))
+#' @param frequency triangle frequency, either "yearly" or "quarterly";
+#' @param startDate Date after which claims are analyzed;
+#' @param evaluationDate Date of evaluation for existing claims and IBNR;
+#' @param futureDate Date of evaluation for UPR (future claims).
+#' @rdname simTriangle-methods
+#' @aliases simTriangle,ANY-method
 setMethod("simTriangle", signature("Simulation", "data.frame", "data.frame"), function(object, claimdata, simdata, frequency="yearly", startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),futureDate=as.Date("2017-12-31"))
 {
 	tryCatch({
@@ -2117,16 +2137,24 @@ setMethod("simTriangle", signature("Simulation", "data.frame", "data.frame"), fu
 })
 
 #' Generate claim simulation result report in html
+#' @name simReport
 #' @param object ClaimType object
 #' @param simSummary simulation result summary generated by simSummary
-#' @param simTriangle triangle summary generated by simTriangle
-#' @param startDate Date after which claims are analyzed
-#' @param evaluationDate Date of evaluation for existing claims and IBNR
-#' @param futureDate Date of evaluation for UPR (future claims)
-#' @param iYear Boolean that indicates whether summary by accident year should be produced in the report
-#' @rdname simReport
-#' @export
+#' @param ... Additional parameters that may or may not be used. 
+#' @rdname simReport-methods
+#'
+#' @importFrom R2HTML HTML.title HTML HTMLhr HTMLInsertGraph HTMLCSS
+#' @import scatterplot3d
+#'
+#' @exportMethod simReport
 setGeneric("simReport", function(object, simSummary, ...) standardGeneric("simReport"))
+#' @param simTriangle triangle summary generated by simTriangle;
+#' @param startDate Date after which claims are analyzed;
+#' @param evaluationDate Date of evaluation for existing claims and IBNR;
+#' @param futureDate Date of evaluation for UPR (future claims);
+#' @param iYear Boolean that indicates whether summary by accident year should be produced in the report.
+#' @rdname simReport-methods
+#' @aliases simReport,ANY-method
 setMethod("simReport", signature("Simulation", "data.frame"), function(object, simSummary, simTriangle=NA, startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),futureDate=as.Date("2017-12-31"),iYear=FALSE)
 {
 	tryCatch({
@@ -2148,7 +2176,7 @@ setMethod("simReport", signature("Simulation", "data.frame"), function(object, s
 			if (object@iIBNR==TRUE) {classes <- c(classes,"IBNR")}
 			if (object@iUPR==TRUE) {classes <- c(classes,"UPR")}
 
-			require(R2HTML)
+			#require(R2HTML)
 			pckgdir <- find.package("cascsim")
 			pckgdir <- paste0(pckgdir,"/doc/")
 			dir.create("report")
@@ -2310,7 +2338,7 @@ setMethod("simReport", signature("Simulation", "data.frame"), function(object, s
 					}
 					else if (claimobj@ssrCopula@dimension>=2)
 					{
-						require(scatterplot3d)
+						#require(scatterplot3d)
 						scatterplot3d(samples[,1:3], color="blue")
 					}
 				} else {

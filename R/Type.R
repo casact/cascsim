@@ -93,13 +93,17 @@ setClass("ClaimType",
 )
 
 #' Claim simulation at line/type/status level
+#' @name claimSample
 #' @param object ClaimType object
-#' @param claimData claim data including existing claims for RBNER and claim reopenness analysis
-#' @param startDate Date from which claim data is included in the analysis
-#' @param evaluationDate Date of evaluation
-#' @rdname claimSample
-#' @export
+#' @param ... Additional parameters that may or may not be used. 
+#' @rdname claimSample-methods
+#' @exportMethod claimSample
 setGeneric("claimSample", function(object, ...) standardGeneric("claimSample"))
+#' @param claimData claim data including existing claims for RBNER and claim reopenness analysis;
+#' @param startDate Date from which claim data is included in the analysis;
+#' @param evaluationDate Date of evaluation.
+#' @rdname claimSample-methods
+#' @aliases claimSample,ANY-method
 setMethod("claimSample", signature("ClaimType"), function(object, claimData=data.frame(), startDate=as.Date("2012-01-01"), evaluationDate=as.Date("2016-12-31"))
 {
 	tryCatch({
@@ -395,7 +399,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 				developmentYears<-ceiling(as.numeric(as.Date(evaluationDate) - as.Date(claimData[,"occurrenceDate"]))/365)
 
 				if(object@reopen@FacModel==TRUE & object@reopen@fun == "exponential"){
-					reopenp<-object@reopen@paras[1]+bject@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLossesobject@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(reopen@paras)])
+					reopenp<-object@reopen@paras[1]+object@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLosses+object@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(object@reopen@paras)])
 					if (length(object@reopen@xname)>0){
 						for (i in c(1:length(object@reopen@xname))){
 							reopenp<-reopenp+object@reopen@paras[4+i]*as.numeric(claimData[,object@reopen@paras[i]])
@@ -406,7 +410,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					resettleDates <- ifelse(reopens == 0, NA, as.character(reopenDates + as.numeric(lapply(object@resettleLag,doSample, n=1))))
 					sindex<-getIndex(object@severityIndex,resettleDates)/getIndex(object@severityIndex,as.character(settlementDates))
 				} else if(object@reopen@FacModel==TRUE & object@reopen@fun == "log"){
-					reopenp<-object@reopen@paras[1]+bject@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLossesobject@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(reopen@paras)])
+					reopenp<-object@reopen@paras[1]+object@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLosses+object@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(object@reopen@paras)])
 					if (length(object@reopen@xname)>0){
 						for (i in c(1:length(object@reopen@xname))){
 							reopenp<-reopenp+object@reopen@paras[4+i]*as.numeric(claimData[,object@reopen@paras[i]])
@@ -417,7 +421,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					resettleDates <- ifelse(reopens == 0, NA, as.character(reopenDates + as.numeric(lapply(object@resettleLag,doSample, n=1))))
 					sindex<-getIndex(object@severityIndex,resettleDates)/getIndex(object@severityIndex,as.character(settlementDates))
 				} else if(object@reopen@FacModel==TRUE & object@reopen@fun == "inverse"){
-					reopenp<-object@reopen@paras[1]+bject@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLossesobject@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(reopen@paras)])
+					reopenp<-object@reopen@paras[1]+object@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLosses+object@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(object@reopen@paras)])
 					if (length(object@reopen@xname)>0){
 						for (i in c(1:length(object@reopen@xname))){
 							reopenp<-reopenp+object@reopen@paras[4+i]*as.numeric(claimData[,object@reopen@paras[i]])
@@ -428,7 +432,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 					resettleDates <- ifelse(reopens == 0, NA, as.character(reopenDates + as.numeric(lapply(object@resettleLag,doSample, n=1))))
 					sindex<-getIndex(object@severityIndex,resettleDates)/getIndex(object@severityIndex,as.character(settlementDates))
 				} else if (object@reopen@FacModel==TRUE & object@reopen@fun == "identity") {
-					reopenp<-object@reopen@paras[1]+bject@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLossesobject@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(reopen@paras)])
+					reopenp<-object@reopen@paras[1]+object@reopen@paras[2]*developmentYears+object@reopen@paras[3]*incurredLosses+object@reopen@paras[4]*osRatios+rnorm(nobs,0,object@reopen@paras[length(object@reopen@paras)])
 					if (length(object@reopen@xname)>0){
 						for (i in c(1:length(object@reopen@xname))){
 							reopenp<-reopenp+object@reopen@paras[4+i]*as.numeric(claimData[,object@reopen@paras[i]])
