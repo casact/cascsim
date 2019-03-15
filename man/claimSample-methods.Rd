@@ -10,7 +10,8 @@
 claimSample(object, ...)
 
 \S4method{claimSample}{ClaimType}(object, claimData = data.frame(),
-  startDate = as.Date("2012-01-01"), evaluationDate = as.Date("2016-12-31"))
+  startDate = as.Date("2012-01-01"),
+  evaluationDate = as.Date("2016-12-31"))
 }
 \arguments{
 \item{object}{ClaimType object}

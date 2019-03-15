@@ -10,7 +10,8 @@
 setUpperTriangle(object, data, ...)
 
 \S4method{setUpperTriangle}{Triangle,data.frame}(object, data,
-  evaluationDate = as.Date("2016-12-31"), lob = "Total", ctype = "Total")
+  evaluationDate = as.Date("2016-12-31"), lob = "Total",
+  ctype = "Total")
 }
 \arguments{
 \item{object}{Triangle Object}

@@ -10,7 +10,8 @@
 simSummary(object, simdata, ...)
 
 \S4method{simSummary}{Simulation,data.frame}(object, simdata,
-  startDate = as.Date("2012-01-01"), evaluationDate = as.Date("2016-12-31"),
+  startDate = as.Date("2012-01-01"),
+  evaluationDate = as.Date("2016-12-31"),
   futureDate = as.Date("2017-12-31"))
 }
 \arguments{
