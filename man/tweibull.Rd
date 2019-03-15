@@ -11,7 +11,7 @@ dtweibull(x, shape, scale, min = 0, max = 1e+09)
 
 ptweibull(q, shape, scale, min = 0, max = 1e+09)
 
-qtweibull(p, shape, scale, min = 0, max = 1 + e9)
+qtweibull(p, shape, scale, min = 0, max = 1e+09)
 
 rtweibull(n, shape, scale, min = 0, max = 1e+09)
 }

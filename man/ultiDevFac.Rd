@@ -13,6 +13,8 @@ ultiDevFac(Years, meanDevFac, sdDevFac = rep(0, length(meanDevFac)),
 \item{meanDevFac}{A vector that contains the expected development factor schedule for Normal distribution. It is mu for Lognormal distribution and shape for Gamma distribution.}
 
 \item{sdDevFac}{A vector that contains the standard deviation of expected development factor schedule for Normal distribution. It is sigma for Lognormal distribution and scale for Gamma distribution.}
+
+\item{distType}{distribution type for development factor. It can be "normal", "lognormal" or "gamma".}
 }
 \description{
 Calculate ultimate development factor based on current development year, a mean development factor schedule and its volatility. It is used to simulate the ultimate loss for open claims.
