@@ -94,6 +94,8 @@ setClass("Simulation",
 #' @param ... Additional parameters that may or may not be used. 
 #' @rdname claimFitting-methods
 #'
+#' @importFrom methods new
+#'
 #' @import grDevices
 #'
 #' @importFrom R2HTML HTML.title HTML HTMLhr HTMLInsertGraph HTMLCSS
@@ -118,27 +120,6 @@ setGeneric("claimFitting", function(object, claimData, ...) standardGeneric("cla
 #' @param fDeductible Boolean variable to indicate whether deductible empirical distribution needs to be fitted;
 #' @param fLimit Boolean variable to indicate whether limit empirical distribution needs to be fitted;
 #' @param check Boolean variable to indicate whether graph of each tried distribution fitting needs to be generated and saved.
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' lines<-c("Auto","Property","Liab")
-#' types<-c("N","H")
-#' #exposure index
-#' index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),
-#' cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
-#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
-#' #severity index
-#' index2 <- new("Index",monthlyIndex=c(cumprod(c(1,rep(1.03^(1/12),59))),rep(1.03^(5),300)))
-#' objan <- new("ClaimType", line="Auto",claimType="N",exposureIndex=index1,severityIndex=index2)
-#' objah <- new("ClaimType", line="Auto",claimType="H",exposureIndex=index1,severityIndex=index2)
-#' objpn <- new("ClaimType", line="Property",claimType="N",exposureIndex=index1,severityIndex=index2)
-#' objph <- new("ClaimType", line="Property",claimType="H",exposureIndex=index1,severityIndex=index2)
-#' objln <- new("ClaimType", line="Liab",claimType="N",exposureIndex=index1,severityIndex=index2)
-#' objlh <- new("ClaimType", line="Liab",claimType="H",exposureIndex=index1,severityIndex=index2)
-#' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE,
-#' iCopula=TRUE, iReport=TRUE)
-#' simobj <- claimFitting(simobj,claimdata)
 #' @rdname claimFitting-methods
 #' @aliases claimFitting,ANY-method
 setMethod("claimFitting", signature("Simulation", "data.frame"), function(object, claimData, startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),
@@ -1352,98 +1333,6 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 #' @name claimSimulation
 #' @param object Simulation object
 #' @param ... Additional parameters that may or may not be used. 
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' lines<-c("Auto","Property","Liab")
-#' types<-c("N","H")
-#' #exposure index
-#' index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),
-#' cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
-#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
-#' #severity index
-#' index2 <- new("Index",monthlyIndex=c(cumprod(c(1,rep(1.03^(1/12),59))),rep(1.03^(5),300)))
-#' objan <- new("ClaimType", line="Auto",claimType="N",exposureIndex=index1,severityIndex=index2)
-#' objah <- new("ClaimType", line="Auto",claimType="H",exposureIndex=index1,severityIndex=index2)
-#' objpn <- new("ClaimType", line="Property",claimType="N",exposureIndex=index1,severityIndex=index2)
-#' objph <- new("ClaimType", line="Property",claimType="H",exposureIndex=index1,severityIndex=index2)
-#' objln <- new("ClaimType", line="Liab",claimType="N",exposureIndex=index1,severityIndex=index2)
-#' objlh <- new("ClaimType", line="Liab",claimType="H",exposureIndex=index1,severityIndex=index2)
-#' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE,
-#' iCopula=TRUE, iReport=TRUE)
-#' simobj <- claimFitting(simobj,claimdata)
-
-#' @examples
-#' library(cascsim)
-#' data(claimdata)
-#' lines<-c("Auto","Property","Liab")
-#' types<-c("N","H")
-#' #IBNR Only
-#' library(cascsim)
-#' data(claimdata)
-#' lines<-c("Auto","Property","Liab")
-#' types<-c("N","H")
-#' objan <- new("ClaimType", line="Auto",claimType="N")
-#' objah <- new("ClaimType", line="Auto",claimType="H")
-#' objpn <- new("ClaimType", line="Property",claimType="N")
-#' objph <- new("ClaimType", line="Property",claimType="H")
-#' objln <- new("ClaimType", line="Liab",claimType="N")
-#' objlh <- new("ClaimType", line="Liab",claimType="H")
-#' objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,
-#' iUPR=FALSE,claimobjs=objlist,simNo=2)
-#' simdata <- claimSimulation(simobj)
-#' simSummary <- simSummary(simobj,simdata)
-#' simobj@iReport <- TRUE
-#' simReport(simobj,simSummary)
-#'
-#' #IBNR and UPR Only
-#' #library(cascsim)
-#' #data(claimdata)
-#' #lines<-c("Auto","Property","Liab")
-#' #types<-c("N","H")
-#' #objan <- new("ClaimType", line="Auto",claimType="N")
-#' #objah <- new("ClaimType", line="Auto",claimType="H")
-#' #objpn <- new("ClaimType", line="Property",claimType="N")
-#' #objph <- new("ClaimType", line="Property",claimType="H")
-#' #objln <- new("ClaimType", line="Liab",claimType="N")
-#' #objlh <- new("ClaimType", line="Liab",claimType="H")
-#' #objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' #simobj <- new("Simulation",lines=lines,types=types,iRBNER=FALSE,iROPEN=FALSE,iIBNR=TRUE,
-#' #iUPR=TRUE,claimobjs=objlist,simNo=2)
-#' #simdata <- claimSimulation(simobj)
-#' #simSummary <- simSummary(simobj,simdata)
-#' #simobj@iReport <- TRUE
-#' #simReport(simobj,simSummary)
-#'
-#' #All four claim classes: RBNER, ROPEN, IBNR and UPR
-#' #library(cascsim)
-#' #data(claimdata)
-#' #lines<-c("Auto","Property","Liab")
-#' #types<-c("N","H")
-#' #objan <- new("ClaimType", line="Auto",claimType="N")
-#' #objah <- new("ClaimType", line="Auto",claimType="H")
-#' #objpn <- new("ClaimType", line="Property",claimType="N")
-#' #objph <- new("ClaimType", line="Property",claimType="H")
-#' #objln <- new("ClaimType", line="Liab",claimType="N")
-#' #objlh <- new("ClaimType", line="Liab",claimType="H")
-#' #objlist <- list(objan,objah,objpn,objph,objln,objlh)
-#' #simobj <- new("Simulation",lines=lines,types=types,iRBNER=TRUE,iROPEN=TRUE,iIBNR=TRUE,
-#' #iUPR=TRUE,claimobjs=objlist,simNo=2)
-#' #simdata <- claimSimulation(simobj,claimData=claimdata)
-#' #simSummary <- simSummary(simobj,simdata)
-#' #simTriangle <- simTriangle(simobj,claimdata,simdata)
-#' #simobj@iReport <- TRUE
-#' #simReport(simobj,simSummary,simTriangle)
-#' #multicore computing
-#' #simobj@ncores<-4
-#' #simobj@simNo<-2
-#' #simdata <- claimSimulation(simobj,claimdata)
-#' #simSummary <- simSummary(simobj,simdata)
-#' #simTriangle <- simTriangle(simobj,claimdata,simdata)
-#' #simobj@iReport <- TRUE
-#' #simReport(simobj,simSummary)
 #' @rdname claimSimulation-methods
 #'
 #' @importFrom utils write.table
@@ -2048,6 +1937,7 @@ setMethod("simSummary", signature("Simulation", "data.frame"), function(object, 
 #' @param claimdata claim data used as basis for simulation
 #' @param simdata simulation data generated by claimSimulation
 #' @param ... Additional parameters that may or may not be used. 
+#' @importFrom methods new
 #' @rdname simTriangle-methods
 #' @exportMethod simTriangle
 setGeneric("simTriangle", function(object, claimdata, simdata, ...) standardGeneric("simTriangle"))
