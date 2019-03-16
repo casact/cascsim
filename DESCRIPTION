@@ -4,7 +4,8 @@ Version: 0.0.0.9000
 Authors@R: c(
     person("Robert", "Bear", email = "rbear@reserveprism.com", role = "aut"),
     person("Kailan", "Shang", email = "klshang81@gmail.com", role = c("aut","cre")),
-    person("Hai", "You", email = "hyou@reserveprism.com", role = "aut"))
+    person("Hai", "You", email = "hyou@reserveprism.com", role = "aut"),
+	person("Brian", "Fannin", email = "bfannin@casact.org", role = "ctb"))
 Description: It is an open source insurance claim simulation engine sponsored
     by the Casualty Actuarial Society and built by ReservePrism LLC. It generates 
 	individual insurance claims including open claims, reopened claims, IBNR 
