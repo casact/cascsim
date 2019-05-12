@@ -17,7 +17,10 @@ setEmpirical(this, ...) <- value
 
 \item{...}{Additional function arguments.}
 
-\item{value}{Two-column matrix with values and probabilities}
+\item{value}{Two-column matrix with values and probabilities
+dist <- new("Normal")
+setEmpirical(dist) <- matrix(c(0.01,0.25,0.5,0.75,0.99, 11,12,13,14,15), nrow = 5, ncol = 2)
+dist}
 }
 \description{
 Set the list of values and corresponding probabilities (Pr(X<value) for continuous variable and Pr(X==value) for discrete variable).

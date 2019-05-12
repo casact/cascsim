@@ -23,3 +23,11 @@ setAnnualizedRate(this, ...) <- value
 Set the annualized level rate to construct the index.
 Only used when tabulate == FALSE.
 }
+\examples{
+xindex <- new("Index")
+setID(xindex)<-"IDX1"
+setTabulate(xindex)<-FALSE
+setAnnualizedRate(xindex)<-0.03
+xindex<-setIndex(xindex)
+xindex@monthlyIndex
+}

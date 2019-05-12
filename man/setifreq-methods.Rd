@@ -21,3 +21,19 @@ setifreq(this, ...) <- value
 \description{
 Set the data type: frequency or severity/time lag.
 }
+\examples{
+library(cascsim)
+data(claimdata)
+
+#frequecy fitting example
+findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+claimdata[,"Type"]=="H"),]$occurrenceDate))
+colnames(rawdata)<-"occurrenceDate"
+xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+setifreq(xFit) <- FALSE
+xFit@ifreq
+}

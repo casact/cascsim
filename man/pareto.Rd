@@ -44,3 +44,10 @@ Quantile function of Pareto Distribution
 
 Random generation of Pareto Distribution
 }
+\examples{
+mpareto(1,1000,2)
+dpareto(1500,1000,2)
+ppareto(1500,1000,2)
+qpareto(0.5,1000,2)
+rpareto(100,1000,2)
+}

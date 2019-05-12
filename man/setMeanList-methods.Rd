@@ -21,3 +21,11 @@ setMeanList(this, ...) <- value
 \description{
 \code{setMeanList<-} sets expected year-to-year loss development factor. Years after It is only used when ibnerfModel == FALSE.
 }
+\examples{
+xIBNERFactor <- new("DevFac")
+setID(xIBNERFactor)<-"IF1"
+setFacModel(xIBNERFactor)<-FALSE
+setMeanList(xIBNERFactor)<-c(1.26,1.1,1.05,1.02,1)
+setVolList(xIBNERFactor)<-rep(0.02,5)
+xIBNERFactor
+}

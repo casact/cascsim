@@ -21,3 +21,14 @@ setSeasonality(this, ...) <- value
 \description{
 \code{setSeasonality<-} sets monthly multiplier to reflect seasonal impact.
 }
+\examples{
+xindex <- new("Index")
+setID(xindex)<-"IDX1"
+setTabulate(xindex)<-TRUE
+setAnnualizedRate(xindex)<-0.03
+setYearlyIndex(xindex)<- c(1,1.05,1.2,0.95,1.3)
+set.seed(123)
+setSeasonality(xindex)<-rnorm(12,mean=1,sd=0.03)
+xindex<-setIndex(xindex)
+xindex@monthlyIndex
+}

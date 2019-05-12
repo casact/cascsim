@@ -21,3 +21,11 @@ setMonthlyIndex(this, ...) <- value
 \description{
 \code{setMonthlyIndex<-} sets monthly index values.
 }
+\examples{
+xindex <- new("Index")
+setID(xindex)<-"IDX1"
+setTabulate(xindex)<-TRUE
+setMonthlyIndex(xindex)<- rep(1,360)
+xindex<-setIndex(xindex)
+xindex@monthlyIndex
+}

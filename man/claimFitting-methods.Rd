@@ -66,3 +66,20 @@ claimFitting(object, claimData, ...)
 \description{
 Claim data fitting analysis at line/type/status level
 }
+\examples{
+library(cascsim)
+data(claimdata)
+lines<-c("Auto")
+types<-c("N")
+#exposure index
+index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),
+cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
+#severity index
+index2 <- new("Index",monthlyIndex=c(cumprod(c(1,rep(1.03^(1/12),59))),rep(1.03^(5),300)))
+objan <- new("ClaimType", line="Auto",claimType="N",exposureIndex=index1,severityIndex=index2)
+objlist <- list(objan)
+simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE,
+iCopula=FALSE, iReport=TRUE)
+simobj <- claimFitting(simobj,claimdata,fSSRCorrelation = FALSE, fSettlementLag = FALSE)
+}

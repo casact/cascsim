@@ -21,3 +21,13 @@ setFacModel(this, ...) <- value
 \description{
 Determine whether the development factor is determined by a predictive model or a fixed schedule by development year
 }
+\examples{
+xIBNERFactor <- new("DevFac")
+setID(xIBNERFactor)<-"IF1"
+setFacModel(xIBNERFactor)<-TRUE
+setFun(xIBNERFactor)<-"identity"
+setXname(xIBNERFactor)<- c("x1","x2","x3")
+setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+xIBNERFactor<-setDevFac(xIBNERFactor)
+xIBNERFactor
+}

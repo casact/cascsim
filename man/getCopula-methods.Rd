@@ -19,3 +19,10 @@ getCopula(object, ...)
 \description{
 Get the R copula object.
 }
+\examples{
+library(cascsim)
+dist1<-new("Pareto",p1=20,p2=3)
+dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+nom.cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+getCopula(nom.cop)
+}

@@ -26,3 +26,8 @@ setID(this, ...) <- value
 setID
 Set the ID for an object
 }
+\examples{
+xindex <- new("Index")
+setID(xindex)<-"IDX1"
+xindex@indexID
+}

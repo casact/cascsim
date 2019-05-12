@@ -16,7 +16,11 @@ setParams(this, ...) <- value
 
 \item{...}{Additional function arguments.}
 
-\item{value}{Numeric vector containing parameters}
+\item{value}{Numeric vector containing parameters
+examples
+dist <- new("Normal")
+setParams(dist) <- c(2,3)
+dist}
 }
 \description{
 Set distribution parameters.

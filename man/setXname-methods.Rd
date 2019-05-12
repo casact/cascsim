@@ -21,3 +21,13 @@ setXname(this, ...) <- value
 \description{
 \code{setXname<-} sets explanatory variable names in addition to "Intercept","DevelopmentYear","IncurredLoss", and "OSRatio". Additional variable names must match exactly with claim data. The xname vector is only used when ibnerfModel == TRUE.
 }
+\examples{
+xIBNERFactor <- new("DevFac")
+setID(xIBNERFactor)<-"IF1"
+setFacModel(xIBNERFactor)<-TRUE
+setFun(xIBNERFactor)<-"identity"
+setXname(xIBNERFactor)<- c("x1","x2","x3")
+setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+xIBNERFactor<-setDevFac(xIBNERFactor)
+xIBNERFactor
+}

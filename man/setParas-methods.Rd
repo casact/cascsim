@@ -21,3 +21,13 @@ setParas(this, ...) <- value
 \description{
 \code{setParas<-} sets model parameters. Their order must match the order of c("Intercept","DevelopmentYear","IncurredLoss","OSRatio",xname,"Volatility"). "Volatility" stands for the volatility of the error term in the model and used to simulate IBNER development factors. The parameter vector is only used when ibnerfModel == TRUE.
 }
+\examples{
+xIBNERFactor <- new("DevFac")
+setID(xIBNERFactor)<-"IF1"
+setFacModel(xIBNERFactor)<-TRUE
+setFun(xIBNERFactor)<-"identity"
+setXname(xIBNERFactor)<- c("x1","x2","x3")
+setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+xIBNERFactor<-setDevFac(xIBNERFactor)
+xIBNERFactor
+}
