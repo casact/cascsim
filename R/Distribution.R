@@ -51,6 +51,10 @@ setClass("Empirical", contains="Distribution")
 #' @param this Distribution Object
 #' @param ... Additional function arguments.
 #' @param value Numeric vector containing parameters
+#' examples
+#' dist <- new("Normal")
+#' setParams(dist) <- c(2,3)
+#' dist
 #' @rdname setParams-methods
 #' @exportMethod setParams<-
 setGeneric("setParams<-", function(this, ..., value) standardGeneric("setParams<-"))
@@ -69,6 +73,9 @@ setReplaceMethod("setParams",signature("Distribution","numeric"), function(this,
 #' @param this Distribution Object
 #' @param ... Additional function arguments.
 #' @param value Two-column matrix with values and probabilities
+#' dist <- new("Normal")
+#' setEmpirical(dist) <- matrix(c(0.01,0.25,0.5,0.75,0.99, 11,12,13,14,15), nrow = 5, ncol = 2)
+#' dist
 #' @rdname setEmpirical-methods
 #' @exportMethod setEmpirical<-
 setGeneric("setEmpirical<-", function(this, ..., value) standardGeneric("setEmpirical<-"))
@@ -220,7 +227,7 @@ setMethod("doSample",signature("Normal", "numeric"), function(object, n) {
 			rtnorm(n,object@p1, object@p2, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Normal distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Normal distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -237,7 +244,7 @@ setMethod("doSample",signature("Beta", "numeric"), function(object, n) {
 			rtbeta(n,object@p1, object@p2, object@p3, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Beta distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Beta distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -254,7 +261,7 @@ setMethod("doSample",signature("Exponential", "numeric"),  function(object, n) {
 			rtexp(n,object@p1, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Exponential distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Exponential distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -271,7 +278,7 @@ setMethod("doSample",signature("Gamma", "numeric"), function(object, n) {
 			rtgamma(n,object@p1, object@p2, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Gamma distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Gamma distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -288,7 +295,7 @@ setMethod("doSample",signature("Lognormal", "numeric"), function(object, n) {
 			rtlnorm(n,object@p1, object@p2, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Lognormal distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Lognormal distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -305,7 +312,7 @@ setMethod("doSample",signature("Pareto", "numeric"), function(object, n) {
 			rtpareto(n,object@p1, object@p2, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Pareto distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Pareto distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -322,7 +329,7 @@ setMethod("doSample",signature("Poisson", "numeric"), function(object, n) {
 			rtpois(n,object@p1, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Poisson distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Poisson distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -339,7 +346,7 @@ setMethod("doSample",signature("NegativeBinomial", "numeric"), function(object, 
 			rtnbinom(n,object@p1, object@p2, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Negative Binomial distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Negative Binomial distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -356,7 +363,7 @@ setMethod("doSample",signature("Geometric", "numeric"), function(object, n) {
 			rtgeom(n,object@p1, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Geometric distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Geometric distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -373,7 +380,7 @@ setMethod("doSample",signature("Uniform", "numeric"), function(object, n) {
 			runif(n,max(object@min, object@p1), min(max(object@min,object@max), object@p2))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Uniform distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Uniform distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -390,7 +397,7 @@ setMethod("doSample",signature("Weibull", "numeric"), function(object, n) {
 			rtweibull(n,object@p1, object@p2, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for Weibull distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for Weibull distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -407,7 +414,7 @@ setMethod("doSample",signature("Empirical", "numeric"), function(object, n) {
 			rtempirical(n,object@empirical, object@min, max(object@min, object@max))
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for empirical distribution ", object@info, ": ", err))
+		message(paste0(">>>Critical Error for empirical distribution ", object@info, ": ", err))
 		gc()
 		return(-1)
 	})

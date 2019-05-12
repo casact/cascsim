@@ -46,6 +46,12 @@ setClass("CopulaObj",
 #' @param this Copula Object
 #' @param ... Additional function arguments
 #' @param value The copula type
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' setCopulaType(cop) <- "joe"
 #' @rdname setCopulaType-methods
 #' @exportMethod setCopulaType<-
 setGeneric("setCopulaType<-", function(this, ..., value) standardGeneric("setCopulaType<-"))
@@ -61,6 +67,12 @@ setReplaceMethod("setCopulaType",signature("CopulaObj", "character"), function(t
 #' @param this Copula Object
 #' @param ... Additional function arguments
 #' @param value The copula parameters
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' setCopulaParam(cop) <- 0.6
 #' @rdname setCopulaParam-methods
 #' @exportMethod setCopulaParam<-
 setGeneric("setCopulaParam<-", function(this, ..., value) standardGeneric("setCopulaParam<-"))
@@ -76,6 +88,14 @@ setReplaceMethod("setCopulaParam",signature("CopulaObj", "numeric"), function(th
 #' @param this Copula Object
 #' @param ... Additional function arguments
 #' @param value The list of marginal distributions.
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' dist3<-new("Pareto",p1=10,p2=3)
+#' dist4<-new("Normal",p1=2,p2=3,min=0,max=20,truncated=TRUE)
+#' setMarginal(cop) <- list(dist1=dist3,dist2=dist4)
 #' @rdname setMarginal-methods
 #' @exportMethod setMarginal<-
 setGeneric("setMarginal<-", function(this, ..., value) standardGeneric("setMarginal<-"))
@@ -92,6 +112,14 @@ setReplaceMethod("setMarginal",signature("CopulaObj", "list"), function(this, va
 #' @param this Copula Object
 #' @param ... Additional function arguments
 #' @param value The dimension of the copula. It can also be set by providing marginal distributions
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' dist3<-new("Pareto",p1=10,p2=3)
+#' setDimension(cop) <- 3
+#' setMarginal(cop) <- list(dist1=dist1,dist2=dist2,dist3=dist3)
 #' @rdname setDimension-methods
 #' @exportMethod setDimension<-
 setGeneric("setDimension<-", function(this, ..., value) standardGeneric("setDimension<-"))
@@ -107,6 +135,12 @@ setReplaceMethod("setDimension",signature("CopulaObj", "numeric"), function(this
 #' @param this Copula Object
 #' @param ... Additional function arguments
 #' @param value The matrix format. The default is "un" for unstructured. Other choices include "ex" for exchangeable, "ar1" for AR(1), and "toep" for Toeplitz (toeplitz).
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' setDispstr(cop) <- "ex"
 #' @rdname setDispstr-methods
 #' @exportMethod setDispstr<-
 setGeneric("setDispstr<-", function(this, ..., value) standardGeneric("setDispstr<-"))
@@ -122,6 +156,12 @@ setReplaceMethod("setDispstr",signature("CopulaObj", "character"), function(this
 #' @param this Copula Object
 #' @param ... Additional function arguments
 #' @param value The degree of freedom. The default value is 3.
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' cop <- new("CopulaObj", type="t", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' setDf(cop) <- 5
 #' @rdname setDf-methods
 #' @exportMethod setDf<-
 setGeneric("setDf<-", function(this, ..., value) standardGeneric("setDf<-"))
@@ -143,6 +183,12 @@ setReplaceMethod("setObservation",signature("CopulaObj", "matrix"), function(thi
 #' @name getCopula
 #' @param object R copula object
 #' @param ... Additional parameters that may or may not be used
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' nom.cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' getCopula(nom.cop)
 #' @rdname getCopula-methods
 #'
 #' @importFrom copula archmCopula ellipCopula
@@ -164,7 +210,7 @@ setMethod("getCopula", signature("CopulaObj"), function(object)
 		gc()
 		return(obj)
 	}, error = function(err){
-		print(paste0(">>>Critical Error for copula construction: ", object@info,", ",err))
+		message(paste0(">>>Critical Error for copula construction: ", object@info,", ",err))
 		gc()
 		return(-1)
 	})
@@ -214,7 +260,7 @@ setMethod("copulaSample", signature("CopulaObj","numeric"), function(object, n)
 		}
 		gc()
 	}, error = function(err){
-		print(paste0(">>>Critical Error for copula sampling: ", object@info,", ",err))
+		message(paste0(">>>Critical Error for copula sampling: ", object@info,", ",err))
 		gc()
 		return(-1)
 	})
@@ -261,6 +307,13 @@ setMethod("toString",signature("CopulaObj"), function(object)
 #' @name copulaDataPlot
 #' @param object Copula Object
 #' @param ... Additional parameters that may or may not be used
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' nom.cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' setObservation(nom.cop)<-copulaSample(nom.cop,100)
+#' copulaDataPlot(nom.cop)
 #' @rdname copulaDataPlot-methods
 #' @import scatterplot3d
 #' @exportMethod copulaDataPlot
@@ -270,7 +323,7 @@ setGeneric("copulaDataPlot", function(object, ...) standardGeneric("copulaDataPl
 setMethod("copulaDataPlot",signature("CopulaObj"), function(object) {
 	par(mfrow = c(1,1))
 	if (nrow(object@observation) >0 && ncol(object@observation) < 3){
-		plot(object@observation, main = "Correlated Observation Plot", color = "blue")
+		plot(object@observation, main = "Correlated Observation Plot", col = "blue")
 	}else if (nrow(object@observation) >0 && ncol(object@observation) >= 3){
 		#require(scatterplot3d)
 		scatterplot3d(object@observation[,1:3], main = "Correlated Observation Plot", color = "blue")
@@ -366,12 +419,12 @@ setMethod("copulaFit",signature("CopulaObj"), function(object)
 		}
 		gc()
 	}, warning = function(war){
-		print(paste0(">>>Warning for copula fitting: ", object@info,", ",war))
+		message(paste0(">>>Warning for copula fitting: ", object@info,", ",war))
 		gc()
 		object@fitsucc <- FALSE
 		return(object)
 	}, error = function(err){
-		print(paste0(">>>Critical Error for copula fitting: ", object@info,", ",err))
+		message(paste0(">>>Critical Error for copula fitting: ", object@info,", ",err))
 		gc()
 		object@coutput = data.frame(Copula=character(),
 							Method=character(),
@@ -438,12 +491,12 @@ setMethod("copulaFitErr",signature("CopulaObj"), function(object)
 		}
 		gc()
 	}, warning = function(war){
-		#print(paste0(">>>Warning for copula fitting: ", object@info,", ",war))
+		#message(paste0(">>>Warning for copula fitting: ", object@info,", ",war))
 		gc()
 		object@fitsucc <- FALSE
 		return(object)
 	}, error = function(err){
-		#print(paste0(">>>Critical Error for copula fitting: ", object@info,", ",err))
+		#message(paste0(">>>Critical Error for copula fitting: ", object@info,", ",err))
 		gc()
 		object@coutput = data.frame(Copula=character(),
 							Method=character(),
@@ -542,7 +595,7 @@ setMethod("copulaFitPlot",signature("CopulaObj"), function(object) {
 			plotText("The marginal data cannot be drawn")
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for copula fit plotting: ", object@info,", ",err))
+		message(paste0(">>>Critical Error for copula fit plotting: ", object@info,", ",err))
 		gc()
 		plotText("The copula fitting cannot be drawn")
 	})

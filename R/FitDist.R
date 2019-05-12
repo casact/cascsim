@@ -79,7 +79,7 @@ setClass("FitDist",
            deductible=vector(),
            p0=NaN,
            dof=0,
-           psd=c(),
+           psd=vector(),
            aic=0,
            bic=0,
            chisq=0,
@@ -153,6 +153,21 @@ setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value An Index Object
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' setTrend(xFit) <- findex
+#' xFit@trend
 #' @rdname setTrend-methods
 #' @exportMethod setTrend<-
 setGeneric("setTrend<-", function(this, ..., value) standardGeneric("setTrend<-"))
@@ -168,6 +183,21 @@ setReplaceMethod("setTrend",signature("FitDist", "Index"), function(this, value)
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A character string: "mle", "mme", or "qme"
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' setfitmethod(xFit) <- "mme"
+#' xFit@method
 #' @rdname setfitmethod-methods
 #' @exportMethod setfitmethod<-
 setGeneric("setfitmethod<-", function(this, ..., value) standardGeneric("setfitmethod<-"))
@@ -183,6 +213,21 @@ setReplaceMethod("setfitmethod",signature("FitDist", "character"), function(this
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A boolean
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=FALSE, freq="Monthly")
+#' setidate(xFit) <- TRUE
+#' xFit@idate
 #' @rdname setidate-methods
 #' @exportMethod setidate<-
 setGeneric("setidate<-", function(this, ..., value) standardGeneric("setidate<-"))
@@ -198,6 +243,21 @@ setReplaceMethod("setidate",signature("FitDist", "logical"), function(this, valu
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A character string: "Annual" or "Monthly"
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Annual")
+#' setfreq(xFit) <- "Monthly"
+#' xFit@freq
 #' @rdname setfreq-methods
 #' @exportMethod setfreq<-
 setGeneric("setfreq<-", function(this, ..., value) standardGeneric("setfreq<-"))
@@ -213,6 +273,21 @@ setReplaceMethod("setfreq",signature("FitDist", "character"), function(this, val
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A boolean
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' setifreq(xFit) <- FALSE
+#' xFit@ifreq
 #' @rdname setifreq-methods
 #' @exportMethod setifreq<-
 setGeneric("setifreq<-", function(this, ..., value) standardGeneric("setifreq<-"))
@@ -228,6 +303,21 @@ setReplaceMethod("setifreq",signature("FitDist", "logical"), function(this, valu
 #' @param this FitDist Object
 #' @param ... Additional function arguments
 #' @param value A numeric vector with values between 0 and 1.
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' setprobs(xFit) <- c(0.1,0.5,0.9)
+#' xFit@probs
 #' @rdname setprobs-methods
 #' @exportMethod setprobs<-
 setGeneric("setprobs<-", function(this, ..., value) standardGeneric("setprobs<-"))
@@ -258,6 +348,21 @@ setReplaceMethod("setObservation",signature("FitDist", "matrix"), function(this,
 #' @name setFitdata
 #' @param object FitDist Object
 #' @param ... Additional function arguments
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' xFit@fitdata
 #' @rdname setFitdata-methods
 #' @exportMethod setFitdata
 setGeneric("setFitdata", function(object, ...) standardGeneric("setFitdata"))
@@ -355,7 +460,7 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
     gc()
     return(object)
   }, error = function(err){
-    print(paste0(">>>Critical Error for distribution fitting: ", err))
+    message(paste0(">>>Critical Error for distribution fitting: ", err))
     gc()
     return(-1)
   })
@@ -365,6 +470,24 @@ setMethod("setFitdata",signature("FitDist"), function(object) {
 #' @name setTrialDist<-
 #' @param this FitDist Object
 #' @param value Distribution to fit to
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' observationPlot(xFit)
+#' fitPlot(xFit)
 #' @rdname setTrialDist-methods
 #'
 #' @importFrom methods new
@@ -843,7 +966,7 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
     this@fitted@fitsucc <- TRUE
     this
   }, error = function(err){
-    print(paste0(">>>Critical Error for distribution fitting: ", err))
+    message(paste0(">>>Critical Error for distribution fitting: ", err))
     gc()
     this@fitted@fitsucc <- FALSE
     this@soutput[1,] <- c(value, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
@@ -855,6 +978,24 @@ setReplaceMethod("setTrialDist",signature("FitDist", "Distribution"), function(t
 #' @name setTrialDistErr<-
 #' @param this FitDist Object
 #' @param value Distribution to fit to
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDistErr(xFit) <- new("Poisson")
+#' xFit@soutput
+#' observationPlot(xFit)
+#' fitPlot(xFit)
 #' @rdname setTrialDistErr-methods
 #'
 #' @importFrom methods new
@@ -1333,7 +1474,7 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
     this@fitted@fitsucc <- TRUE
     this
   }, error = function(err){
-    #print(paste0(">>>Critical Error for distribution fitting: ", err))
+    #message(paste0(">>>Critical Error for distribution fitting: ", err))
     gc()
     this@soutput[1,] <- c(value, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA)
     this@fitted@fitsucc <- FALSE
@@ -1345,6 +1486,22 @@ setReplaceMethod("setTrialDistErr",signature("FitDist", "Distribution"), functio
 #' @name setFittedDist<-
 #' @param this FitDist Object
 #' @param value Fitted distribution
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@fitted
 #' @rdname setFittedDist-methods
 #' @exportMethod setFittedDist<-
 setGeneric("setFittedDist<-", function(this, value) standardGeneric("setFittedDist<-"))
@@ -1360,6 +1517,23 @@ setReplaceMethod("setFittedDist",signature("FitDist", "Distribution"), function(
 #' @param object FitDist Object
 #' @param ... Additional function arguments
 #' @param n Number of samples, should not be used in current setting
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' fitPlot(xFit)
 #' @rdname fitPlot-methods
 #' @exportMethod fitPlot
 setGeneric("fitPlot", function(object, ...) standardGeneric("fitPlot"))
@@ -1404,7 +1578,7 @@ setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
 
     }
   }, error = function(err){
-    print(paste0(">>>Critical Error for plotting fitted distribution: ", err))
+    message(paste0(">>>Critical Error for plotting fitted distribution: ", err))
     gc()
   })
 
@@ -1415,6 +1589,23 @@ setMethod("fitPlot",signature("FitDist"), function(object, n=missing) {
 #' @name observationPlot
 #' @param object FitDist Object
 #' @param ... Additional function arguments
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' observationPlot(xFit)
 #' @rdname observationPlot-methods
 #' @exportMethod observationPlot
 setGeneric("observationPlot", function(object, ...) standardGeneric("observationPlot"))
@@ -1431,7 +1622,7 @@ setMethod("observationPlot",signature("FitDist"), function(object) {
     hist(x,breaks=15, main="Histogram of the Observation", xlab="observations", ylab="Frequency", col="blue")
     plot(object@trend@monthlyIndex, xlab="Time", ylab="Index")
   }, error = function(err){
-    print(paste0(">>>Critical Error for plotting observation data: ", err))
+    message(paste0(">>>Critical Error for plotting observation data: ", err))
     gc()
   })
 
@@ -1443,6 +1634,23 @@ setMethod("observationPlot",signature("FitDist"), function(object) {
 #' @param object FitDist Object
 #' @param ... Additional function arguments
 #' @param n Number of samples, should not be used in current setting
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' PDFPlot(xFit)
 #' @rdname PDFPlot-methods
 #' @export PDFPlot
 setGeneric("PDFPlot", function(object, ...) standardGeneric("PDFPlot"))
@@ -1464,7 +1672,7 @@ setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
       legend("topright",c("observed","fitted"),lty=c(1,1), lwd=c(2.5,2.5),col=c("blue","red"))
     }
   }, error = function(err){
-    print(paste0(">>>Critical Error for PDF plot in distribution fitting: ", err))
+    message(paste0(">>>Critical Error for PDF plot in distribution fitting: ", err))
     gc()
   })
 })
@@ -1474,6 +1682,23 @@ setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
 #' @param object FitDist Object
 #' @param ... Additional function arguments
 #' @param n Number of samples, should not be used in current setting
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' CDFPlot(xFit)
 #' @rdname CDFPlot-methods
 #' @exportMethod CDFPlot
 setGeneric("CDFPlot", function(object, ...) standardGeneric("CDFPlot"))
@@ -1495,7 +1720,7 @@ setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
 
     }
   }, error = function(err){
-    print(paste0(">>>Critical Error for CDF plot in distribution fitting: ", err))
+    message(paste0(">>>Critical Error for CDF plot in distribution fitting: ", err))
     gc()
   })
 })
@@ -1505,6 +1730,23 @@ setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
 #' @param object FitDist Object
 #' @param ... Additional function arguments
 #' @param n Number of samples, should not be used in current setting
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' QQPlot(xFit)
 #' @rdname QQPlot-methods
 #' @exportMethod QQPlot
 setGeneric("QQPlot", function(object, ...) standardGeneric("QQPlot"))
@@ -1519,7 +1761,7 @@ setMethod("QQPlot",signature("FitDist"), function(object, n=missing) {
 
     abline(0, 1)
   }, error = function(err){
-    print(paste0(">>>Critical Error for QQ plot in distribution fitting: ", err))
+    message(paste0(">>>Critical Error for QQ plot in distribution fitting: ", err))
     gc()
   })
 })
@@ -1529,6 +1771,24 @@ setMethod("QQPlot",signature("FitDist"), function(object, n=missing) {
 #' @param object FitDist Object
 #' @param ... Additional function arguments
 #' @param n Number of samples, should not be used in current setting
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' xFit <- setFitdata(xFit)
+#' setTrialDist(xFit) <- new("Poisson")
+#' xFit@soutput
+#' observationPlot(xFit)
+#' PPPlot(xFit)
 #' @rdname PPPlot-methods
 #' @exportMethod PPPlot
 setGeneric("PPPlot", function(object, ...) standardGeneric("PPPlot"))
@@ -1545,7 +1805,7 @@ setMethod("PPPlot",signature("FitDist"), function(object, n=missing) {
 
     abline(0, 1)
   }, error = function(err){
-    print(paste0(">>>Critical Error for PP plot in distribution fitting: ", err))
+    message(paste0(">>>Critical Error for PP plot in distribution fitting: ", err))
     gc()
   })
 })
@@ -1556,7 +1816,6 @@ setMethod("PPPlot",signature("FitDist"), function(object, n=missing) {
 #' @param ... Additional function arguments
 #' @param n Number of samples, should not be used in current setting
 #' @rdname KSTest-methods
-#' @exportMethod KSTest
 setGeneric("KSTest", function(object, ...) standardGeneric("KSTest"))
 #' @rdname KSTest-methods
 #' @aliases KSTest,ANY-method
@@ -1579,7 +1838,7 @@ setMethod("KSTest",signature("FitDist"), function(object, n=missing) {
     }
     gc()
   }, error = function(err){
-    print(paste0(">>>Critical Error for K-S Test: ", err))
+    message(paste0(">>>Critical Error for K-S Test: ", err))
     gc()
   })
 })
@@ -1589,7 +1848,6 @@ setMethod("KSTest",signature("FitDist"), function(object, n=missing) {
 #' @param object FitDist Object
 #' @param ... Additional function arguments
 #' @rdname ChiSqrTest-methods
-#' @exportMethod ChiSqrTest
 setGeneric("ChiSqrTest", function(object, ...) standardGeneric("ChiSqrTest"))
 #' @rdname ChiSqrTest-methods
 #' @aliases ChiSqrTest,ANY-method
@@ -1619,7 +1877,7 @@ setMethod("ChiSqrTest",signature("FitDist"), function(object) {
     return (paste("X-Squared=", round(as.numeric(z$statistic), 3), ", df=", round(as.numeric(z$parameter), 5), ", P-Value=", round(z$p.value,5),sep=""))
     gc()
   }, error = function(err){
-    print(paste0(">>>Critical Error for Chi-Squared Test: ", err))
+    message(paste0(">>>Critical Error for Chi-Squared Test: ", err))
     gc()
   })
 })

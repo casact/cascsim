@@ -4,6 +4,10 @@
 #' @param this Self
 #' @param ... Additional function arguments
 #' @param value ID
+#' @examples
+#' xindex <- new("Index")
+#' setID(xindex)<-"IDX1"
+#' xindex@indexID
 #' @rdname setID-methods
 #' @exportMethod setID<-
 setGeneric("setID<-", function(this, ..., value) standardGeneric("setID<-"))
@@ -14,13 +18,19 @@ setGeneric("setID<-", function(this, ..., value) standardGeneric("setID<-"))
 #' @param ... Additional function arguments
 #' @param value Start Date
 #' @rdname setStartDate-methods
-#' @exportMethod setStartDate<-
 setGeneric("setStartDate<-", function(this, ..., value) standardGeneric("setStartDate<-"))
 
 #' Input the raw data.
 #' @name setObservation<-
 #' @param this FitDist Object or Copula Object
 #' @param value A data frame or a matrix. For FitDist object, it could be a two-column data frame with the occurrence date and loss size/number of occurrence. Or a one-column data frame with loss size (ifreq == FALSE) or number of occurrence (ifreq == TRUE && idate == FALSE) or occurrence dates (ifreq == TRUE && idate == TRUE). For Copula object, it could be a matrix with each column contains the experience data of a variable.
+#' @examples
+#' library(cascsim)
+#' dist1<-new("Pareto",p1=20,p2=3)
+#' dist2<-new("Normal",p1=5,p2=3,min=0,max=20,truncated=TRUE)
+#' nom.cop <- new("CopulaObj", param=c(0.5),marginal=list(dist1=dist1,dist2=dist2),dimension=2)
+#' setObservation(nom.cop)<-copulaSample(nom.cop,100)
+#' nom.cop@observation
 #' @rdname setObservation-methods
 #' @export setObservation<-
 setGeneric("setObservation<-", function(this,value) standardGeneric("setObservation<-"))
@@ -78,6 +88,20 @@ setGeneric("doPlot", function(object, ...) standardGeneric("doPlot"))
 #' @name getObservation
 #' @param object Object
 #' @param ... Additional function arguments
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' getObservation(xFit)
 #' @rdname getObservation-methods
 #' @exportMethod getObservation
 setGeneric("getObservation", function(object,...) standardGeneric("getObservation"))
@@ -86,6 +110,20 @@ setGeneric("getObservation", function(object,...) standardGeneric("getObservatio
 #' @name getTrend
 #' @param object Object
 #' @param ... Additional function arguments
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#'
+#' #frequecy fitting example
+#' findex <- new("Index", startDate = as.Date("2012-01-01"), tabulate=TRUE, monthlyIndex = c(rep(1,11),
+#' cumprod(c(1,rep(1.5^(1/12),11))),cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),1.4))
+#' rawdata <- as.data.frame(as.Date(claimdata[(claimdata[,"LoB"]=="Auto" & 
+#' claimdata[,"Type"]=="H"),]$occurrenceDate))
+#' colnames(rawdata)<-"occurrenceDate"
+#' xFit <- new("FitDist", observation=rawdata, trend=findex,startDate = as.Date("2012-01-01"),
+#' method="mle",ifreq=TRUE,idate=TRUE, freq="Monthly")
+#' getTrend(xFit)
 #' @rdname getTrend-methods
 #' @exportMethod getTrend
 setGeneric("getTrend", function(object,...) standardGeneric("getTrend"))

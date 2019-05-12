@@ -96,6 +96,16 @@ setClass("ClaimType",
 #' @name claimSample
 #' @param object ClaimType object
 #' @param ... Additional parameters that may or may not be used. 
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#' #IBNR simulation
+#' claimobj <- new("ClaimType", line="Auto",claimType="N",iRBNER=FALSE,iROPEN=FALSE,
+#' iIBNR=TRUE,iUPR=FALSE,
+#' IBNRfreqIndex=new("Index",startDate=as.Date("2016-01-01"),
+#' monthlyIndex=rep(30,12)),iCopula=TRUE)
+#' ibnrdata <- claimSample(claimobj,claimdata)
+#' ibnrdata
 #' @rdname claimSample-methods
 #' @exportMethod claimSample
 setGeneric("claimSample", function(object, ...) standardGeneric("claimSample"))
@@ -1051,7 +1061,7 @@ setMethod("claimSample", signature("ClaimType"), function(object, claimData=data
 		return(tmpdata)
 
 	}, error = function(err){
-		print(paste0(">>>Critical Error for claim simulation: Line-", object@line, " Type-", object@claimType, " Sim No.-", object@simno, ", ",err))
+		message(paste0(">>>Critical Error for claim simulation: Line-", object@line, " Type-", object@claimType, " Sim No.-", object@simno, ", ",err))
 		gc()
 	})
 })

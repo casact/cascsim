@@ -120,6 +120,22 @@ setGeneric("claimFitting", function(object, claimData, ...) standardGeneric("cla
 #' @param fDeductible Boolean variable to indicate whether deductible empirical distribution needs to be fitted;
 #' @param fLimit Boolean variable to indicate whether limit empirical distribution needs to be fitted;
 #' @param check Boolean variable to indicate whether graph of each tried distribution fitting needs to be generated and saved.
+#' @examples
+#' library(cascsim)
+#' data(claimdata)
+#' lines<-c("Auto")
+#' types<-c("N")
+#' #exposure index
+#' index1 <- new("Index",monthlyIndex=c(rep(1,11),cumprod(c(1,rep(1.5^(1/12),11))),
+#' cumprod(c(1.5,rep((1.3/1.5)^(1/12),11))),
+#' cumprod(c(1.3,rep((1.35/1.3)^(1/12),11))),cumprod(c(1.35,rep((1.4/1.35)^(1/12),11))),rep(1.4,301)))
+#' #severity index
+#' index2 <- new("Index",monthlyIndex=c(cumprod(c(1,rep(1.03^(1/12),59))),rep(1.03^(5),300)))
+#' objan <- new("ClaimType", line="Auto",claimType="N",exposureIndex=index1,severityIndex=index2)
+#' objlist <- list(objan)
+#' simobj <- new("Simulation",lines=lines,types=types,claimobjs=objlist,iFit=TRUE,
+#' iCopula=FALSE, iReport=TRUE)
+#' simobj <- claimFitting(simobj,claimdata,fSSRCorrelation = FALSE, fSettlementLag = FALSE)
 #' @rdname claimFitting-methods
 #' @aliases claimFitting,ANY-method
 setMethod("claimFitting", signature("Simulation", "data.frame"), function(object, claimData, startDate=as.Date("2012-01-01"),evaluationDate=as.Date("2016-12-31"),
@@ -142,7 +158,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 {
 	tryCatch({
 
-		print("Fitting process started.")
+		message("Fitting process started.")
 
 		startDate <- toDate(startDate)
 		evaluationDate <- toDate(evaluationDate)
@@ -160,8 +176,8 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 		if (as.numeric(as.Date(evaluationDate) - as.Date(startDate))<60 & fFrequency == TRUE) {
 			fFrequency = FALSE
 			fFreqCorrelation = FALSE
-			print("Frequency and Frequency Copula Fitting are turned off due to insufficient data.")
-			cat("\n")
+			message("Frequency and Frequency Copula Fitting are turned off due to insufficient data.")
+			message("\n")
 		}
 
 
@@ -263,7 +279,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 						if(nrow(fitdata)>5 & co@line==l & co@claimType==t){
 							if(fReportLag==TRUE){
 								f <- "reportLag"
-								print(paste0("Start Fitting Line:",l," Type:",t," ",f))
+								message(paste0("Start Fitting Line:",l," Type:",t," ",f))
 								reportlags <- as.numeric(as.Date(fitdata[,"reportDate"])-as.Date(fitdata[,"occurrenceDate"]))
 								reportlags <- ifelse(reportlags==0, runif(length(reportlags)),reportlags)
 
@@ -276,14 +292,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									for (i in c(1:length(continuousDist))){
 										so <- tryCatch({
 											setTrialDistErr(xFit) <- new(continuousDist[i])
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution fitted"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution fitted"))
 											1
 											}#,warning=function(w) {
 											#	setTrialDist(xFit) <- new(continuousDist[i])
 											#	return(1)
 											#}
 											,error=function(e) {
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution failed to fit"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution failed to fit"))
 											-1
 											}
 										)
@@ -314,19 +330,19 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 											bestfit <- xFit@fitted
 											bestBIC <- as.numeric(xFit@soutput[1,12])
 										}
-										#print(toString(xFit@fitted))
+										#message(toString(xFit@fitted))
 									}
 
 									if (irlso == 1) {
 										co@reportLag <- bestfit
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@reportLag)))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@reportLag)))
 										xFit@fitted<-bestfit
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										fitPlot(xFit)
 										dev.off()
 									} else {
 										co@reportLag@fitsucc <- FALSE
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										plotText(paste0("Data cannot fit to any tested distribution"))
 										dev.off()
@@ -355,12 +371,12 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									cn <- paste0(l,t,f,"emp")
 									empiricals[,cn]<-Quantile(xFit@fitted,seq(0.001,1,0.001))
 								}
-								cat("\n")
+								message("\n")
 							}
 
 							if(fFrequency==TRUE){
 								f <- "frequency"
-								print(paste0("Start Fitting Line:",l," Type:",t," ",f))
+								message(paste0("Start Fitting Line:",l," Type:",t," ",f))
 								rawdata <- as.data.frame(as.Date(fitdata$occurrenceDate))
 								colnames(rawdata)<-"occurrenceDate"
 								if(TRUE){#(objName(co@frequency)!="Empirical"){
@@ -371,14 +387,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									for (i in c(1:length(discreteDist))){
 										so <- tryCatch({
 											setTrialDistErr(xFit) <- new(discreteDist[i])
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",discreteDist[i]," distribution fitted"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",discreteDist[i]," distribution fitted"))
 											1
 											}#,warning=function(w) {
 											#	setTrialDist(xFit) <- new(continuousDist[i])
 											#	return(1)
 											#}
 											,error=function(e) {
-												print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",discreteDist[i]," distribution failed to fit"))
+												message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",discreteDist[i]," distribution failed to fit"))
 												-1
 											}
 										)
@@ -409,18 +425,18 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 											bestfit <- xFit@fitted
 											bestBIC <- as.numeric(xFit@soutput[1,12])
 										}
-										#print(toString(xFit@fitted))
+										#message(toString(xFit@fitted))
 									}
 									if (ifso == 1) {
 										co@frequency <- bestfit
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@frequency)))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@frequency)))
 										xFit@fitted<-bestfit
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										fitPlot(xFit)
 										dev.off()
 									} else {
 										co@frequency@fitsucc <- FALSE
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										plotText(paste0("Data cannot fit to any tested distribution"))
 										dev.off()
@@ -446,13 +462,13 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									cn <- paste0(l,t,f,"emp")
 									empiricals[,cn]<-Quantile(xFit@fitted,seq(0.001,1,0.001))
 								}
-								cat("\n")
+								message("\n")
 							}
 
 							if(fSettlementLag==TRUE){
 								fitdatacls <- fitdata[fitdata$status=="CLOSED",]
 								f <- "settlementLag"
-								print(paste0("Start Fitting Line:",l," Type:",t," ",f))
+								message(paste0("Start Fitting Line:",l," Type:",t," ",f))
 								settlementlags <- as.numeric(as.Date(fitdatacls[,"settlementDate"])-as.Date(fitdatacls[,"reportDate"]))
 								rm(fitdatacls)
 								settlementlags <- settlementlags[!is.na(settlementlags)]
@@ -466,14 +482,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									for (i in c(1:length(continuousDist))){
 										so <- tryCatch({
 											setTrialDistErr(xFit) <- new(continuousDist[i])
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution fitted"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution fitted"))
 											1
 											}#,warning=function(w) {
 											#	setTrialDist(xFit) <- new(continuousDist[i])
 											#	return(1)
 											#}
 											,error=function(e) {
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution failed to fit"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution failed to fit"))
 											-1
 											}
 										)
@@ -508,14 +524,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 									if (islso == 1) {
 										co@settlementLag <- bestfit
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@settlementLag)))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@settlementLag)))
 										xFit@fitted<-bestfit
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										fitPlot(xFit)
 										dev.off()
 									} else {
 										co@settlementLag@fitsucc <- FALSE
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										plotText(paste0("Data cannot fit to any tested distribution"))
 										dev.off()
@@ -541,12 +557,12 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									cn <- paste0(l,t,f,"emp")
 									empiricals[,cn]<-Quantile(xFit@fitted,seq(0.001,1,0.001))
 								}
-								cat("\n")
+								message("\n")
 							}
 
 							if(fDeductible==TRUE){
 								f <- "Deductible"
-								print(paste0("Start Fitting Line:",l," Type:",t," ",f))
+								message(paste0("Start Fitting Line:",l," Type:",t," ",f))
 								deductibles <- as.numeric(fitdata[,"Deductible"])
 								deductibles <- ifelse(is.na(deductibles),0,deductibles)
 								deductibles <- ifelse(deductibles<0,0,deductibles)
@@ -571,12 +587,12 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 								cn <- paste0(l,t,f,"emp")
 								empiricals[,cn]<-Quantile(xFit@fitted,seq(0.001,1,0.001))
-								cat("\n")
+								message("\n")
 							}
 
 							if(fLimit==TRUE){
 								f <- "Limit"
-								print(paste0("Start Fitting Line:",l," Type:",t," ",f))
+								message(paste0("Start Fitting Line:",l," Type:",t," ",f))
 
 								limits <- as.numeric(fitdata[,"Limit"])
 								limits <- ifelse(is.na(limits),1e10,limits)
@@ -601,12 +617,12 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 								cn <- paste0(l,t,f,"emp")
 								empiricals[,cn]<-Quantile(xFit@fitted,seq(0.001,1,0.001))
-								cat("\n")
+								message("\n")
 							}
 
 							if(fSeverity==TRUE){
 								f <- "severity"
-								print(paste0("Start Fitting Line:",l," Type:",t," ",f))
+								message(paste0("Start Fitting Line:",l," Type:",t," ",f))
 
 								nclosed <- nrow(fitdata[fitdata[,"status"]=="CLOSED",])
 								nvalid <- nrow(fitdata[fitdata[,"claimLiability"]==TRUE & fitdata[,"status"]=="CLOSED",])
@@ -667,14 +683,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									for (i in c(1:length(continuousDist))){
 										so <- tryCatch({
 											setTrialDistErr(xFit) <- new(continuousDist[i])
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution fitted"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution fitted"))
 											1
 											}#,warning=function(w) {
 											#	setTrialDist(xFit) <- new(continuousDist[i])
 											#	return(1)
 											#}
 											,error=function(e) {
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution failed to fit"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",continuousDist[i]," distribution failed to fit"))
 											-1
 											}
 										)
@@ -712,14 +728,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									}
 									if (isso == 1) {
 										co@severity <- bestfit
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@severity)))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@severity)))
 										xFit@fitted<-bestfit
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										fitPlot(xFit)
 										dev.off()
 									} else {
 										co@severity@fitsucc <- FALSE
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ","No distribution is found appropriate."))
 										png(filename = paste0("fit",object@tag,l,t,f,".png"))
 										plotText(paste0("Data cannot fit to any tested distribution"))
 										dev.off()
@@ -766,13 +782,13 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 								xFit <- setFitdata(xFit)
 								losses <- xFit@fitdata
 
-								cat("\n")
+								message("\n")
 
 							}
 
 							if(co@iCopula==TRUE & fReportLag==TRUE & fSettlementLag==TRUE & fSeverity==TRUE & fSSRCorrelation==TRUE){
 								f <- "ssrCorrelation"
-								print(paste0("Start Fitting Line:",l," Type:",t," ","Correlation among severity, report lag and settlement lag"))
+								message(paste0("Start Fitting Line:",l," Type:",t," ","Correlation among severity, report lag and settlement lag"))
 								x <- cbind(losses,settlementlags,reportlags)
 								if (nrow(x) > 2000) {
 									x <- x[sample(nrow(x), 2000), ]
@@ -796,14 +812,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 										so <- tryCatch({
 											if(nom.cop@type=="t") {nom.cop@fittest=TRUE} else {nom.cop@fittest=TRUE}#FALSE
 											nom.cop <- copulaFitErr(nom.cop)
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula fitted"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula fitted"))
 											1
 											}#,warning=function(w) {
 											#	setTrialDist(xFit) <- new(continuousDist[i])
 											#	return(1)
 											#}
 											,error=function(e) {
-											print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula failed to fit"))
+											message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula failed to fit"))
 											-1
 											}
 										)
@@ -838,7 +854,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 									if (issrso == 1) {
 										bestfit@fitsucc = TRUE
 										co@ssrCopula <- bestfit
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@ssrCopula)))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(co@ssrCopula)))
 										png(filename = paste0("fit",object@tag,l,t,f,".png"),width=480,height=240)
 										copulaFitPlot(bestfit)
 										dev.off()
@@ -854,12 +870,12 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 															stringsAsFactors=FALSE)
 										nom.cop@coutput[1,] = c("normal", "mpl", NA, NA, 3, NA, NA)
 										co@ssrCopula <- nom.cop
-										print(paste0("Line:",l," Type:",t," ",f, " best fit: ","No copula is found appropriate."))
+										message(paste0("Line:",l," Type:",t," ",f, " best fit: ","No copula is found appropriate."))
 										png(filename = paste0("fit",object@tag,l,t,f,".png"),width=480,height=240)
 										plotText(paste0("Data cannot fit to any tested copula"))
 										dev.off()
 									}
-									cat("\n")
+									message("\n")
 								} else {
 									dist1 <- co@severity
 									dist2 <- co@settlementLag
@@ -875,17 +891,17 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 														stringsAsFactors=FALSE)
 									nom.cop@coutput[1,] = c("normal", "mpl", NA, NA, 3, NA, NA)
 									co@ssrCopula <- nom.cop
-									print(paste0("Severity, settlement lag and report lag copula fitting is turned off due to insufficient data for line " , l, " type " , t))
+									message(paste0("Severity, settlement lag and report lag copula fitting is turned off due to insufficient data for line " , l, " type " , t))
 									png(filename = paste0("fit",object@tag,l,t,f,".png"),width=480,height=240)
 									plotText(paste0("Data are insufficient fit to any tested copula"))
 									dev.off()
-									cat("\n")
+									message("\n")
 								}
 							}
 							if(co@line==l & co@claimType==t) {object@claimobjs[[obji]]<-co}
 						} else {
-							print (paste0("Nothing to fit for line " , l, " type " , t))
-							cat("\n")
+							message (paste0("Nothing to fit for line " , l, " type " , t))
+							message("\n")
 						}
 					}
 				}
@@ -935,7 +951,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 					f <- "freqCorrelation"
 					l <- "Total"
 					t <- "Total"
-					print(paste0("Start Fitting frequency correlation among business lines"))
+					message(paste0("Start Fitting frequency correlation among business lines"))
 					x <- data.matrix(uym[,-1])
 					if (nrow(x)>=10) {
 						bestP <- 0
@@ -951,14 +967,14 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 							so <- tryCatch({
 								nom.cop <- copulaFitErr(nom.cop)
-								print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula fitted"))
+								message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula fitted"))
 								1
 								}#,warning=function(w) {
 								#	setTrialDist(xFit) <- new(continuousDist[i])
 								#	return(1)
 								#}
 								,error=function(e) {
-								print(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula failed to fit"))
+								message(paste0("Line-", l, " Type-", t, " Fitting-", f,": ",copulaList[i]," copula failed to fit"))
 								-1
 								}
 							)
@@ -993,7 +1009,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 
 						if (ifcso == 1) {
 							object@freqCopula <- bestfit
-							print(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(object@freqCopula)))
+							message(paste0("Line:",l," Type:",t," ",f, " best fit: ",toString(object@freqCopula)))
 							png(filename = paste0("fit",object@tag,f,".png"),width=480,height=240)
 							copulaFitPlot(bestfit)
 							dev.off()
@@ -1001,7 +1017,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 							nom.cop <- new("CopulaObj", type="normal",param=rep(0,(length(object@lines)-1)*length(object@lines)/2),dimension=length(object@lines),fittest=copulaTest)
 							nom.cop@coutput <- data.frame(matrix(c("normal","mpl",rep(NA,5)),1,7))
 							object@freqCopula <- nom.cop
-							print(paste0("Line:",l," Type:",t," ",f, " best fit: ","No copula is found appropriate."))
+							message(paste0("Line:",l," Type:",t," ",f, " best fit: ","No copula is found appropriate."))
 							png(filename = paste0("fit",object@tag,l,t,f,".png"),width=480,height=240)
 							plotText(paste0("Data cannot fit to any tested copula"))
 							dev.off()
@@ -1010,7 +1026,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 						nom.cop <- new("CopulaObj", type="normal",param=rep(0,(length(object@lines)-1)*length(object@lines)/2),dimension=length(object@lines),fittest=copulaTest)
 						nom.cop@coutput <- data.frame(matrix(c("normal","mpl",rep(NA,5)),1,7))
 						object@freqCopula <- nom.cop
-						print(paste0("Frequency copula fitting is turned off due to insufficient data"))
+						message(paste0("Frequency copula fitting is turned off due to insufficient data"))
 						png(filename = paste0("fit",object@tag,l,t,f,".png"),width=480,height=240)
 						plotText(paste0("Data is insufficient to fit to any tested copula"))
 						dev.off()
@@ -1286,7 +1302,7 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 								}
 							}
 						}
-						cat(paste("Report generated: ",file," at ",date(), "\n", sep = ""))
+						message(paste("Report generated: ",file," at ",date(), "\n", sep = ""))
 					}
 
 					Report <- function(file) {
@@ -1307,22 +1323,22 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 			} else {
 				stop("Reset iFit of the simulation object to TRUE to fit frequency, severity, report lag, settlement lag and frequency correlation to claim data.")
 			}
-			print("Claim data fitting done")
+			message("Claim data fitting done")
 			return(object)
 
 		} else {
-			print("Nothing to fit or no claim data.")
-			print("Claim data fitting done")
+			message("Nothing to fit or no claim data.")
+			message("Claim data fitting done")
 		}
 
 	}, error = function(err){
-		print("Something is wrong. Please check the error messages")
+		message("Something is wrong. Please check the error messages")
 		if (exists("l") & exists("t") & exists("f")){
-			print(paste0(">>>Critical Error for claim distribution fitting: ",err," Line-", l, " Type-", t, " Fitting-", f))
+			message(paste0(">>>Critical Error for claim distribution fitting: ",err," Line-", l, " Type-", t, " Fitting-", f))
 		} else {
-			print(paste0(">>>Critical Error for claim distribution fitting: ",err))
+			message(paste0(">>>Critical Error for claim distribution fitting: ",err))
 		}
-		print("Claim data fitting done")
+		message("Claim data fitting done")
 		gc()
 		return(-1)
 	})
@@ -1333,6 +1349,46 @@ setMethod("claimFitting", signature("Simulation", "data.frame"), function(object
 #' @name claimSimulation
 #' @param object Simulation object
 #' @param ... Additional parameters that may or may not be used. 
+#' examples
+#' library(cascsim)
+#' data(claimdata)
+#' lines <- c("Auto")
+#' types <- c("N")
+#' AutoN <- new("ClaimType", line = "Auto", claimType = "N")
+#' AutoN@exposureIndex <- setIndex(new("Index",indexID="I1",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0)) # level exposure across time
+#' AutoN@frequency <- new("Poisson", p1 =50)
+#' AutoN@severityIndex <- setIndex(new("Index",indexID="I2",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0.02)) #assuming a 2% annual inflation
+#' AutoN@severity <- new("Lognormal", p1 =2, p2 =3)
+#' AutoN@deductible <- new("Empirical", empirical=matrix(c(0,1,100,100),2,2))
+#' AutoN@limit <- new("Empirical", empirical=matrix(c(0,1,1e8,1e8),2,2))
+#' AutoN@p0<-0
+#' AutoN@reportLag <- new("Exponential", p1 =0.1)
+#' AutoN@settlementLag <- new("Exponential", p1 =0.05)
+#' AutoN@iCopula <- TRUE #use copula
+#' AutoN@ssrCopula <- new("CopulaObj", type ="normal", dimension = 3, 
+#' param = c(0.1,0.2,0.1))#A Gaussian Copula
+#' AutoN@ssrCopula@marginal <- c(AutoN@severity,AutoN@settlementLag,AutoN@reportLag)
+#' AutoN@laeDevFac <- new("DevFac",FacID="F1",FacModel= TRUE,fun="linear",
+#' paras =c(5,1.5,0.005,1.2,3))
+#' AutoN@fIBNER <- new("DevFac",FacID="D1",FacModel= FALSE,
+#' meanList =c(1.2,1.15,1.1,1.05,1),volList =c(0,0,0,0,0))
+#' AutoN@reopen <- new("DevFac",FacID="D2",FacModel= FALSE,
+#' meanList =c(0.02,0.015,0.01,0.005,0),volList =c(0.003, 0.002, 0.001, 0.001, 0))
+#' AutoN@roDevFac <- new("DevFac",FacID="D3",FacModel= FALSE,
+#' meanList =c(1.05,1.1,1,1,1),volList =c(0.00589,0.0037,0.00632,0.00815,0))
+#' AutoN@reopenLag <- new("Exponential", p1 =0.01)
+#' AutoN@resettleLag <- new("Exponential", p1 =0.25)
+#' simobj <- new("Simulation", lines=lines, types=types, 
+#' claimobjs= list(AutoN))
+#' simobj@simNo <- 1
+#' simobj@iRBNER <-FALSE
+#' simobj@iROPEN <-FALSE
+#' simobj@iIBNR <-TRUE
+#' simobj@iUPR <-FALSE
+#' simdata <- claimSimulation(simobj,claimdata, startDate = as.Date("2012-01-01"), 
+#' evaluationDate = as.Date("2016-12-31"), futureDate = as.Date("2017-12-31"))
 #' @rdname claimSimulation-methods
 #'
 #' @importFrom utils write.table
@@ -1485,7 +1541,7 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 					}
 					for(isim in c(vsims[i]:vsim[i])){
 						object<-vobj[[i]]
-						print(paste0("Worker ",i,",Simulation ",isim+object@startNo-1," started at ",date()))
+						message(paste0("Worker ",i,",Simulation ",isim+object@startNo-1," started at ",date()))
 						if(object@iCopula==TRUE) {
 							freqs <- copulaSample(object@freqCopula,nmonths)
 						}
@@ -1562,8 +1618,8 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 							}
 						}
 						#	if (isim %% 10 == 0) {
-						print(paste0("Worker",i,",Simulation ",isim+object@startNo-1," ended at ",date()))
-						print(">>>Simulation is finished successfully<<<")
+						message(paste0("Worker",i,",Simulation ",isim+object@startNo-1," ended at ",date()))
+						message(">>>Simulation is finished successfully<<<")
 					}
 					#file.rename("simdatatmp.csv", filename)
 					return(simdata)
@@ -1618,7 +1674,7 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 					if(object@iCopula==TRUE) {
 						freqs <- copulaSample(object@freqCopula,nmonths)
 					}
-					print(paste0("Simulation ",isim+object@startNo-1," started at ",date()))
+					message(paste0("Simulation ",isim+object@startNo-1," started at ",date()))
 					for(l in object@lines){
 						for(t in object@types){
 							for(co in object@claimobjs){
@@ -1690,13 +1746,13 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 								simdata <- rbind(simdata,stmp)
 
 								#	if (isim %% 10 == 0) {
-								#	print(paste0("Simulation ",isim,": ",proc.time()[3]," elapsed"))
+								#	message(paste0("Simulation ",isim,": ",proc.time()[3]," elapsed"))
 							}
 						}
 					}
 					#write.csv(simdata,filename,row.names=FALSE)
-					print(paste0("Simulation ",isim+object@startNo-1," ended at ",date()))
-					print(">>>Simulation is finished successfully<<<")
+					message(paste0("Simulation ",isim+object@startNo-1," ended at ",date()))
+					message(">>>Simulation is finished successfully<<<")
 				}
 #				write.csv(simdata,filename,row.names=FALSE)
 				#file.rename("simdatatmp.csv", filename)
@@ -1710,12 +1766,12 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 
 	}, error = function(err){
 		if (exists("l") & exists("t") & exists("c") & exists("isim")){
-			print(paste0(">>>Critical Error for claim simulation:  ",err," Line-", l, " Type-", t, " Class-", c, " Sim No.-", isim+object@startNo-1))
+			message(paste0(">>>Critical Error for claim simulation:  ",err," Line-", l, " Type-", t, " Class-", c, " Sim No.-", isim+object@startNo-1))
 		} else {
-			print(paste0(">>>Critical Error for claim simulation:  ",err))
+			message(paste0(">>>Critical Error for claim simulation:  ",err))
 		}
 
-		print(">>>Simulation is finished with error")
+		message(">>>Simulation is finished with error")
 		gc()
 		return(-1)
 	})
@@ -1726,6 +1782,47 @@ setMethod("claimSimulation", signature("Simulation"), function(object, claimData
 #' @param object Simulation object
 #' @param simdata simulation data generated by claimSimulation
 #' @param ... Additional parameters that may or may not be used.
+#' examples
+#' library(cascsim)
+#' data(claimdata)
+#' lines <- c("Auto")
+#' types <- c("N")
+#' AutoN <- new("ClaimType", line = "Auto", claimType = "N")
+#' AutoN@exposureIndex <- setIndex(new("Index",indexID="I1",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0)) # level exposure across time
+#' AutoN@frequency <- new("Poisson", p1 =50)
+#' AutoN@severityIndex <- setIndex(new("Index",indexID="I2",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0.02)) #assuming a 2% annual inflation
+#' AutoN@severity <- new("Lognormal", p1 =2, p2 =3)
+#' AutoN@deductible <- new("Empirical", empirical=matrix(c(0,1,100,100),2,2))
+#' AutoN@limit <- new("Empirical", empirical=matrix(c(0,1,1e8,1e8),2,2))
+#' AutoN@p0<-0
+#' AutoN@reportLag <- new("Exponential", p1 =0.1)
+#' AutoN@settlementLag <- new("Exponential", p1 =0.05)
+#' AutoN@iCopula <- TRUE #use copula
+#' AutoN@ssrCopula <- new("CopulaObj", type ="normal", dimension = 3, 
+#' param = c(0.1,0.2,0.1))#A Gaussian Copula
+#' AutoN@ssrCopula@marginal <- c(AutoN@severity,AutoN@settlementLag,AutoN@reportLag)
+#' AutoN@laeDevFac <- new("DevFac",FacID="F1",FacModel= TRUE,fun="linear",
+#' paras =c(5,1.5,0.005,1.2,3))
+#' AutoN@fIBNER <- new("DevFac",FacID="D1",FacModel= FALSE,
+#' meanList =c(1.2,1.15,1.1,1.05,1),volList =c(0,0,0,0,0))
+#' AutoN@reopen <- new("DevFac",FacID="D2",FacModel= FALSE,
+#' meanList =c(0.02,0.015,0.01,0.005,0),volList =c(0.003, 0.002, 0.001, 0.001, 0))
+#' AutoN@roDevFac <- new("DevFac",FacID="D3",FacModel= FALSE,
+#' meanList =c(1.05,1.1,1,1,1),volList =c(0.00589,0.0037,0.00632,0.00815,0))
+#' AutoN@reopenLag <- new("Exponential", p1 =0.01)
+#' AutoN@resettleLag <- new("Exponential", p1 =0.25)
+#' simobj <- new("Simulation", lines=lines, types=types, 
+#' claimobjs= list(AutoN))
+#' simobj@simNo <- 1
+#' simobj@iRBNER <-FALSE
+#' simobj@iROPEN <-FALSE
+#' simobj@iIBNR <-TRUE
+#' simobj@iUPR <-FALSE
+#' simdata <- claimSimulation(simobj,claimdata, startDate = as.Date("2012-01-01"), 
+#' evaluationDate = as.Date("2016-12-31"), futureDate = as.Date("2017-12-31"))
+#' simSummary <- simSummary(simobj,simdata)
 #' @rdname simSummary-methods
 #' @exportMethod simSummary
 setGeneric("simSummary", function(object, simdata, ...) standardGeneric("simSummary"))
@@ -1754,7 +1851,7 @@ setMethod("simSummary", signature("Simulation", "data.frame"), function(object, 
 
 		if(nrow(simdata)==0) {stop("No simulation data to summarize")}
 		if (object@iSummary==TRUE){
-			print(paste0("Starting summarizing the simulation results: ",date()))
+			message(paste0("Starting summarizing the simulation results: ",date()))
 #			if(length(object@lines)>1) {
 				idx1<-c(object@lines,"Total")
 #			} else {
@@ -1901,7 +1998,7 @@ setMethod("simSummary", signature("Simulation", "data.frame"), function(object, 
 						}
 					}
 				}
-				print(paste0("Business Line ",i1," summarized: ",date()))
+				message(paste0("Business Line ",i1," summarized: ",date()))
 			}
 			rownames(simSummary)<-NULL
 			simSummary<-as.data.frame(simSummary)
@@ -1922,9 +2019,9 @@ setMethod("simSummary", signature("Simulation", "data.frame"), function(object, 
 		}
 	}, error = function(err){
 		if (exists("l") & exists("t") & exists("c")){
-			print(paste0(">>>Critical Error for claim simulation summarization: ",err," Line-", l, " Type-", t, " Class-", c))
+			message(paste0(">>>Critical Error for claim simulation summarization: ",err," Line-", l, " Type-", t, " Class-", c))
 		} else {
-			print(paste0(">>>Critical Error for claim simulation summarization: ",err))
+			message(paste0(">>>Critical Error for claim simulation summarization: ",err))
 		}
 		return(-1)
 		gc()
@@ -1937,8 +2034,50 @@ setMethod("simSummary", signature("Simulation", "data.frame"), function(object, 
 #' @param claimdata claim data used as basis for simulation
 #' @param simdata simulation data generated by claimSimulation
 #' @param ... Additional parameters that may or may not be used. 
-#' @importFrom methods new
+#' examples
+#' library(cascsim)
+#' data(claimdata)
+#' lines <- c("Auto")
+#' types <- c("N")
+#' AutoN <- new("ClaimType", line = "Auto", claimType = "N")
+#' AutoN@exposureIndex <- setIndex(new("Index",indexID="I1",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0)) # level exposure across time
+#' AutoN@frequency <- new("Poisson", p1 =50)
+#' AutoN@severityIndex <- setIndex(new("Index",indexID="I2",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0.02)) #assuming a 2% annual inflation
+#' AutoN@severity <- new("Lognormal", p1 =2, p2 =3)
+#' AutoN@deductible <- new("Empirical", empirical=matrix(c(0,1,100,100),2,2))
+#' AutoN@limit <- new("Empirical", empirical=matrix(c(0,1,1e8,1e8),2,2))
+#' AutoN@p0<-0
+#' AutoN@reportLag <- new("Exponential", p1 =0.1)
+#' AutoN@settlementLag <- new("Exponential", p1 =0.05)
+#' AutoN@iCopula <- TRUE #use copula
+#' AutoN@ssrCopula <- new("CopulaObj", type ="normal", dimension = 3, 
+#' param = c(0.1,0.2,0.1))#A Gaussian Copula
+#' AutoN@ssrCopula@marginal <- c(AutoN@severity,AutoN@settlementLag,AutoN@reportLag)
+#' AutoN@laeDevFac <- new("DevFac",FacID="F1",FacModel= TRUE,fun="linear",
+#' paras =c(5,1.5,0.005,1.2,3))
+#' AutoN@fIBNER <- new("DevFac",FacID="D1",FacModel= FALSE,
+#' meanList =c(1.2,1.15,1.1,1.05,1),volList =c(0,0,0,0,0))
+#' AutoN@reopen <- new("DevFac",FacID="D2",FacModel= FALSE,
+#' meanList =c(0.02,0.015,0.01,0.005,0),volList =c(0.003, 0.002, 0.001, 0.001, 0))
+#' AutoN@roDevFac <- new("DevFac",FacID="D3",FacModel= FALSE,
+#' meanList =c(1.05,1.1,1,1,1),volList =c(0.00589,0.0037,0.00632,0.00815,0))
+#' AutoN@reopenLag <- new("Exponential", p1 =0.01)
+#' AutoN@resettleLag <- new("Exponential", p1 =0.25)
+#' simobj <- new("Simulation", lines=lines, types=types, 
+#' claimobjs= list(AutoN))
+#' simobj@simNo <- 1
+#' simobj@iRBNER <-FALSE
+#' simobj@iROPEN <-FALSE
+#' simobj@iIBNR <-TRUE
+#' simobj@iUPR <-FALSE
+#' simdata <- claimSimulation(simobj,claimdata, startDate = as.Date("2012-01-01"), 
+#' evaluationDate = as.Date("2016-12-31"), futureDate = as.Date("2017-12-31"))
+#' simSummary <- simSummary(simobj,simdata)
+#' simTriangle <- simTriangle(simobj,claimdata,simdata)
 #' @rdname simTriangle-methods
+#' @importFrom methods new
 #' @exportMethod simTriangle
 setGeneric("simTriangle", function(object, claimdata, simdata, ...) standardGeneric("simTriangle"))
 #' @param frequency triangle frequency, either "yearly" or "quarterly";
@@ -1974,7 +2113,7 @@ setMethod("simTriangle", signature("Simulation", "data.frame", "data.frame"), fu
 		}
 
 		if (object@iSummary==TRUE){
-			print(paste0("Starting creating triangles from the simulation results: ",date()))
+			message(paste0("Starting creating triangles from the simulation results: ",date()))
 #			if(length(object@lines)>1) {
 				idx1<-c(object@lines,"Total")
 #			} else {
@@ -2120,7 +2259,7 @@ setMethod("simTriangle", signature("Simulation", "data.frame", "data.frame"), fu
 						}
 					}
 				}
-				print(paste0("Business Line ",i1," triangle constructed: ",date()))
+				message(paste0("Business Line ",i1," triangle constructed: ",date()))
 			}
 			rownames(simSummary)<-NULL
 			write.table(simSummary,summaryname,row.names=FALSE, sep=",")
@@ -2130,9 +2269,9 @@ setMethod("simTriangle", signature("Simulation", "data.frame", "data.frame"), fu
 		}
 	}, error = function(err){
 		if (exists("l") & exists("t") & exists("c") & exists("i5")){
-			print(paste0(">>>Critical Error for constructing claim simulation triangles: ",err," Line-", l, " Type-", t, " Class-", c, " Measure-",i5))
+			message(paste0(">>>Critical Error for constructing claim simulation triangles: ",err," Line-", l, " Type-", t, " Class-", c, " Measure-",i5))
 		} else {
-			print(paste0(">>>Critical Error for constructing claim simulation triangles: ",err))
+			message(paste0(">>>Critical Error for constructing claim simulation triangles: ",err))
 		}
 		return(-1)
 		gc()
@@ -2144,6 +2283,49 @@ setMethod("simTriangle", signature("Simulation", "data.frame", "data.frame"), fu
 #' @param object ClaimType object
 #' @param simSummary simulation result summary generated by simSummary
 #' @param ... Additional parameters that may or may not be used. 
+#' examples
+#' library(cascsim)
+#' data(claimdata)
+#' lines <- c("Auto")
+#' types <- c("N")
+#' AutoN <- new("ClaimType", line = "Auto", claimType = "N")
+#' AutoN@exposureIndex <- setIndex(new("Index",indexID="I1",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0)) # level exposure across time
+#' AutoN@frequency <- new("Poisson", p1 =50)
+#' AutoN@severityIndex <- setIndex(new("Index",indexID="I2",tabulate= FALSE,
+#' startDate=as.Date("2012-01-01"), annualizedRate = 0.02)) #assuming a 2% annual inflation
+#' AutoN@severity <- new("Lognormal", p1 =2, p2 =3)
+#' AutoN@deductible <- new("Empirical", empirical=matrix(c(0,1,100,100),2,2))
+#' AutoN@limit <- new("Empirical", empirical=matrix(c(0,1,1e8,1e8),2,2))
+#' AutoN@p0<-0
+#' AutoN@reportLag <- new("Exponential", p1 =0.1)
+#' AutoN@settlementLag <- new("Exponential", p1 =0.05)
+#' AutoN@iCopula <- TRUE #use copula
+#' AutoN@ssrCopula <- new("CopulaObj", type ="normal", dimension = 3, 
+#' param = c(0.1,0.2,0.1))#A Gaussian Copula
+#' AutoN@ssrCopula@marginal <- c(AutoN@severity,AutoN@settlementLag,AutoN@reportLag)
+#' AutoN@laeDevFac <- new("DevFac",FacID="F1",FacModel= TRUE,fun="linear",
+#' paras =c(5,1.5,0.005,1.2,3))
+#' AutoN@fIBNER <- new("DevFac",FacID="D1",FacModel= FALSE,
+#' meanList =c(1.2,1.15,1.1,1.05,1),volList =c(0,0,0,0,0))
+#' AutoN@reopen <- new("DevFac",FacID="D2",FacModel= FALSE,
+#' meanList =c(0.02,0.015,0.01,0.005,0),volList =c(0.003, 0.002, 0.001, 0.001, 0))
+#' AutoN@roDevFac <- new("DevFac",FacID="D3",FacModel= FALSE,
+#' meanList =c(1.05,1.1,1,1,1),volList =c(0.00589,0.0037,0.00632,0.00815,0))
+#' AutoN@reopenLag <- new("Exponential", p1 =0.01)
+#' AutoN@resettleLag <- new("Exponential", p1 =0.25)
+#' simobj <- new("Simulation", lines=lines, types=types, 
+#' claimobjs= list(AutoN))
+#' simobj@simNo <- 1
+#' simobj@iRBNER <-FALSE
+#' simobj@iROPEN <-FALSE
+#' simobj@iIBNR <-TRUE
+#' simobj@iUPR <-FALSE
+#' simdata <- claimSimulation(simobj,claimdata, startDate = as.Date("2012-01-01"), 
+#' evaluationDate = as.Date("2016-12-31"), futureDate = as.Date("2017-12-31"))
+#' simSummary <- simSummary(simobj,simdata)
+#' simTriangle <- simTriangle(simobj,claimdata,simdata)
+#' simReport(simobj, simSummary, simTriangle)
 #' @rdname simReport-methods
 #'
 #' @importFrom R2HTML HTML.title HTML HTMLhr HTMLInsertGraph HTMLCSS
@@ -2764,7 +2946,7 @@ setMethod("simReport", signature("Simulation", "data.frame"), function(object, s
 						}
 					}
 				}
-				cat(paste("Report generated: ",file," at ",date(), "\n",sep = ""))
+				message(paste("Report generated: ",file," at ",date(), "\n",sep = ""))
 			}
 
 			Report <- function(file) {
@@ -2784,7 +2966,7 @@ setMethod("simReport", signature("Simulation", "data.frame"), function(object, s
 			stop("Set iReport of simulation object to TRUE to generate html report.")
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error for generating claim simulation report: ",err))
+		message(paste0(">>>Critical Error for generating claim simulation report: ",err))
 		gc()
 	})
 })

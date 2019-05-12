@@ -48,6 +48,13 @@ setReplaceMethod("setStartDate",signature("Index", "Date"), function(this, value
 #' @param this Index Object
 #' @param ... Additional function arguments
 #' @param value Logical Value (default:FALSE)
+#' @examples
+#' xindex <- new("Index")
+#' setID(xindex)<-"IDX1"
+#' setTabulate(xindex)<-FALSE
+#' setAnnualizedRate(xindex)<-0.03
+#' xindex<-setIndex(xindex)
+#' xindex@monthlyIndex
 #' @rdname setTabulate-methods
 #' @exportMethod setTabulate<-
 setGeneric("setTabulate<-", function(this, ..., value) standardGeneric("setTabulate<-"))
@@ -64,6 +71,13 @@ setReplaceMethod("setTabulate",signature("Index", "logical"), function(this, val
 #' @param this Index Object
 #' @param ... Additional function arguments
 #' @param value Numeric Value (default:0.02)
+#' @examples
+#' xindex <- new("Index")
+#' setID(xindex)<-"IDX1"
+#' setTabulate(xindex)<-FALSE
+#' setAnnualizedRate(xindex)<-0.03
+#' xindex<-setIndex(xindex)
+#' xindex@monthlyIndex
 #' @rdname setAnnualizedRate-methods
 #' @exportMethod setAnnualizedRate<-
 setGeneric("setAnnualizedRate<-", function(this, ..., value) standardGeneric("setAnnualizedRate<-"))
@@ -81,6 +95,12 @@ setReplaceMethod("setAnnualizedRate",signature("Index", "numeric"), function(thi
 #' @param this Index Object
 #' @param ... Additional function arguments
 #' @param value Numeric Vector
+#' @examples
+#' xindex <- new("Index")
+#' setID(xindex)<-"IDX1"
+#' setTabulate(xindex)<-TRUE
+#' setYearlyIndex(xindex)<- c(1,1.05,1.2,0.95,1.3)
+#' xindex@yearlyIndex
 #' @rdname setYearlyIndex-methods
 #' @exportMethod setYearlyIndex<-
 setGeneric("setYearlyIndex<-", function(this, ..., value) standardGeneric("setYearlyIndex<-"))
@@ -99,6 +119,13 @@ setReplaceMethod("setYearlyIndex",signature("Index", "vector"), function(this, v
 #' @param this Index Object
 #' @param ... Additional function arguments
 #' @param value Numeric Vector
+#' @examples
+#' xindex <- new("Index")
+#' setID(xindex)<-"IDX1"
+#' setTabulate(xindex)<-TRUE
+#' setMonthlyIndex(xindex)<- rep(1,360)
+#' xindex<-setIndex(xindex)
+#' xindex@monthlyIndex
 #' @rdname setMonthlyIndex-methods
 #' @exportMethod setMonthlyIndex<-
 setGeneric("setMonthlyIndex<-", function(this, ..., value) standardGeneric("setMonthlyIndex<-"))
@@ -117,6 +144,16 @@ setReplaceMethod("setMonthlyIndex",signature("Index", "vector"), function(this, 
 #' @param this Index Object
 #' @param ... Additional function arguments
 #' @param value Numeric Vector (default:rep(1,12))
+#' @examples
+#' xindex <- new("Index")
+#' setID(xindex)<-"IDX1"
+#' setTabulate(xindex)<-TRUE
+#' setAnnualizedRate(xindex)<-0.03
+#' setYearlyIndex(xindex)<- c(1,1.05,1.2,0.95,1.3)
+#' set.seed(123)
+#' setSeasonality(xindex)<-rnorm(12,mean=1,sd=0.03)
+#' xindex<-setIndex(xindex)
+#' xindex@monthlyIndex
 #' @rdname setSeasonality-methods
 #' @exportMethod setSeasonality<-
 setGeneric("setSeasonality<-", function(this, ..., value) standardGeneric("setSeasonality<-"))
@@ -203,7 +240,7 @@ setMethod("setIndex",signature("Index"), function(object) {
 		gc()
 		object
 	}, error = function(err){
-		print(paste0(">>>Critical Error for ", "Index ", object@indexID, ": ", err))
+		message(paste0(">>>Critical Error for ", "Index ", object@indexID, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -238,7 +275,7 @@ setMethod("getIndex",signature("Index"), function(object,dates) {
 		gc()
 		return(object@monthlyIndex[indices])
 	}, error = function(err){
-		print(paste0(">>>Critical Error for getting index values", "Index ", object@indexID, ": ", err))
+		message(paste0(">>>Critical Error for getting index values", "Index ", object@indexID, ": ", err))
 		gc()
 		return(-1)
 	})
@@ -280,7 +317,7 @@ setMethod("shiftIndex",signature("Index"), function(object,newStartDate,endDate)
 		gc()
 		return(newMI)
 	}, error = function(err){
-		print(paste0(">>>Critical Error for shifting index values", "Index ", object@indexID, ": ", err))
+		message(paste0(">>>Critical Error for shifting index values", "Index ", object@indexID, ": ", err))
 		gc()
 		return(-1)
 	})

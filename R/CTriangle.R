@@ -197,7 +197,7 @@ setMethod("setUpperTriangle",signature("Triangle","data.frame"), function(object
 		gc()
 		object
 	}, error = function(err){
-		print(paste0(">>>Critical Error: ", err))
+		message(paste0(">>>Critical Error: ", err))
 		gc()
 		return(-1)
 	})
@@ -367,7 +367,7 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 		gc()
 		object
 	}, error = function(err){
-		print(paste0(">>>Critical Error: ", err))
+		message(paste0(">>>Critical Error: ", err))
 		gc()
 		return(-1)
 	})
@@ -382,7 +382,6 @@ setMethod("setUpperKeep",signature("Triangle","data.frame"), function(object,dat
 #' @param data Simulated Data
 #' @param ... Additional function arguments.
 #' @rdname setRectangle-methods
-#' @exportMethod setRectangle
 setGeneric("setRectangle", function(object,data,...) standardGeneric("setRectangle"))
 #' @param evaluationDate Evaluation Date;
 #' @param futureDate End of projection date;
@@ -628,7 +627,7 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 			object
 		}
 	}, error = function(err){
-		print(paste0(">>>Critical Error: ", err))
+		message(paste0(">>>Critical Error: ", err))
 		gc()
 		return(-1)
 	})

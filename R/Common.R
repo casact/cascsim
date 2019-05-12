@@ -2,6 +2,8 @@
 #' @param order Order of moment
 #' @param xm Threshold value
 #' @param alpha Default=3
+#' @examples
+#' mpareto(1,1000,2)
 #' @rdname pareto
 #' @export
 mpareto <- function(order, xm, alpha = 3) {
@@ -18,24 +20,32 @@ mpareto <- function(order, xm, alpha = 3) {
 
 #' Density function of Pareto Distribution (PDF: alpha*xm^alpha/x^(alpha+1))
 #' @param x Value of the variable
+#' @examples
+#' dpareto(1500,1000,2)
 #' @rdname pareto
 #' @export
 dpareto <- function(x, xm, alpha = 3) ifelse(x > xm , alpha*xm^alpha/(x^(alpha+1)), 0)
 
 #' Cumulative probability function of Pareto Distribution (CDF: 1-(xm/x)^alpha)
 #' @param q Value of the variable
+#' @examples
+#' ppareto(1500,1000,2)
 #' @rdname pareto
 #' @export
 ppareto <- function(q, xm, alpha = 3) ifelse(q > xm , 1 - (xm/q)^alpha, 0 )
 
 #' Quantile function of Pareto Distribution
 #' @param p Value of the probability
+#' @examples
+#' qpareto(0.5,1000,2)
 #' @rdname pareto
 #' @export
 qpareto <- function(p, xm, alpha = 3) ifelse(p < 0 | p > 1, NaN, xm*(1-p)^(-1/alpha))
 
 #' Random generation of Pareto Distribution
 #' @param n Number of samples
+#' @examples
+#' rpareto(100,1000,2)
 #' @rdname pareto
 #' @export
 rpareto <- function(n, xm, alpha = 3) qpareto(runif(n), xm, alpha)
@@ -168,6 +178,8 @@ dempirical <- function(x, cdf) {
 #' @param sd Standard deviation of the untruncated Normal distribution
 #' @param min Left truncation (like deductible)
 #' @param max Right truncation (like limit)
+#' @examples
+#' dtnorm(0.5,1,2)
 #' @rdname tnorm
 #' @export
 dtnorm <- function(x,mean,sd,min=0,max=1e+9) {
@@ -179,6 +191,8 @@ dtnorm <- function(x,mean,sd,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Normal Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptnorm(0.5,1,2)
 #' @rdname tnorm
 #' @export
 ptnorm <- function(q,mean,sd,min=0,max=1e+9) {
@@ -190,6 +204,8 @@ ptnorm <- function(q,mean,sd,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Normal Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtnorm(0.5,1,2)
 #' @rdname tnorm
 #' @export
 qtnorm <- function(p,mean,sd,min=0,max=1e+9) {
@@ -199,6 +215,8 @@ qtnorm <- function(p,mean,sd,min=0,max=1e+9) {
 
 #' Random generation of Truncated Normal Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtnorm(100,1,2)
 #' @rdname tnorm
 #' @export
 rtnorm <- function(n,mean,sd,min=0,max=1e+9) {qtnorm(runif(n),mean=mean, sd=sd,min,max)}
@@ -212,6 +230,8 @@ rtnorm <- function(n,mean,sd,min=0,max=1e+9) {qtnorm(runif(n),mean=mean, sd=sd,m
 #' @param ncp non-centrality parameter (Default: 0)
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtbeta(0.6,1,2)
 #' @rdname tbeta
 #' @export
 dtbeta <- function(x, shape1, shape2, ncp = 0, min=0,max=1) {
@@ -223,6 +243,8 @@ dtbeta <- function(x, shape1, shape2, ncp = 0, min=0,max=1) {
 
 #' Cumulative probability function of Truncated Beta Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptbeta(0.5,1,2)
 #' @rdname tbeta
 #' @export
 ptbeta <- function(q, shape1, shape2, ncp = 0, min=0,max=1) {
@@ -234,6 +256,8 @@ ptbeta <- function(q, shape1, shape2, ncp = 0, min=0,max=1) {
 
 #' Quantile function of Truncated Beta Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtbeta(0.5,1,2)
 #' @rdname tbeta
 #' @export
 qtbeta <- function(p, shape1, shape2, ncp = 0, min=0,max=1) {
@@ -243,6 +267,8 @@ qtbeta <- function(p, shape1, shape2, ncp = 0, min=0,max=1) {
 
 #' Random generation of Truncated Beta Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtbeta(100,1,2)
 #' @rdname tbeta
 #' @export
 rtbeta <- function(n, shape1, shape2, ncp = 0, min=0,max=1) {qtbeta(runif(n),shape1, shape2, ncp,min,max)}
@@ -254,6 +280,8 @@ rtbeta <- function(n, shape1, shape2, ncp = 0, min=0,max=1) {qtbeta(runif(n),sha
 #' @param rate Distribution parameter
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtexp(5,0.1)
 #' @rdname texp
 #' @export
 dtexp <- function(x,rate,min=0,max=1e+9) {
@@ -265,6 +293,8 @@ dtexp <- function(x,rate,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Exponential Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptexp(5,0.1)
 #' @rdname texp
 #' @export
 ptexp <- function(q,rate,min=0,max=1e+9) {
@@ -276,6 +306,8 @@ ptexp <- function(q,rate,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Exponential Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtexp(0.5,0.1)
 #' @rdname texp
 #' @export
 qtexp <- function(p,rate,min=0,max=1e+9) {
@@ -285,6 +317,8 @@ qtexp <- function(p,rate,min=0,max=1e+9) {
 
 #' Random generation of Truncated Exponential Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtexp(100,0.1)
 #' @rdname texp
 #' @export
 rtexp <- function(n,rate,min=0,max=1e+9) {qtexp(runif(n),rate,min,max)}
@@ -297,6 +331,8 @@ rtexp <- function(n,rate,min=0,max=1e+9) {qtexp(runif(n),rate,min,max)}
 #' @param scale Scale parameter
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtgamma(2,3,2)
 #' @rdname tgamma
 #' @export
 dtgamma <- function(x,shape,scale,min=0,max=1e+9) {
@@ -308,6 +344,8 @@ dtgamma <- function(x,shape,scale,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Gamma Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptgamma(2,3,2)
 #' @rdname tgamma
 #' @export
 ptgamma <- function(q,shape,scale,min=0,max=1e+9) {
@@ -319,6 +357,8 @@ ptgamma <- function(q,shape,scale,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Gamma Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtgamma(0.5,3,2)
 #' @rdname tgamma
 #' @export
 qtgamma <- function(p,shape,scale,min=0,max=1e+9) {
@@ -328,6 +368,8 @@ qtgamma <- function(p,shape,scale,min=0,max=1e+9) {
 
 #' Random generation of Truncated Gamma Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtgamma(100,3,2)
 #' @rdname tgamma
 #' @export
 rtgamma <- function(n,shape,scale,min=0,max=1e+9) {qtgamma(runif(n),shape,scale,min,max)}
@@ -339,6 +381,8 @@ rtgamma <- function(n,shape,scale,min=0,max=1e+9) {qtgamma(runif(n),shape,scale,
 #' @param prob Distribution parameter
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtgeom(3,0.3)
 #' @rdname tgeom
 #' @export
 dtgeom <- function(x,prob,min=0,max=1e+9) {
@@ -350,6 +394,8 @@ dtgeom <- function(x,prob,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Geometric Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptgeom(3,0.3)
 #' @rdname tgeom
 #' @export
 ptgeom <- function(q,prob,min=0,max=1e+9) {
@@ -361,6 +407,8 @@ ptgeom <- function(q,prob,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Geometric Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtgeom(0.7,0.3)
 #' @rdname tgeom
 #' @export
 qtgeom <- function(p,prob,min=0,max=1e+9) {
@@ -370,6 +418,8 @@ qtgeom <- function(p,prob,min=0,max=1e+9) {
 
 #' Random generation of Truncated Geometric Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtgeom(100,0.3)
 #' @rdname tgeom
 #' @export
 rtgeom <- function(n,prob,min=0,max=1e+9) {qtgeom(runif(n),prob,min,max)}
@@ -382,6 +432,8 @@ rtgeom <- function(n,prob,min=0,max=1e+9) {qtgeom(runif(n),prob,min,max)}
 #' @param sdlog Standard deviation of the log of the distribution
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtlnorm(20,3,0.5)
 #' @rdname tlnorm
 #' @export
 dtlnorm <- function(x,meanlog,sdlog,min=0,max=1e+9) {
@@ -393,6 +445,8 @@ dtlnorm <- function(x,meanlog,sdlog,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Lognormal Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptlnorm(20,3,0.5)
 #' @rdname tlnorm
 #' @export
 ptlnorm <- function(q,meanlog,sdlog,min=0,max=1e+9) {
@@ -404,6 +458,8 @@ ptlnorm <- function(q,meanlog,sdlog,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Lognormal Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtlnorm(0.5,3,0.5)
 #' @rdname tlnorm
 #' @export
 qtlnorm <- function(p,meanlog,sdlog,min=0,max=1e+9) {
@@ -413,6 +469,8 @@ qtlnorm <- function(p,meanlog,sdlog,min=0,max=1e+9) {
 
 #' Random generation of Truncated Lognormal Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtlnorm(100,3,0.5)
 #' @rdname tlnorm
 #' @export
 rtlnorm <- function(n,meanlog,sdlog,min=0,max=1e+9) {qtlnorm(runif(n),meanlog, sdlog,min,max)}
@@ -425,6 +483,8 @@ rtlnorm <- function(n,meanlog,sdlog,min=0,max=1e+9) {qtlnorm(runif(n),meanlog, s
 #' @param prob Probability of success in each trial
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtnbinom(230,100,0.3)
 #' @rdname tnbinom
 #' @export
 dtnbinom <- function(x,size,prob,min=0,max=1e+9) {
@@ -436,6 +496,8 @@ dtnbinom <- function(x,size,prob,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Negative Binomial Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptnbinom(230,100,0.3)
 #' @rdname tnbinom
 #' @export
 ptnbinom <- function(q,size,prob,min=0,max=1e+9) {
@@ -447,6 +509,8 @@ ptnbinom <- function(q,size,prob,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Negative Binomial Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtnbinom(0.5,100,0.3)
 #' @rdname tnbinom
 #' @export
 qtnbinom <- function(p,size,prob,min=0,max=1e+9) {
@@ -456,6 +520,8 @@ qtnbinom <- function(p,size,prob,min=0,max=1e+9) {
 
 #' Random generation of Truncated Negative Binomial Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtnbinom(500,100,0.3)
 #' @rdname tnbinom
 #' @export
 rtnbinom <- function(n,size,prob,min=0,max=1e+9) {qtnbinom(runif(n),size,prob,min,max)}
@@ -468,6 +534,8 @@ rtnbinom <- function(n,size,prob,min=0,max=1e+9) {qtnbinom(runif(n),size,prob,mi
 #' @param alpha Model parameter
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtpareto(500,1000,2)
 #' @rdname tpareto
 #' @export
 dtpareto <- function(x,xm,alpha,min=xm,max=1e+9) {
@@ -479,6 +547,8 @@ dtpareto <- function(x,xm,alpha,min=xm,max=1e+9) {
 
 #' Cumulative probability function of Truncated Pareto Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptpareto(500,1000,2)
 #' @rdname tpareto
 #' @export
 ptpareto <- function(q,xm,alpha,min=xm,max=1e+9) {
@@ -490,6 +560,8 @@ ptpareto <- function(q,xm,alpha,min=xm,max=1e+9) {
 
 #' Quantile function of Truncated Pareto Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtpareto(0.5,1000,2)
 #' @rdname tpareto
 #' @export
 qtpareto <- function(p,xm,alpha,min=xm,max=1e+9) {
@@ -499,6 +571,8 @@ qtpareto <- function(p,xm,alpha,min=xm,max=1e+9) {
 
 #' Random generation of Truncated Pareto Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtpareto(100,1000,2)
 #' @rdname tpareto
 #' @export
 rtpareto <- function(n,xm,alpha,min=xm,max=1e+9) {qtpareto(runif(n),xm,alpha,min,max)}
@@ -510,6 +584,8 @@ rtpareto <- function(n,xm,alpha,min=xm,max=1e+9) {qtpareto(runif(n),xm,alpha,min
 #' @param lambda Distribution parameter
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtpois(3,5)
 #' @rdname tpois
 #' @export
 dtpois <- function(x,lambda,min=0,max=1e+9) {
@@ -521,6 +597,8 @@ dtpois <- function(x,lambda,min=0,max=1e+9) {
 
 #' Cumulative probability function of Truncated Poisson Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptpois(3,5)
 #' @rdname tpois
 #' @export
 ptpois <- function(q,lambda,min=0,max=1e+9) {
@@ -532,6 +610,8 @@ ptpois <- function(q,lambda,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Poisson Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtpois(0.6,5)
 #' @rdname tpois
 #' @export
 qtpois <- function(p,lambda,min=0,max=1e+9) {
@@ -541,6 +621,8 @@ qtpois <- function(p,lambda,min=0,max=1e+9) {
 
 #' Random generation of Truncated Poisson Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtpois(100,5)
 #' @rdname tpois
 #' @export
 rtpois <- function(n,lambda,min=0,max=1e+9){qtpois(runif(n),lambda,min,max)}
@@ -553,6 +635,8 @@ rtpois <- function(n,lambda,min=0,max=1e+9){qtpois(runif(n),lambda,min,max)}
 #' @param scale Scale parameter
 #' @param min Left truncation deductible
 #' @param max Right truncation limit
+#' @examples
+#' dtweibull(2.5,2,3)
 #' @rdname tweibull
 #' @export
 dtweibull <- function(x,shape,scale,min=0,max=1e+9){
@@ -564,6 +648,8 @@ dtweibull <- function(x,shape,scale,min=0,max=1e+9){
 
 #' Cumulative probability function of Truncated Weibull Distribution
 #' @param q Value of the variable after deductible and limit max(0,min(claim,limit)-deductible)
+#' @examples
+#' ptweibull(2.5,2,3)
 #' @rdname tweibull
 #' @export
 ptweibull <- function(q,shape,scale,min=0,max=1e+9) {
@@ -575,6 +661,8 @@ ptweibull <- function(q,shape,scale,min=0,max=1e+9) {
 
 #' Quantile function of Truncated Weibull Distribution max(0,min(claim,limit)-deductible)
 #' @param p Value of the probability
+#' @examples
+#' qtweibull(0.5,2,3)
 #' @rdname tweibull
 #' @export
 qtweibull <- function(p,shape,scale,min=0,max=1000000000) {
@@ -584,6 +672,8 @@ qtweibull <- function(p,shape,scale,min=0,max=1000000000) {
 
 #' Random generation of Truncated Weibull Distribution max(0,min(claim,limit)-deductible)
 #' @param n Number of samples
+#' @examples
+#' rtweibull(100,2,3)
 #' @rdname tweibull
 #' @export
 rtweibull <- function(n,shape,scale,min=0,max=1e+9) {qtweibull(runif(n),shape,scale,min,max)}
@@ -791,6 +881,8 @@ nloglik <- function(paras,dist,fitdata,deductible,limit){
 
 #' Convert US date mm/dd/yyyy to yyyy-mm-dd format
 #' @param d vector of dates in possible US format
+#' @examples
+#' toDate("3/5/2017")
 #' @rdname toDate
 #' @export
 toDate<-function(d)

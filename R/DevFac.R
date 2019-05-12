@@ -44,6 +44,15 @@ setReplaceMethod("setID",signature("DevFac", "character"), function(this, value)
 #' @param this DevFac Object
 #' @param ... Additional function arguments
 #' @param value Logical Value (default:FALSE)
+#' @examples
+#' xIBNERFactor <- new("DevFac")
+#' setID(xIBNERFactor)<-"IF1"
+#' setFacModel(xIBNERFactor)<-TRUE
+#' setFun(xIBNERFactor)<-"identity"
+#' setXname(xIBNERFactor)<- c("x1","x2","x3")
+#' setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+#' xIBNERFactor<-setDevFac(xIBNERFactor)
+#' xIBNERFactor
 #' @rdname setFacModel-methods
 #' @exportMethod setFacModel<-
 setGeneric("setFacModel<-", function(this, ..., value) standardGeneric("setFacModel<-"))
@@ -60,6 +69,15 @@ setReplaceMethod("setFacModel",signature("DevFac", "logical"), function(this, va
 #' @param this DevFac Object
 #' @param ... Additional function arguments
 #' @param value String Value (default:"identity")
+#' @examples
+#' xIBNERFactor <- new("DevFac")
+#' setID(xIBNERFactor)<-"IF1"
+#' setFacModel(xIBNERFactor)<-TRUE
+#' setFun(xIBNERFactor)<-"identity"
+#' setXname(xIBNERFactor)<- c("x1","x2","x3")
+#' setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+#' xIBNERFactor<-setDevFac(xIBNERFactor)
+#' xIBNERFactor
 #' @rdname setFun-methods
 #' @exportMethod setFun<-
 setGeneric("setFun<-", function(this, ..., value) standardGeneric("setFun<-"))
@@ -77,6 +95,15 @@ setReplaceMethod("setFun",signature("DevFac", "character"), function(this, value
 #' @param this DevFac Object
 #' @param ... Additional function arguments
 #' @param value Character Vector
+#' @examples
+#' xIBNERFactor <- new("DevFac")
+#' setID(xIBNERFactor)<-"IF1"
+#' setFacModel(xIBNERFactor)<-TRUE
+#' setFun(xIBNERFactor)<-"identity"
+#' setXname(xIBNERFactor)<- c("x1","x2","x3")
+#' setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+#' xIBNERFactor<-setDevFac(xIBNERFactor)
+#' xIBNERFactor
 #' @rdname setXname-methods
 #' @exportMethod setXname<-
 setGeneric("setXname<-", function(this, ..., value) standardGeneric("setXname<-"))
@@ -95,6 +122,15 @@ setReplaceMethod("setXname",signature("DevFac", "vector"), function(this, value)
 #' @param this DevFac Object
 #' @param ... Additional function arguments
 #' @param value Numeric Vector
+#' @examples
+#' xIBNERFactor <- new("DevFac")
+#' setID(xIBNERFactor)<-"IF1"
+#' setFacModel(xIBNERFactor)<-TRUE
+#' setFun(xIBNERFactor)<-"identity"
+#' setXname(xIBNERFactor)<- c("x1","x2","x3")
+#' setParas(xIBNERFactor)<-c(0.6,-0.2,0.01,-0.3,0.02,0.03,0.01,0.02)
+#' xIBNERFactor<-setDevFac(xIBNERFactor)
+#' xIBNERFactor
 #' @rdname setParas-methods
 #' @exportMethod setParas<-
 setGeneric("setParas<-", function(this, ..., value) standardGeneric("setParas<-"))
@@ -113,6 +149,13 @@ setReplaceMethod("setParas",signature("DevFac", "vector"), function(this, value)
 #' @param this DevFac Object
 #' @param ... Additional function arguments
 #' @param value Numeric Vector
+#' @examples
+#' xIBNERFactor <- new("DevFac")
+#' setID(xIBNERFactor)<-"IF1"
+#' setFacModel(xIBNERFactor)<-FALSE
+#' setMeanList(xIBNERFactor)<-c(1.26,1.1,1.05,1.02,1)
+#' setVolList(xIBNERFactor)<-rep(0.02,5)
+#' xIBNERFactor
 #' @rdname setMeanList-methods
 #' @exportMethod setMeanList<-
 setGeneric("setMeanList<-", function(this, ..., value) standardGeneric("setMeanList<-"))
@@ -131,6 +174,13 @@ setReplaceMethod("setMeanList",signature("DevFac", "vector"), function(this, val
 #' @param this DevFac Object
 #' @param ... Additional function arguments
 #' @param value Numeric Vector
+#' @examples
+#' xIBNERFactor <- new("DevFac")
+#' setID(xIBNERFactor)<-"IF1"
+#' setFacModel(xIBNERFactor)<-FALSE
+#' setMeanList(xIBNERFactor)<-c(1.26,1.1,1.05,1.02,1)
+#' setVolList(xIBNERFactor)<-rep(0.02,5)
+#' xIBNERFactor
 #' @rdname setVolList-methods
 #' @exportMethod setVolList<-
 setGeneric("setVolList<-", function(this, ..., value) standardGeneric("setVolList<-"))
@@ -186,7 +236,7 @@ setMethod("setDevFac",signature("DevFac"), function(object) {
 		gc()
 		object
 	}, error = function(err){
-		print(paste0(">>>Critical Error: ", err))
+		message(paste0(">>>Critical Error: ", err))
 		gc()
 		return(-1)
 	})
