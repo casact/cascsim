@@ -80,11 +80,11 @@ pempirical <- function(q, cdf) {
 		return(runif(length(q)))
 	} else if (sum(cdf[,1])>1 & cdf[nrow(cdf),1] ==1) { #cumulative probability function for continuous distribution
 		return(approx(cdf[,2],cdf[,1],xout=q, rule=2)$y)
-	} else if (sum(cdf[,1])>1 && cdf[nrow(cdf),1] <1) {
+	} else if (sum(cdf[,1])>1 & cdf[nrow(cdf),1] <1) {
 		warning("cdf input is not complete. The last row does not have a cumulative probability of 1. It will be extrapolated to 1.")
 		nx <- nrow(cdf)
 		xend = (cdf[nx,2]-cdf[nx-1,2])/(cdf[nx,1]-cdf[nx-1,1])*(1-cdf[nx-1,1])+cdf[nx-1,2]
-		cdfnew <- rbind(cdfnew,c(1,xend))
+		cdfnew <- rbind(cdf,c(1,xend))
 		return(approx(cdfnew[,2],cdfnew[,1],xout=q, rule=2)$y)
 	} else { #probability mass function for discrete distribution
 		ps <- cdf[,1]/sum(cdf[,1])
@@ -115,7 +115,7 @@ qempirical <- function(p, cdf) {
 		warning("cdf input is not complete. The last row does not have a cumulative probability of 1. It will be extrapolated to 1.")
 		nx <- nrow(cdf)
 		xend = (cdf[nx,2]-cdf[nx-1,2])/(cdf[nx,1]-cdf[nx-1,1])*(1-cdf[nx-1,1])+cdf[nx-1,2]
-		cdfnew <- rbind(cdfnew,c(1,xend))
+		cdfnew <- rbind(cdf,c(1,xend))
 		return(approx(cdfnew[,1],cdfnew[,2],xout=p, rule=2)$y)
 	} else { #probability mass function for discrete distribution
 		ps <- cumsum(cdf[,1])/sum(cdf[,1])
@@ -147,7 +147,7 @@ rempirical <- function(n, cdf) {
 		warning("cdf input is not complete. The last row does not have a cumulative probability of 1. It will be extrapolated to 1.")
 		nx <- nrow(cdf)
 		xend = (cdf[nx,2]-cdf[nx-1,2])/(cdf[nx,1]-cdf[nx-1,1])*(1-cdf[nx-1,1])+cdf[nx-1,2]
-		cdfnew <- rbind(cdfnew,c(1,xend))
+		cdfnew <- rbind(cdf,c(1,xend))
 		return(qempirical(runif(n), cdfnew))
 	} else { #probability mass function for discrete distribution
 		ps <- cdf[,1]/sum(cdf[,1])
