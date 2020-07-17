@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 #' Moment function of Pareto Distribution (PDF: alpha*xm^alpha/x^(alpha+1))
 #' @param order Order of moment
 #' @param xm Threshold value

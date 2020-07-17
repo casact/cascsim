@@ -1,3 +1,6 @@
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 #' Sample Claim Data
 #'
 #' A dataset containing about 10,000 simulated claim records from 2012 to 2016 for illustration.

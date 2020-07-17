@@ -14,7 +14,7 @@ Description: It is an open source insurance claim simulation engine sponsored
 	Parodi (2013) <https://www.actuaries.org.uk/documents/triangle-free-reserving-non-traditional-framework-estimating-reserves-and-reserve-uncertainty>.
 Depends: R (>= 3.4.0)
 Imports: parallel, R2HTML, fitdistrplus, moments, copula, scatterplot3d, methods
-License: GPL-3
+License: LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1

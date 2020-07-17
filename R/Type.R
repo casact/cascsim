@@ -1,8 +1,11 @@
+# This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+# If a copy of the MPL was not distributed with this file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 #' An S4 class to represent a claim type.
 #'
 #' @slot simno The simulation index.
 #' @slot line A string to identify the business line that the claim belongs to.
-#' @slot claimType A string to identify the type of the claim. It further classifies the claims within a business line. For example, the type could be based on the size of the loss. 
+#' @slot claimType A string to identify the type of the claim. It further classifies the claims within a business line. For example, the type could be based on the size of the loss.
 #' @slot iRBNER A Boolean variable to indicate whether RBNER (open claims) should be simulated.
 #' @slot iROPEN A Boolean variable to indicate whether claim reopen should be simulated.
 #' @slot iIBNR A Boolean variable to indicate whether IBNR claims should be simulated.
