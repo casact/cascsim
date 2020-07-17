@@ -6,3 +6,6 @@ r:
   - devel
 sudo: false
 cache: packages
+
+packages:
+  - libgsl0-dev
