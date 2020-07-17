@@ -7,5 +7,7 @@ r:
 sudo: false
 cache: packages
 
-packages:
-  - libgsl0-dev
+addons:
+  apt:
+    packages:
+    - libgsl0-dev
