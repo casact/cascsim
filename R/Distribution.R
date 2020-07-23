@@ -804,18 +804,18 @@ setMethod("doPlot",signature("Distribution"), function(object) {
 })
 
 #ToString function
-setMethod("toString",signature("Normal"), function(object) { return(paste("Gaussian p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Beta"), function(object) { return(paste("Beta p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Exponential"),  function(object) { return(paste("Exponential p1=", round(object@p1,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Gamma"), function(object) { return(paste("Gamma p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Geometric"), function(object) { return(paste("Geometric p1=", round(object@p1,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Lognormal"), function(object) { return(paste("Lognormal p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("NegativeBinomial"), function(object) { return(paste("Negative Binomial p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Pareto"), function(object) { return(paste("Pareto p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Poisson"), function(object) { return(paste("Poisson p1=", round(object@p1,4)," info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Uniform"), function(object) { return(paste("Uniform p1=", round(object@p1,4), " p2=", round(object@p2,4), " info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Weibull"), function(object) { return(paste("Weibull p1=", round(object@p1,4), " p2=", round(object@p2,4)," info=", object@info, " min=", object@min, " max=", object@max, " truncated=", object@truncated, sep=""))})
-setMethod("toString",signature("Empirical"), function(object) { return(paste("Empirical ", object@info, sep=""))})
+setMethod("toString",signature("Normal"), function(x) { return(paste("Gaussian p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Beta"), function(x) { return(paste("Beta p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Exponential"),  function(x) { return(paste("Exponential p1=", round(x@p1,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Gamma"), function(x) { return(paste("Gamma p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Geometric"), function(x) { return(paste("Geometric p1=", round(x@p1,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Lognormal"), function(x) { return(paste("Lognormal p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("NegativeBinomial"), function(x) { return(paste("Negative Binomial p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Pareto"), function(x) { return(paste("Pareto p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Poisson"), function(x) { return(paste("Poisson p1=", round(x@p1,4)," info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Uniform"), function(x) { return(paste("Uniform p1=", round(x@p1,4), " p2=", round(x@p2,4), " info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Weibull"), function(x) { return(paste("Weibull p1=", round(x@p1,4), " p2=", round(x@p2,4)," info=", x@info, " min=", x@min, " max=", x@max, " truncated=", x@truncated, sep=""))})
+setMethod("toString",signature("Empirical"), function(x) { return(paste("Empirical ", x@info, sep=""))})
 
 #' Calculate Theoretical Mean of distribution.
 #' min and max are not applied

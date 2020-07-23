@@ -301,9 +301,9 @@ setMethod("copulaPlot", signature("CopulaObj"), function(object)
 })
 
 
-setMethod("toString",signature("CopulaObj"), function(object)
+setMethod("toString",signature("CopulaObj"), function(x)
 {
-	return(paste("Copula type=", object@type, " info=", object@info, " dim=", length(object@marginal), " param=c(", paste(object@param, collapse=";"), ") marginal=list(", paste(unlist(lapply(object@marginal, toString)), collapse=";") , ") df=", object@df, " dispstr=", object@dispstr, sep=""))
+	return(paste("Copula type=", x@type, " info=", x@info, " dim=", length(x@marginal), " param=c(", paste(x@param, collapse=";"), ") marginal=list(", paste(unlist(lapply(x@marginal, toString)), collapse=";") , ") df=", x@df, " dispstr=", x@dispstr, sep=""))
 })
 
 #' Experience data plotting.

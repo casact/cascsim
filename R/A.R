@@ -38,8 +38,6 @@ setGeneric("setStartDate<-", function(this, ..., value) standardGeneric("setStar
 #' @export setObservation<-
 setGeneric("setObservation<-", function(this,value) standardGeneric("setObservation<-"))
 
-setGeneric("toString", function(object, ...) standardGeneric("toString"))
-
 #' Density function.
 #' @name Density
 #' @param object Distribution Object

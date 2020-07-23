@@ -637,6 +637,6 @@ setMethod("setRectangle",signature("Triangle","data.frame"), function(object,dat
 
 })
 
-setMethod("toString",signature("Triangle"), function(object) {
-	return(object@rectangle)
+setMethod("toString",signature("Triangle"), function(x) {
+	return(x@rectangle)
 })

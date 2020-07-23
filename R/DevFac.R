@@ -246,32 +246,32 @@ setMethod("setDevFac",signature("DevFac"), function(object) {
 
 })
 
-setMethod("toString",signature("DevFac"), function(object) {
-	if(object@FacModel==TRUE){
-		ns<-c("DevelopmentYear","IncurredLoss","OSRatio",object@xname,"e")
-		result<-as.character(round(object@paras[1],4))
-		for(i in c(2:length(object@paras))){
-			result<-paste0(result,"+",round(object@paras[i],4),"*",ns[i-1])
+setMethod("toString",signature("DevFac"), function(x) {
+	if(x@FacModel==TRUE){
+		ns<-c("DevelopmentYear","IncurredLoss","OSRatio",x@xname,"e")
+		result<-as.character(round(x@paras[1],4))
+		for(i in c(2:length(x@paras))){
+			result<-paste0(result,"+",round(x@paras[i],4),"*",ns[i-1])
 		}
-		if(object@fun=="inverse"){
+		if(x@fun=="inverse"){
 			result<-paste0("1/(",result,")")
 		}
-		if(object@fun=="exponential"){
+		if(x@fun=="exponential"){
 			result<-paste0("log(",result,")")
 		}
-		if(object@fun=="log"){
+		if(x@fun=="log"){
 			result<-paste0("exp(",result,")")
 		}
 	}else{
-		result<-rbind(object@meanList,object@volList)
-		if (object@distType == "normal"){
+		result<-rbind(x@meanList,x@volList)
+		if (x@distType == "normal"){
 			rownames(result)<-c("mean","vol")
-		} else if (object@distType == "lognormal") {
+		} else if (x@distType == "lognormal") {
 			rownames(result)<-c("meanlog","sdlog")
 		} else {
 			rownames(result)<-c("shape","scale")
 		}
-		colnames(result)<-c(1:length(object@meanList))
+		colnames(result)<-c(1:length(x@meanList))
 	}
 	return(result)
 })

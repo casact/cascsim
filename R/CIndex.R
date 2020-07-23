@@ -326,4 +326,4 @@ setMethod("shiftIndex",signature("Index"), function(object,newStartDate,endDate)
 	})
 })
 
-setMethod("toString",signature("Index"), function(object) { return(paste("Index ", object@indexID, " start date=", object@startDate, sep=""))})
+setMethod("toString",signature("Index"), function(x) { return(paste("Index ", x@indexID, " start date=", x@startDate, sep=""))})
