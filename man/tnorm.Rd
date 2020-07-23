@@ -41,3 +41,9 @@ Quantile function of Truncated Normal Distribution max(0,min(claim,limit)-deduct
 
 Random generation of Truncated Normal Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtnorm(0.5,1,2)
+ptnorm(0.5,1,2)
+qtnorm(0.5,1,2)
+rtnorm(100,1,2)
+}

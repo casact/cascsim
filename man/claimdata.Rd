@@ -4,7 +4,9 @@
 \name{claimdata}
 \alias{claimdata}
 \title{Sample Claim Data}
-\format{A data frame with 10030 rows and 15 variables}
+\format{
+A data frame with 10030 rows and 15 variables
+}
 \usage{
 data(claimdata)
 }

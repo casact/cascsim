@@ -4,8 +4,12 @@
 \alias{ultiDevFac}
 \title{Calculate ultimate development factor based on current development year, a mean development factor schedule and its volatility. It is used to simulate the ultimate loss for open claims.}
 \usage{
-ultiDevFac(Years, meanDevFac, sdDevFac = rep(0, length(meanDevFac)),
-  distType = "normal")
+ultiDevFac(
+  Years,
+  meanDevFac,
+  sdDevFac = rep(0, length(meanDevFac)),
+  distType = "normal"
+)
 }
 \arguments{
 \item{Years}{Include two columns: Current development year and Settlement Year}

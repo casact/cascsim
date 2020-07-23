@@ -39,3 +39,9 @@ Quantile function of Truncated Geometric Distribution max(0,min(claim,limit)-ded
 
 Random generation of Truncated Geometric Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtgeom(3,0.3)
+ptgeom(3,0.3)
+qtgeom(0.7,0.3)
+rtgeom(100,0.3)
+}

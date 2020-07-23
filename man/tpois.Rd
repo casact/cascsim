@@ -39,3 +39,9 @@ Quantile function of Truncated Poisson Distribution max(0,min(claim,limit)-deduc
 
 Random generation of Truncated Poisson Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtpois(3,5)
+ptpois(3,5)
+qtpois(0.6,5)
+rtpois(100,5)
+}

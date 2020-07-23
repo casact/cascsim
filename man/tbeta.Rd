@@ -43,3 +43,9 @@ Quantile function of Truncated Beta Distribution max(0,min(claim,limit)-deductib
 
 Random generation of Truncated Beta Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtbeta(0.6,1,2)
+ptbeta(0.5,1,2)
+qtbeta(0.5,1,2)
+rtbeta(100,1,2)
+}

@@ -12,3 +12,6 @@ toDate(d)
 \description{
 Convert US date mm/dd/yyyy to yyyy-mm-dd format
 }
+\examples{
+toDate("3/5/2017")
+}

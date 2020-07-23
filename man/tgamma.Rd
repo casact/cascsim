@@ -41,3 +41,9 @@ Quantile function of Truncated Gamma Distribution max(0,min(claim,limit)-deducti
 
 Random generation of Truncated Gamma Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtgamma(2,3,2)
+ptgamma(2,3,2)
+qtgamma(0.5,3,2)
+rtgamma(100,3,2)
+}

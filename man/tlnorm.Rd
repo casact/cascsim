@@ -41,3 +41,9 @@ Quantile function of Truncated Lognormal Distribution max(0,min(claim,limit)-ded
 
 Random generation of Truncated Lognormal Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtlnorm(20,3,0.5)
+ptlnorm(20,3,0.5)
+qtlnorm(0.5,3,0.5)
+rtlnorm(100,3,0.5)
+}

@@ -41,3 +41,9 @@ Quantile function of Truncated Negative Binomial Distribution max(0,min(claim,li
 
 Random generation of Truncated Negative Binomial Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtnbinom(230,100,0.3)
+ptnbinom(230,100,0.3)
+qtnbinom(0.5,100,0.3)
+rtnbinom(500,100,0.3)
+}

@@ -41,3 +41,9 @@ Quantile function of Truncated Pareto Distribution max(0,min(claim,limit)-deduct
 
 Random generation of Truncated Pareto Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtpareto(500,1000,2)
+ptpareto(500,1000,2)
+qtpareto(0.5,1000,2)
+rtpareto(100,1000,2)
+}

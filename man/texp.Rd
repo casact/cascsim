@@ -39,3 +39,9 @@ Quantile function of Truncated Exponential Distribution max(0,min(claim,limit)-d
 
 Random generation of Truncated Exponential Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtexp(5,0.1)
+ptexp(5,0.1)
+qtexp(0.5,0.1)
+rtexp(100,0.1)
+}

@@ -41,3 +41,9 @@ Quantile function of Truncated Weibull Distribution max(0,min(claim,limit)-deduc
 
 Random generation of Truncated Weibull Distribution max(0,min(claim,limit)-deductible)
 }
+\examples{
+dtweibull(2.5,2,3)
+ptweibull(2.5,2,3)
+qtweibull(0.5,2,3)
+rtweibull(100,2,3)
+}
