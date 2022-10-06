@@ -1680,6 +1680,8 @@ setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
   })
 })
 
+setGeneric("CDFPlot", function(object, ...) standardGeneric("CDFPlot"))
+
 #' Plotting the CDF of data and fitted distribution
 #' @name CDFPlot
 #' @param object FitDist Object
@@ -1702,11 +1704,8 @@ setMethod("PDFPlot",signature("FitDist"), function(object, n=missing) {
 #' setTrialDist(xFit) <- new("Poisson")
 #' xFit@soutput
 #' CDFPlot(xFit)
-#' @rdname CDFPlot-methods
-#' @exportMethod CDFPlot
-setGeneric("CDFPlot", function(object, ...) standardGeneric("CDFPlot"))
-#' @rdname CDFPlot-methods
-#' @aliases CDFPlot,ANY-method
+#' @rdname CDFPlot
+#' @export
 setMethod("CDFPlot",signature("FitDist"), function(object, n=missing) {
   tryCatch({
     par(mfrow = c(1, 1))
